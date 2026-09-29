@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Governance Route Finder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+[hidden]{display:none!important}
+:root{
+  --navy:#122C47; --gold:#C8AB36; --gold-ink:#8A7318;
+  --bg:#F3F5F8; --panel:#FFFFFF; --ink:#16202E; --muted:#58647A; --line:#D6DCE5; --soft:#EEF1F5;
+  --head-bg:#122C47; --head-ink:#F4F6F9; --head-muted:#B9C5D6;
+  --accent:#1F4E86; --accent-soft:#E3EBF6;
+  --so:#1B7485; --gl:#122C47; --sp:#A5661A; --fo:#76498A;
+  --ok:#2E7D48; --ok-bg:#E6F2EA; --warn:#A5661A; --warn-bg:#FBF0E0; --crit:#B8322A; --crit-bg:#FBEAE8;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:Arial,"Helvetica Neue",Helvetica,"Liberation Sans",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --gold:#D9BE55; --gold-ink:#D9BE55;
+  --bg:#0D1520; --panel:#142031; --ink:#E4EAF2; --muted:#9AA7B8; --line:#2A3A51; --soft:#1A283B;
+  --head-bg:#0A1A2C; --head-ink:#EEF2F7; --head-muted:#9FB0C6;
+  --accent:#7FA8E0; --accent-soft:#1C2A40;
+  --so:#5EC0D1; --gl:#9DB6DA; --sp:#E0A355; --fo:#C39AD6;
+  --ok:#71C58B; --ok-bg:#16291E; --warn:#E6A94A; --warn-bg:#35270F; --crit:#F07A6E; --crit-bg:#3A1C1B;}}
+:root[data-theme="dark"]{color-scheme:dark;
+  --gold:#D9BE55; --gold-ink:#D9BE55;
+  --bg:#0D1520; --panel:#142031; --ink:#E4EAF2; --muted:#9AA7B8; --line:#2A3A51; --soft:#1A283B;
+  --head-bg:#0A1A2C; --head-ink:#EEF2F7; --head-muted:#9FB0C6;
+  --accent:#7FA8E0; --accent-soft:#1C2A40;
+  --so:#5EC0D1; --gl:#9DB6DA; --sp:#E0A355; --fo:#C39AD6;
+  --ok:#71C58B; --ok-bg:#16291E; --warn:#E6A94A; --warn-bg:#35270F; --crit:#F07A6E; --crit-bg:#3A1C1B;}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{padding-inline:16px;max-width:1320px;margin:0 auto}
+header.top{background:var(--head-bg);color:var(--head-ink);padding-block:22px 20px}
+.kicker{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+h1{margin:6px 0 6px;font-size:26px;line-height:1.2;text-wrap:balance}
+.lede{margin:0;color:var(--head-muted);max-width:72ch;font-size:14px}
+.layout{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:20px;padding-block:20px 40px;align-items:start}
+@media (max-width:980px){.layout{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px}
+.qcol{display:grid;gap:14px}
+.step{display:grid;gap:10px}
+.step h2{margin:0;font-size:16px;display:flex;gap:10px;align-items:baseline}
+.step h2 .n{font:600 12px var(--mono);color:var(--gold-ink)}
+.help{margin:0;color:var(--muted);font-size:13px}
+.choices{display:grid;gap:8px}
+.choice{display:grid;grid-template-columns:18px 1fr;gap:10px;align-items:start;border:1px solid var(--line);border-radius:6px;padding:10px 12px;cursor:pointer;background:var(--panel)}
+.choice:hover{border-color:var(--muted)}
+.choice input{margin:3px 0 0}
+.choice b{display:block;font-size:14px}
+.choice span{font-size:13px;color:var(--muted)}
+.choice:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.q{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.q:first-of-type{border-top:0}
+.q p{margin:0;font-size:14px}
+.q .tag{font:600 10.5px var(--mono);color:var(--muted);letter-spacing:.04em;text-transform:uppercase;display:block;margin-bottom:2px}
+@media (max-width:560px){.q{grid-template-columns:1fr}}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.seg span{display:block;padding:6px 11px;font-size:13px;font-weight:600;color:var(--muted);border-left:1px solid var(--line);min-width:52px;text-align:center}
+.seg label:first-child span{border-left:0}
+.seg input:checked+span{background:var(--navy);color:#fff}
+:root[data-theme="dark"] .seg input:checked+span{background:var(--accent);color:#0B1426}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .seg input:checked+span{background:var(--accent);color:#0B1426}}
+.seg input:focus-visible+span{outline:2px solid var(--gold);outline-offset:-2px}
+.checks{display:grid;gap:6px}
+.checks label{display:grid;grid-template-columns:18px 1fr;gap:10px;font-size:14px;align-items:start}
+.checks small{display:block;color:var(--muted);font:600 10.5px var(--mono);letter-spacing:.03em}
+select{font:14px var(--sans);padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);max-width:100%}
+a{color:var(--accent)}
+.note{font-size:13px;border-radius:6px;padding:10px 12px;background:var(--soft)}
+.note.warn{background:var(--warn-bg)} .note.crit{background:var(--crit-bg)} .note.ok{background:var(--ok-bg)}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+button{font:600 13px var(--sans);border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 12px;cursor:pointer}
+button.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.rcol{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+@media (max-width:980px){.rcol{position:static}}
+.verdict{display:grid;gap:6px;border-radius:8px;padding:16px 18px;background:var(--navy);color:#fff}
+.verdict .k{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.verdict h2{margin:0;font-size:21px;text-wrap:balance}
+.verdict p{margin:0;font-size:14px;color:#D5DEEA}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.pill{font:600 11px var(--mono);border-radius:12px;padding:3px 9px;background:rgba(255,255,255,.12);color:#fff}
+.pill.crit{background:#B8322A} .pill.high{background:#A5661A} .pill.gold{background:var(--gold);color:#122C47}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--muted);margin:12px 2px}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+.stages{display:grid;gap:12px}
+.stage{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.stage > header{display:flex;gap:10px;align-items:baseline;padding:12px 16px;border-bottom:1px solid var(--line)}
+.stage > header .n{font:600 12px var(--mono);color:var(--gold-ink)}
+.stage > header h3{margin:0;font-size:15.5px}
+.acts{display:grid}
+.act{display:grid;grid-template-columns:132px 1fr;gap:12px;padding:10px 16px;border-top:1px solid var(--line)}
+.act:first-child{border-top:0}
+.role{font:600 11px var(--mono);letter-spacing:.03em;display:flex;gap:7px;align-items:flex-start;padding-top:2px}
+.act p{margin:0;font-size:14px}
+.act .id{font:600 11.5px var(--mono);color:var(--muted);white-space:nowrap}
+.act .cond{display:inline-block;margin-left:6px;font-size:11.5px;font-weight:600;color:var(--warn);background:var(--warn-bg);border-radius:4px;padding:0 6px}
+@media (max-width:560px){.act{grid-template-columns:1fr;gap:4px}}
+.hand{padding:10px 16px 14px;background:var(--soft);border-top:1px solid var(--line)}
+.hand h4{margin:0 0 6px;font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.hand label{display:grid;grid-template-columns:18px 1fr;gap:8px;font-size:13.5px;padding:2px 0}
+.forum{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+.forum td,.forum th{padding:6px 8px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+.forum th{font:600 10.5px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-top:0}
+.forum tr.on td{background:var(--accent-soft);font-weight:600}
+.tblwrap{overflow-x:auto}
+.foot{font-size:12.5px;color:var(--muted);margin-top:14px}
+.empty{color:var(--muted);font-size:14px}
+.sibs{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;margin:10px 0 0}.sibs a{color:#C8AB36;text-decoration:none;border-bottom:1px solid rgba(200,171,54,.45)}.sibs a:hover{border-bottom-color:#C8AB36}.sibs span{color:rgba(255,255,255,.6)}
+.idlink{color:inherit;text-decoration:underline;text-decoration-color:var(--gold,#C8AB36);text-underline-offset:2px}.idlink:hover{color:var(--gold,#C8AB36)}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="kicker">The Council · AI governance · corrected suite v3</div>
+    <h1>Which governance route does my AI use take?</h1>
+    <p class="lede">Answer the questions on the left. The route on the right shows only the steps your case needs, who does each one, and what to hand over before moving on. The AI Governance Lead confirms the route; this guide does not approve anything.</p>
+<nav class="sibs" aria-label="Related tools"><span>Also:</span><a href="suite-map.html">Suite map</a><a href="flow-builder.html">Flow builder</a></nav>
+  </div>
+</header>
+
+<main class="wrap layout">
+  <section class="qcol" aria-label="Questions">
+    <div class="card step" id="s1">
+      <h2><span class="n">1</span>What's happening?</h2>
+      <div class="choices" role="radiogroup" aria-label="Situation">
+        <label class="choice"><input type="radio" name="sit" value="new" id="sit-new"><div><b>A new AI use is proposed</b><span>Buying, building, commissioning or switching on an AI capability.</span></div></label>
+        <label class="choice"><input type="radio" name="sit" value="change" id="sit-change"><div><b>A use already in governance is changing</b><span>New purpose, data, supplier, model, connection, audience or action.</span></div></label>
+        <label class="choice"><input type="radio" name="sit" value="found" id="sit-found"><div><b>AI is already in use but isn't registered</b><span>Discovered, inherited or switched on without going through governance.</span></div></label>
+        <label class="choice"><input type="radio" name="sit" value="approved" id="sit-approved"><div><b>I want to use a tool that's already approved</b><span>It's on the AI Register and I want to check my use is covered.</span></div></label>
+      </div>
+    </div>
+
+    <div class="card step" id="s1b" hidden>
+      <h2><span class="n">1a</span>Does your use match the approval exactly?</h2>
+      <p class="help">Check the AIR-ID, the exact UC-ID, the approved purpose, data, users and conditions in the decision record, and that the Register shows Approved and Active.</p>
+      <div class="seg" role="radiogroup" aria-label="Use matches approval">
+        <label><input type="radio" name="match" value="yes" id="match-yes"><span>Yes</span></label>
+        <label><input type="radio" name="match" value="no" id="match-no"><span>No</span></label>
+        <label><input type="radio" name="match" value="unsure" id="match-unsure"><span>Unsure</span></label>
+      </div>
+    </div>
+
+    <div class="card step" id="s2" hidden>
+      <h2><span class="n">2</span>The ten screening questions</h2>
+      <p class="help">These are the Fast-Track Screening questions (AIG-INV-02), word for word. They are factual checks, not a score: one Yes or Unsure means full intake. Don't mark Unsure as No.</p>
+      <div id="ftq"></div>
+    </div>
+
+    <div class="card step" id="s3" hidden>
+      <h2><span class="n">3</span>A few more facts for full triage</h2>
+      <div id="actq" hidden>
+        <div class="q"><p><span class="tag">Action control</span>Does a person review each individual action before it takes effect?</p>
+          <div class="seg" role="radiogroup" aria-label="Human review of each action">
+            <label><input type="radio" name="review" value="yes" id="rev-yes"><span>Yes</span></label>
+            <label><input type="radio" name="review" value="no" id="rev-no"><span>No</span></label>
+            <label><input type="radio" name="review" value="unsure" id="rev-unsure"><span>Unsure</span></label>
+          </div></div>
+      </div>
+      <p class="help">Mandatory escalation triggers (Playbook §4.4.6). Tick any that apply. Each one sets a minimum tier.</p>
+      <div class="checks" id="trigs"></div>
+      <div class="q" style="border-top:1px solid var(--line);margin-top:6px"><p><span class="tag">Risk tier</span>If the case has already been triaged, what tier did the AI Risk Assessment Worksheet give? Otherwise leave as not yet known and use the <a href="https://kimabercromby.github.io/AIGovernanceTriage-MultiBoard/" target="_blank" rel="noopener">triage tool</a>.</p>
+        <select id="tier" aria-label="Risk tier"><option value="">Not yet known</option><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></div>
+    </div>
+
+    <div class="btnrow">
+      <button type="button" class="primary" id="copy">Copy route summary</button>
+      <button type="button" id="reset">Start again</button>
+      <button type="button" id="example">Try an example</button>
+    </div>
+    <p class="foot" id="copied" aria-live="polite"></p>
+  </section>
+
+  <section class="rcol" aria-label="Your route" aria-live="polite">
+    <div id="route"></div>
+  </section>
+</main>
+
+<script>
+(function(){
+const FT=[
+ ["Action","Can it take or initiate any action, rather than only produce information for a person to act on (for example sending communications, updating records, invoking tools/APIs, creating transactions or instructing another system)?"],
+ ["Data","Does it process personal data, special-category data, confidential/restricted data, or create profiles or inferences about identifiable people?"],
+ ["Individual decisions","Could its output influence or support a decision about a resident, employee or other individual, even where a human makes the final decision?"],
+ ["Public service impact","Could it affect access to services, benefits, housing, care, safeguarding, enforcement, eligibility or another statutory function?"],
+ ["External interaction","Does it interact directly with residents, staff or the public, or publish content externally?"],
+ ["Live connections","Does it connect to live databases, operational systems, APIs, credentials or tools, including any write access?"],
+ ["Change and agency","Is it novel, first-of-type, materially changed, fine-tuned, self-learning, agentic, multi-agent, or using dynamic model/tool routing?"],
+ ["Plausible harm","Could an incorrect output or action cause material legal, equality, privacy, security, safety, financial, service-delivery or reputational harm?"],
+ ["Supplier dependence","Does it create significant procurement exposure, a new supplier dependency or material operational reliance on a supplier/service?"],
+ ["Unknowns","Is anything about its data, capability, integration, authority, intended use or operating environment currently unknown or uncertain?"]];
+const TRIG=[
+ ["special","Processing of special category personal data (UK GDPR)","High"],
+ ["vulnerable","Use in relation to vulnerable residents (children, adults with care/support needs, people experiencing homelessness)","High"],
+ ["housing","Directly influences housing allocation, social care assessments or homelessness prevention decisions","High"],
+ ["novel","Novel or first-of-type AI deployment with no prior Council operational experience","High"],
+ ["statutory","Produces or directly informs statutory decisions","Critical"],
+ ["change","Significant supplier, model, data or scope change that materially alters the risk profile","High"]];
+const ROLES={SO:["Service Owner","var(--so)"],GL:["AI Governance Lead","var(--gl)"],SP:["Specialists","var(--sp)"],FO:["Decision forum","var(--fo)"],ALL:["Anyone using AI","var(--muted)"]};
+const FORUM=[["Low","Service Owner and Service Manager","Register entry, basic assessment, policy compliance review"],
+ ["Medium","Relevant delivery forum, under delegated authority (Assurance Board reviews and recommends)","Structured risk assessment, governance review, monitoring requirements"],
+ ["High","Relevant delivery forum, under delegated authority (Assurance Board formal recommendation and single assurance opinion)","Enhanced assessment; DPIA where screening requires; EIA; Legal and Security review; Responsible AI Assessment"],
+ ["Critical","Relevant delivery forum, with SRO and Executive Sponsor oversight; escalation to Cabinet Member, Cabinet and Audit and Risk Committee","All High controls plus Human Rights Assessment, executive oversight, independent challenge and formal reporting"]];
+const RANK={Low:1,Medium:2,High:3,Critical:4};
+
+// build question UI
+const ftq=document.getElementById('ftq');
+FT.forEach((q,i)=>{ftq.insertAdjacentHTML('beforeend',`<div class="q"><p><span class="tag">${i+1} · ${q[0]}</span>${q[1]}</p><div class="seg" role="radiogroup" aria-label="Question ${i+1}">${['yes','no','unsure'].map(v=>`<label><input type="radio" name="ft${i}" value="${v}" id="ft${i}-${v}"><span>${v[0].toUpperCase()+v.slice(1)}</span></label>`).join('')}</div></div>`)});
+const trigs=document.getElementById('trigs');
+TRIG.forEach(t=>trigs.insertAdjacentHTML('beforeend',`<label><input type="checkbox" id="tr-${t[0]}" value="${t[0]}"><span>${t[1]}<small>MINIMUM ${t[2].toUpperCase()}</small></span></label>`));
+
+const $=s=>document.querySelector(s);
+const val=n=>{const e=document.querySelector(`input[name="${n}"]:checked`);return e?e.value:''};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function state(){
+  const s={sit:val('sit'),match:val('match'),ft:FT.map((_,i)=>val('ft'+i)),review:val('review'),tier:$('#tier').value,trig:TRIG.filter(t=>$('#tr-'+t[0]).checked).map(t=>t[0])};
+  s.answered=s.ft.filter(Boolean).length;
+  s.anyYes=s.ft.some(a=>a==='yes'||a==='unsure');
+  s.allNo=s.answered===10&&!s.anyYes;
+  s.act=s.ft[0]; s.canAct=s.act==='yes'; s.mayAct=s.act==='unsure';
+  s.personal=s.ft[1]==='yes'||s.ft[1]==='unsure'||s.trig.includes('special');
+  s.individuals=s.ft[2]==='yes'||s.ft[3]==='yes';
+  s.publicFacing=s.ft[4]==='yes';
+  s.supplier=s.ft[8]==='yes'||s.ft[8]==='unsure';
+  s.agentTrig=(s.canAct||s.mayAct)&&(s.review==='no');
+  s.trigs=[...s.trig];if(s.agentTrig)s.trigs.push('agentic');
+  s.floor=(s.trigs.includes('statutory')||s.agentTrig)?'Critical':(s.trigs.length?'High':'');
+  s.effTier=s.tier&&s.floor?(RANK[s.tier]>=RANK[s.floor]?s.tier:s.floor):(s.tier||s.floor||'');
+  s.floored=s.floor&&s.tier&&RANK[s.floor]>RANK[s.tier];
+  return s;
+}
+function show(){
+  const s=state();
+  $('#s1b').hidden=s.sit!=='approved';
+  const needScreen=s.sit&&!(s.sit==='approved'&&(s.match==='yes'||!s.match));
+  $('#s2').hidden=!needScreen;
+  const full=needScreen&&(s.anyYes||s.sit==='found');
+  $('#s3').hidden=!full;
+  $('#actq').hidden=!(s.canAct||s.mayAct);
+  render(s,needScreen,full);
+}
+function act(role,text,id,cond){return {role,text,id,cond}}
+const DOCS={"AIG-GOV-02": "docs/AIG-GOV-02.pdf", "AIG-AGT-01": "docs/AIG-AGT-01.pdf", "AIG-AGT-02": "docs/AIG-AGT-02.pdf", "AIG-AGT-03": "docs/AIG-AGT-03.pdf", "AIG-AGT-05": "docs/AIG-AGT-05.pdf", "AIG-AGT-06": "docs/AIG-AGT-06.pdf", "AIG-AIMS-01": "docs/AIG-AIMS-01.pdf", "AIG-AIMS-11": "docs/AIG-AIMS-11.pdf", "AIG-AIMS-12": "docs/AIG-AIMS-12.pdf", "AIG-ASS-03": "docs/AIG-ASS-03.pdf", "AIG-ASS-04": "docs/AIG-ASS-04.pdf", "AIG-ASS-05": "docs/AIG-ASS-05.pdf", "AIG-ASS-06": "docs/AIG-ASS-06.pdf", "AIG-ASS-07": "docs/AIG-ASS-07.pdf", "AIG-ASS-08": "docs/AIG-ASS-08.pdf", "AIG-ASS-09": "docs/AIG-ASS-09.pdf", "AIG-ASS-10": "docs/AIG-ASS-10.pdf", "AIG-ASS-11": "docs/AIG-ASS-11.pdf", "AIG-ASS-12": "docs/AIG-ASS-12.pdf", "AIG-DEC-01": "docs/AIG-DEC-01.pdf", "AIG-DEC-02": "docs/AIG-DEC-02.pdf", "AIG-DEC-03": "docs/AIG-DEC-03.pdf", "AIG-GOV-01": "docs/AIG-GOV-01.pdf", "AIG-GOV-03": "docs/AIG-GOV-03.pdf", "AIG-GOV-04": "docs/AIG-GOV-04.pdf", "AIG-GOV-05": "docs/AIG-GOV-05.pdf", "AIG-GOV-06": "docs/AIG-GOV-06.pdf", "AIG-INV-01": "docs/AIG-INV-01.pdf", "AIG-INV-02": "docs/AIG-INV-02.pdf", "AIG-INV-03": "docs/AIG-INV-03.pdf", "AIG-OPS-01": "docs/AIG-OPS-01.pdf", "AIG-OPS-03": "docs/AIG-OPS-03.pdf", "AIG-OPS-04": "docs/AIG-OPS-04.pdf", "AIG-OPS-05": "docs/AIG-OPS-05.pdf", "AIG-AGT-04": "docs/AIG-AGT-04.pdf", "AIG-AIMS-02": "docs/AIG-AIMS-02.pdf", "AIG-AIMS-03": "docs/AIG-AIMS-03.pdf", "AIG-AIMS-04": "docs/AIG-AIMS-04.pdf", "AIG-AIMS-05": "docs/AIG-AIMS-05.pdf", "AIG-AIMS-06": "docs/AIG-AIMS-06.pdf", "AIG-AIMS-07": "docs/AIG-AIMS-07.pdf", "AIG-AIMS-08": "docs/AIG-AIMS-08.pdf", "AIG-AIMS-09": "docs/AIG-AIMS-09.pdf", "AIG-AIMS-10": "docs/AIG-AIMS-10.pdf", "AIG-AIMS-13": "docs/AIG-AIMS-13.pdf", "AIG-ASS-01": "docs/AIG-ASS-01.pdf", "AIG-ASS-02": "docs/AIG-ASS-02.pdf", "AIG-DEC-04": "docs/AIG-DEC-04.pdf", "AIG-INV-04": "docs/AIG-INV-04.pdf", "AIG-INV-05": "docs/AIG-INV-05.pdf", "AIG-OPS-02": "docs/AIG-OPS-02.pdf", "AIG-OPS-06": "docs/AIG-OPS-06.pdf", "UCV": "docs/UCV.pdf"};
+function idLinks(s){return esc(s).replace(/AIG-[A-Z]+-\d+/g,m=>DOCS[m]?`<a class="idlink" href="${DOCS[m]}" target="_blank" rel="noopener" title="Open ${m} (PDF)">${m}</a>`:m)}
+function tierAtLeast(s,t){return s.effTier?RANK[s.effTier]>=RANK[t]:null}
+function condTier(s,t){const r=tierAtLeast(s,t);return r===null?`if tier is ${t} or above`:(r?'':null)}
+
+function buildRoute(s,needScreen,full){
+  if(!s.sit) return null;
+  if(s.sit==='approved'&&s.match==='yes'){
+    return {kind:'ok',k:'Your route',title:'Use it within the approved scope',sub:'No new governance step is needed while your use matches the approval exactly.',pills:[],stages:[
+      {t:'Before each use',acts:[
+        act('ALL','Check the AI Register shows Governance Approval Status Approved and Status Active, and that your use matches the approved purpose, conditions and any required training.','AIG-INV-04'),
+        act('ALL','Check the AIR-ID and exact UC-ID, purpose and conditions in the decision record. An Approved/Active system row alone is not enough.','AIG-DEC-03'),
+        act('ALL','Check outputs and stay accountable for what you use or publish. Don\'t put special-category or highly sensitive data in without data protection approval, or make a final statutory decision without meaningful human review.','AIG-INV-01')],
+       hand:['Use matches the approved purpose, data, users and conditions','Required training done']},
+      {t:'If anything changes or goes wrong',acts:[
+        act('ALL','If the use is new, changed or not clearly approved, pause that use and contact the AI Governance Lead.','AIG-INV-01'),
+        act('SO','Report changes and incidents against the AIR-ID and each affected UC-ID.','AIG-OPS-03')],hand:[]}]};
+  }
+  if(!needScreen) return null;
+  if(s.answered<10&&!s.anyYes&&s.sit!=='found') return {kind:'pending',answered:s.answered};
+
+  // Light-touch route
+  if(s.allNo&&s.sit!=='found'){
+    return {kind:'light',k:'Provisional route',title:'Light-touch: Fast-Track Screening',sub:'All ten answers are No, so this use is provisionally eligible for the light-touch route. Only the AI Governance Lead can confirm it.',pills:[['Light-touch · Low · Priority 4','gold']],stages:[
+      {t:'Screen and register',acts:[
+        act('SO','Submit Fast-Track Screening with all ten answers and the facts about the tool.','AIG-INV-02'),
+        act('GL','Validate that every answer is No, the submission is complete and no mandatory trigger applies. Create the light AI Register row: AIR-ID, name, owner, purpose, lifecycle, Light-touch / Low / Priority 4 and the next review date.','AIG-INV-04'),
+        act('GL','Complete equality, human rights and data protection screening. A low classification doesn\'t waive these duties.','AIG-ASS-03')],
+       hand:['All ten answers evidenced, none guessed','Tool facts and supplier details supplied','Named Service Owner and review date agreed']},
+      {t:'Approve and start',acts:[
+        act('SO','Low-tier approval sits with the Service Owner and Service Manager. Record the decision for this UC-ID before use.','AIG-DEC-03'),
+        act('SO','Keep a proportionate Model Card for the model.','AIG-ASS-09')],hand:['Decision recorded for this UC-ID','The screen alone does not allow use']},
+      {t:'Operate and review',acts:[
+        act('SO','Confirm it is still low-risk at the review date.','AIG-INV-02'),
+        act('SO','Tell governance about any new data source, connection, audience, supplier, model, decision use or action. It may end light-touch eligibility and need full re-triage before the changed use continues.','AIG-INV-03')],hand:[]}]};
+  }
+
+  // Full route
+  const pills=[];
+  if(s.effTier) pills.push([`${s.effTier} tier${s.floored||(!s.tier&&s.floor)?' (minimum from triggers)':''}`, s.effTier==='Critical'?'crit':s.effTier==='High'?'high':'']);
+  else pills.push(['Tier set at triage','']);
+  if(s.canAct) pills.push(['Can act: agentic triage','']); else if(s.mayAct) pills.push(['May act: governance to confirm','']);
+  if(s.trigs.length) pills.push([`${s.trigs.length} escalation trigger${s.trigs.length>1?'s':''}`,'high']);
+  const stages=[];
+  const intake=[];
+  if(s.sit==='found') intake.push(act('SO','Disclose it promptly through Intake: describe when it was first used, how, and who has been exposed. Don\'t treat any existing approval as covering this use.','AIG-INV-03'));
+  if(s.sit==='change') intake.push(act('SO','Tell the AI Governance Lead before the changed use proceeds, and supply the change facts. The case re-enters on the same AIR-ID.','AIG-INV-03'));
+  intake.push(act('SO','Complete Service Owner sections 1 to 7 of the AI Intake Form: tool and version, purpose and public benefit, supplier, data, people affected, outputs, decisions influenced, actions, connected tools, human control and potential harm. Mark unknowns as unknown.','AIG-INV-03'));
+  intake.push(act('GL','Complete the screening, register and pathway sections. Issue or confirm the permanent AIR-ID and a UC-ID for this use.','AIG-INV-04'));
+  if(s.sit==='found') intake.push(act('GL','Decide on investigation, re-triage, extra controls or suspension while the case is assessed.','AIG-INV-01'));
+  stages.push({t:'Intake and registration',acts:intake,hand:['Product description','Data-flow sketch','Supplier information','Any existing assessment or decision record','References given once, against the AIR-ID']});
+
+  const tri=[act('GL','Run AGPI for governance priority and the AI Risk Assessment Worksheet for inherent and residual risk. Apply any trigger floor and issue the case-specific Governance Checklist with the confirmed tier, route and contact.','AIG-ASS-01 · AIG-ASS-02 · AIG-ASS-03'),
+    act('SO','Check the priority and risk assumptions reflect how the service will actually use it.','AIG-ASS-02')];
+  if(s.canAct||s.mayAct){
+    tri.push(act('GL','Run Agentic Triage (five agency dimensions, agency tier, route) and open the Agent Record / ASBOM.','AIG-AGT-03 · AIG-AGT-04',s.mayAct?'if it can act':''));
+    tri.push(act('SO','Describe the approved purpose, tools, credentials, delegation, action limits, intervention and rollback. Provide demonstrations and test results.','AIG-AGT-04',s.mayAct?'if it can act':''));
+  }
+  stages.push({t:'Triage',acts:tri,hand:['Impact, likelihood, failure modes and controls explained','Who can intervene is named'].concat(s.canAct?['Action limits, credentials and rollback described']:[])});
+
+  const as=[];
+  as.push(act('SP','Equality, human rights and data protection screening for every case, whatever the tier.','AIG-ASS-03'));
+  const ra=condTier(s,'Medium'); if(ra!==null) as.push(act('SO','Complete the Responsible AI Assessment. The Governance Lead quality assures it.','AIG-ASS-04',ra));
+  if(s.personal) as.push(act('SP','DPO advises on DPIA screening. Complete a DPIA when the checklist requires it; the Service Owner supplies purpose, data flows, retention, risks and safeguards.','AIG-ASS-05','personal data'));
+  const eia=condTier(s,'High'); if(eia!==null) as.push(act('SP','Equality Impact Assessment, reviewed by the Equalities lead. Required for High and Critical cases.','AIG-ASS-06',eia));
+  else as.push(act('SP','Equality Impact Assessment where the checklist assigns it.','AIG-ASS-06','if assigned'));
+  const hra=condTier(s,'Critical');
+  if(hra!==null) as.push(act('SP','Legal Services leads the Human Rights Assessment.','AIG-ASS-07',hra));
+  else if(s.individuals||s.trigs.includes('statutory')) as.push(act('SP','Legal Services leads a Human Rights Assessment when triggered by rights, statutory decisions or legal uncertainty.','AIG-ASS-07','if triggered'));
+  const lg=condTier(s,'High'); if(lg!==null) as.push(act('SP','Legal advice recorded.','AIG-ASS-03',lg));
+  if(s.canAct||s.mayAct) as.push(act('SP','Security Review including the OWASP ASI01 to ASI10 tests for an action-capable agent, at any tier. Record runtime control evidence in the ASBOM.','AIG-ASS-11 · AIG-AGT-04',s.mayAct?'if it can act':'can act'));
+  else { const sec=condTier(s,'High'); if(sec!==null||s.supplier) as.push(act('SP','AI Security Review.','AIG-ASS-11',s.supplier&&sec!==''?'supplier or security exposure':sec)); }
+  if(s.supplier) as.push(act('SP','Procurement runs the Supplier AI Due-Diligence Questionnaire; the Service Owner obtains supplier answers, architecture and contract facts.','AIG-ASS-08','procured'));
+  as.push(act('SO','Complete the Model Card for each model.','AIG-ASS-09'));
+  as.push(act('GL','Check ATRS reportability (the standard is voluntary for local authorities).','AIG-ASS-10'));
+  as.push(act('GL','Agree the monitoring plan and thresholds'+(s.canAct?', including agentic thresholds, before go-live':'')+'.','AIG-OPS-02'));
+  stages.push({t:'Assessments the checklist assigns',note:'You only complete what the Governance Checklist assigns to you. "Proportionate" means evidenced decisions about applicability, not skipping a triggered check.',acts:as,hand:['Each assigned assessment complete or marked N/A with written reasons','Evidence referenced by AIR-ID, not copied','Specialist sign-offs requested']});
+
+  const dec=[act('GL','Route the gate to the right forum using the Gate Map and prepare the Decision-Ready Paper.','AIG-DEC-01 · AIG-DEC-02'),
+    act('SO','Confirm the case is accurate: purpose, configuration, affected people, human oversight, known limits and residual risks. You cannot self-waive an unresolved specialist issue.','AIG-DEC-02'),
+    act('FO',s.effTier?FORUM.find(f=>f[0]===s.effTier)[1]+'.':'The forum depends on the confirmed tier (see table).','AIG-GOV-06'),
+    act('GL','Record the decision, conditions and next gate in the Decision Record and Gate Log. Approval with conditions doesn\'t close those conditions.','AIG-DEC-03 · AIG-DEC-04')];
+  stages.push({t:'Decision',acts:dec,forum:true,hand:['Specialists have signed off their areas','Conditions have owners and due dates']});
+
+  const go=[act('SO','Work through the Deployment and Rollout Plan with governance: readiness, staff training, human oversight, monitoring, rollback, and closure or formal acceptance of each condition.','AIG-OPS-01'),
+    act('GL','Confirm the Register shows Approved and Active for the actual configuration and this UC-ID. Operational use starts only then.','AIG-INV-04')];
+  if(s.canAct||s.mayAct) go.push(act('SP','Each required runtime control Implemented and Evidenced, or an authorised time-bounded compensating control. Otherwise it is No-go for consequential production autonomy.','AIG-AGT-04 · AIG-OPS-01',s.mayAct?'if it can act':''));
+  stages.push({t:'Go-live',acts:go,hand:['Every condition closed or formally accepted','Rollback tested','Register Approved and Active']});
+
+  const op=[act('SO','Monitor the assigned measures: performance, errors, fairness, complaints, human overrides, supplier performance and condition breaches.','AIG-OPS-02'),
+    act('SO','Harm, suspected breach, unsafe output or unexpected action: contain or pause the use, protect residents, report it and link the incident to the AIR-ID.','AIG-OPS-03')];
+  if(s.individuals||s.publicFacing) op.push(act('SO','Make sure people can challenge an AI-influenced decision and get a fresh human review.','AIG-OPS-04',s.individuals?'affects individuals':'public-facing'));
+  if(s.canAct) op.push(act('GL','Record each consequential action with its Action ID against the exact ASBOM version.','AIG-AGT-06'));
+  op.push(act('SO','Tell the AI Governance Lead before any change to model, supplier, data, tool, authority or purpose proceeds; it re-enters triage.','AIG-INV-03'));
+  stages.push({t:'Operate and monitor',acts:op,hand:[]});
+
+  let title='Full intake and triage', sub='At least one answer was Yes or Unsure, so this use needs full intake and triage.';
+  if(s.sit==='found'){title='Retrospective intake';sub='AI already in use always goes through full Intake, never Fast Track.';}
+  if(s.canAct||s.mayAct) {title+=' with Agentic Triage'; sub+=' It can (or may) act, so Agentic Triage is mandatory.';}
+  if(s.floor) sub+=` The triggers ticked set a minimum tier of ${s.floor}.`;
+  return {kind:'full',k:'Your route',title,sub,pills,stages};
+}
+
+function render(s,needScreen,full){
+  const R=buildRoute(s,needScreen,full);
+  const el=$('#route');
+  if(!R){el.innerHTML=`<div class="card empty">${s.sit==='approved'?'Answer question 1a to see your route.':'Choose what\'s happening to start.'}</div>${legendHTML()}${sampleNote()}`;return}
+  if(R.kind==='pending'){el.innerHTML=`<div class="card"><p class="empty" style="margin:0">Answer all ten screening questions (${R.answered} of 10 so far). One Yes or Unsure is enough to show the full route.</p></div>`;return}
+  const head=`<div class="verdict"><div class="k">${esc(R.k)}</div><h2>${esc(R.title)}</h2><p>${esc(R.sub)}</p><div class="pills">${R.pills.map(p=>`<span class="pill ${p[1]}">${esc(p[0])}</span>`).join('')}</div></div>`;
+  const stg=R.stages.map((st,i)=>`<article class="stage"><header><span class="n">${String(i+1).padStart(2,'0')}</span><h3>${esc(st.t)}</h3></header>
+    ${st.note?`<div class="note" style="margin:10px 16px 0">${esc(st.note)}</div>`:''}
+    <div class="acts">${st.acts.map(a=>`<div class="act"><div class="role" style="color:${ROLES[a.role][1]}"><span class="dot" style="background:${ROLES[a.role][1]};margin-top:2px"></span>${ROLES[a.role][0]}</div><p>${esc(a.text)} <span class="id">${idLinks(a.id)}</span>${a.cond?`<span class="cond">${esc(a.cond)}</span>`:''}</p></div>`).join('')}</div>
+    ${st.forum?forumHTML(s):''}
+    ${st.hand&&st.hand.length?`<div class="hand"><h4>Before moving on</h4>${st.hand.map((h,j)=>`<label><input type="checkbox" id="h${i}-${j}"><span>${esc(h)}</span></label>`).join('')}</div>`:''}
+  </article>`).join('');
+  el.innerHTML=head+legendHTML()+`<div class="stages">${stg}</div><p class="foot">Built from the corrected suite (v3): Staff Guide AIG-INV-01, Fast-Track Screening AIG-INV-02, Governance Checklist AIG-ASS-03 and the triggers in Playbook §4.4.6. Draft for Council review; the AI Governance Lead confirms every route and tier.</p>`;
+  window.__route=R;
+}
+function forumHTML(s){return `<div class="hand" style="background:var(--panel)"><h4>Who approves, by tier</h4><div class="tblwrap"><table class="forum"><thead><tr><th>Tier</th><th>Where approval is made</th><th>Required activities</th></tr></thead><tbody>${FORUM.map(f=>`<tr class="${s.effTier===f[0]?'on':''}"><td>${f[0]}</td><td>${esc(f[1])}</td><td>${esc(f[2])}</td></tr>`).join('')}</tbody></table></div></div>`}
+function legendHTML(){return `<div class="legend">${['SO','GL','SP','FO'].map(k=>`<span><i class="dot" style="background:${ROLES[k][1]}"></i>${ROLES[k][0]}</span>`).join('')}</div>`}
+function sampleNote(){return `<div class="card" style="margin-top:4px"><p class="help" style="margin:0">Not sure where to start? Choose <b>Try an example</b> to load a sample case: an agent that updates housing repair records.</p></div>`}
+
+document.addEventListener('change',show);
+$('#reset').onclick=()=>{document.querySelectorAll('input').forEach(i=>{i.checked=false});$('#tier').value='';$('#copied').textContent='';show();window.scrollTo({top:0,behavior:'smooth'})};
+$('#example').onclick=()=>{$('#reset').onclick();$('#sit-new').checked=true;['yes','yes','yes','yes','no','yes','yes','yes','no','no'].forEach((v,i)=>{$(`#ft${i}-${v}`).checked=true});$('#rev-no').checked=true;$('#tr-vulnerable').checked=true;show();$('#copied').textContent='Example loaded: a new agent that updates housing repair records without a person checking each update.'};
+$('#copy').onclick=async()=>{
+  const R=window.__route; const s=state();
+  if(!R||!R.stages){$('#copied').textContent='Answer the questions first to build a route.';return}
+  const lines=[`AI governance route: ${R.title}`,R.sub,R.pills.map(p=>p[0]).join(' · '),''];
+  R.stages.forEach((st,i)=>{lines.push(`${i+1}. ${st.t}`);st.acts.forEach(a=>lines.push(`   - ${ROLES[a.role][0]}: ${a.text} [${a.id}]${a.cond?` (${a.cond})`:''}`));if(st.hand&&st.hand.length)lines.push(`   Before moving on: ${st.hand.join('; ')}`);lines.push('')});
+  lines.push('Draft suite for Council review. The AI Governance Lead confirms the route and tier.');
+  const txt=lines.join('\n');
+  try{await navigator.clipboard.writeText(txt);$('#copied').textContent='Route summary copied.'}
+  catch(e){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();$('#copied').textContent='Copying isn\'t available here. The summary is selected below; press Ctrl+C to copy.';ta.style.width='100%';ta.style.height='160px';$('#copied').after(ta)}
+};
+show();
+})();
+</script>
