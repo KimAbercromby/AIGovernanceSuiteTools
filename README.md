@@ -1,6 +1,6 @@
 # AI Governance Suite Tools
 
-Interactive navigation tools for the 52-artefact AI governance suite (v3.5, 29 September 2026). Draft for Council review.
+Interactive navigation tools for the 52-artefact AI governance suite (v3.9, 30 September 2026: Playbook v19.9.10, README/Index v1.25). Draft for Council review.
 
 These tools approve nothing. The AI Governance Lead confirms every route and tier, and every decision sits with the delegated decision-maker named in the suite.
 
@@ -18,7 +18,7 @@ Everything is plain HTML with no build step. Open `index.html` in a browser, or 
 
 ## Roles are a pilot design
 
-The role view comes from the draft role table (`AIG_Role_Table_pilot_2026-09-29.xlsx`, kept outside this repo). It is **not adopted**.
+The role view comes from the draft role table (`AIG_Role_Table_pilot_2026-09-29.xlsx`, kept outside this repo), checked against the v3.9 suite on 30 September 2026. Positions that v3.9 now settles are marked as settled, with their source. It is **not adopted**.
 
 - Where the suite's own text names who does, decides or contributes, the tools show that.
 - Where the suite is silent, the tools show a proposed pilot position, marked **?**.
