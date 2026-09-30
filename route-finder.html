@@ -123,7 +123,7 @@ button.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
 
 <header class="top">
   <div class="wrap">
-    <div class="kicker">The Council · AI governance · suite v3.9 · Playbook v19.9.10 · README/Index GOV-01/03 v1.25 · Gate Map DEC-01 v1.6 · Agentic Triage AGT-03 v1.2</div>
+    <div class="kicker">The Council · AI governance · suite v3.9.1 · Playbook v19.9.11 · README/Index GOV-01/03 v1.26 · Gate Map DEC-01 v1.7 · Agentic Triage AGT-03 v1.3 · Risk Worksheet ASS-02 v1.9 · Rollout Plan OPS-01 v1.6</div>
     <h1>Which governance route does my AI use take?</h1>
     <p class="lede">Answer the questions on the left. The route on the right shows only the steps your case needs, who does each one, and what to hand over before moving on. The AI Governance Lead confirms the route; this guide does not approve anything.</p>
 <nav class="sibs" aria-label="Related tools"><span>Also:</span><a href="suite-map.html">Suite map</a><a href="flow-builder.html">Flow builder</a></nav>
@@ -406,7 +406,7 @@ function buildRoute(s,needScreen,full){
   dec.push(act('GL','Record the applicable gates below in the Gate Plan and mark N/A gates there with reasons. Gate 0 (intake) is covered by stage 1.','AIG-DEC-04'));
   stages.push({t:'Decision',note:dnote,acts:dec,gates:gatePlan(s),forum:true,hand:['Specialists have signed off their areas','Conditions have owners and due dates'].concat(s.canAct?['Agentic control checkpoints evidenced for Gate 2']:[])});
 
-  const go=[act('SO','Work through the Deployment and Rollout Plan with governance: readiness, staff training, human oversight, monitoring, rollback, and closure or formal acceptance of each condition.','AIG-OPS-01'),
+  const go=[act('SO','Work through the Deployment and Rollout Plan with governance: readiness, staff training, human oversight, monitoring, rollback and fallback (section 8 also asks whether the service is a prioritised activity in the Council’s business continuity plan and, if so, for the plan reference; proposed), and closure or formal acceptance of each condition.','AIG-OPS-01'),
     act('GL','Confirm the Register shows Approved and Active for the actual configuration and this UC-ID. Operational use starts only then.','AIG-INV-04')];
   if(s.canAct||s.mayAct) go.push(act('SP','Each required runtime control Implemented and Evidenced, or an authorised time-bounded compensating control. Otherwise it is No-go for consequential production autonomy.','AIG-AGT-04 · AIG-OPS-01',s.mayAct?'if it can act':''));
   if(s.canAct||s.mayAct) go.push(act('FO','Gate 6 decision: the go-live decision-maker grants the permitted autonomy level for this UC-ID and re-confirms the agentic control checkpoints. The agent runs only at the permitted level.','AIG-DEC-03 · AIG-AGT-04',s.mayAct?'if it can act':''));
@@ -445,7 +445,7 @@ function render(s,needScreen,full){
     ${st.forum?forumHTML(s):''}
     ${st.hand&&st.hand.length?`<div class="hand"><h4>Before moving on</h4>${st.hand.map((h,j)=>`<label><input type="checkbox" id="h${i}-${j}"><span>${esc(h)}</span></label>`).join('')}</div>`:''}
   </article>`).join('');
-  el.innerHTML=head+legendHTML()+`<div class="stages">${stg}</div><p class="foot">Built from suite v3.9 (Playbook AIG-GOV-02 v19.9.10; Gate Map AIG-DEC-01 v1.6, including its Agentic pathway; Agentic Triage AIG-AGT-03 v1.2): Staff Guide to Registering and Governing AI AIG-INV-01, AI Fast-Track Screening AIG-INV-02, AI Governance Checklist AIG-ASS-03, the Approval and Assurance Matrix in Playbook §3.10.1 and the triggers in Playbook §4.4.6. Draft for Council review; the AI Governance Lead confirms every route and tier.</p>`;
+  el.innerHTML=head+legendHTML()+`<div class="stages">${stg}</div><p class="foot">Built from suite v3.9.1 (Playbook AIG-GOV-02 v19.9.11; Gate Map AIG-DEC-01 v1.7, including its Agentic pathway; Agentic Triage AIG-AGT-03 v1.3; Deployment and Rollout Plan AIG-OPS-01 v1.6): Staff Guide to Registering and Governing AI AIG-INV-01, AI Fast-Track Screening AIG-INV-02, AI Governance Checklist AIG-ASS-03, the Approval and Assurance Matrix in Playbook §3.10.1 and the triggers in Playbook §4.4.6. Draft for Council review; the AI Governance Lead confirms every route and tier.</p>`;
   window.__route=R;
 }
 function forumHTML(s){return `<div class="hand" style="background:var(--panel)"><h4>Who decides, by tier (Playbook §3.10.1)</h4><div class="tblwrap"><table class="forum"><thead><tr><th>Tier</th><th>Delegated authority deciding each UC-ID</th><th>Use-specific governance response</th></tr></thead><tbody>${FORUM.map(f=>`<tr class="${s.effTier===f[0]?'on':''}"><td>${f[0]}</td><td>${esc(f[1])}</td><td>${esc(f[2])}</td></tr>`).join('')}</tbody></table></div></div>`}
