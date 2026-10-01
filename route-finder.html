@@ -123,7 +123,7 @@ button.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
 
 <header class="top">
   <div class="wrap">
-    <div class="kicker">The Council · AI governance · suite v3.9.3 · Playbook v19.9.13 · README/Index GOV-01/03 v1.28 · Gate Map DEC-01 v1.9 · Agentic Triage AGT-03 v1.4 · Risk Worksheet ASS-02 v1.10 · Rollout Plan OPS-01 v1.8</div>
+    <div class="kicker">The Council · AI governance · suite v3.9.4 · Playbook v19.9.14 · README/Index GOV-01/03 v1.29 · Gate Map DEC-01 v1.9 · Agentic Triage AGT-03 v1.4 · Risk Worksheet ASS-02 v1.10 · Rollout Plan OPS-01 v1.8</div>
     <h1>Which governance route does my AI use take?</h1>
     <p class="lede">Answer the questions on the left. The route on the right shows only the steps your case needs, who does each one, and what to hand over before moving on. The AI Governance Lead confirms the route; this guide does not approve anything.</p>
 <nav class="sibs" aria-label="Related tools"><span>Also:</span><a href="suite-map.html">Suite map</a><a href="flow-builder.html">Flow builder</a></nav>
@@ -463,7 +463,7 @@ function render(s,needScreen,full){
     ${st.forum?forumHTML(s):''}
     ${st.hand&&st.hand.length?`<div class="hand"><h4>Before moving on</h4>${st.hand.map((h,j)=>`<label><input type="checkbox" id="h${i}-${j}"><span>${esc(h)}</span></label>`).join('')}</div>`:''}
   </article>`).join('');
-  el.innerHTML=head+legendHTML()+`<div class="stages">${stg}</div><p class="foot">Built from suite v3.9.3 (Playbook AIG-GOV-02 v19.9.13; Gate Map AIG-DEC-01 v1.9, including its Agentic pathway and Gate 4 rule; Agentic Triage AIG-AGT-03 v1.4; Security Review AIG-ASS-11 v1.7; Deployment and Rollout Plan AIG-OPS-01 v1.8; Monitoring Log AIG-OPS-02 v1.6): Staff Guide to Registering and Governing AI AIG-INV-01, AI Fast-Track Screening AIG-INV-02, AI Governance Checklist AIG-ASS-03, the Approval and Assurance Matrix in Playbook §3.10.1 and the triggers in Playbook §4.4.6. Draft for Council review; the AI Governance Lead confirms every route and tier.</p>`;
+  el.innerHTML=head+legendHTML()+`<div class="stages">${stg}</div><p class="foot">Built from suite v3.9.4 (Playbook AIG-GOV-02 v19.9.14; Gate Map AIG-DEC-01 v1.9, including its Agentic pathway and Gate 4 rule; Agentic Triage AIG-AGT-03 v1.4; Security Review AIG-ASS-11 v1.8; Deployment and Rollout Plan AIG-OPS-01 v1.8; Monitoring Log AIG-OPS-02 v1.6): Staff Guide to Registering and Governing AI AIG-INV-01, AI Fast-Track Screening AIG-INV-02, AI Governance Checklist AIG-ASS-03, the Approval and Assurance Matrix in Playbook §3.10.1 and the triggers in Playbook §4.4.6. Draft for Council review; the AI Governance Lead confirms every route and tier.</p>`;
   window.__route=R;
 }
 function forumHTML(s){return `<div class="hand" style="background:var(--panel)"><h4>Who decides, by tier (Playbook §3.10.1)</h4><div class="tblwrap"><table class="forum"><thead><tr><th>Tier</th><th>Delegated authority deciding each UC-ID</th><th>Use-specific governance response</th></tr></thead><tbody>${FORUM.map(f=>`<tr class="${s.effTier===f[0]?'on':''}"><td>${f[0]}</td><td>${esc(f[1])}</td><td>${esc(f[2])}</td></tr>`).join('')}</tbody></table></div></div>`}

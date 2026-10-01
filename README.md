@@ -1,6 +1,6 @@
 # AI Governance Suite Tools
 
-Interactive navigation tools for the 52-artefact AI governance suite (v3.9.3, 1 October 2026: Playbook v19.9.13, README/Index v1.28). Draft for Council review.
+Interactive navigation tools for the 52-artefact AI governance suite (v3.9.4, 1 October 2026: Playbook v19.9.14, README/Index v1.29). Draft for Council review.
 
 These tools approve nothing. The AI Governance Lead confirms every route and tier, and every decision sits with the delegated decision-maker named in the suite.
 
