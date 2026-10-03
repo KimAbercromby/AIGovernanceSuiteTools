@@ -1,23 +1,22 @@
-%PDF-1.4
+%PDF-1.7
 %‚„œ”
 1 0 obj
+<<
+/Producer (pypdf)
+/Title (AIG\055ASS\05501 AI Governance Priority Index \050AGPI\051 Triage Tool \204 workbook headings)
+>>
+endobj
+2 0 obj
 <<
 /Type /Pages
 /Count 1
 /Kids [ 4 0 R ]
 >>
 endobj
-2 0 obj
-<<
-/Title (AIG\055ASS\05501\040AI\040Governance\040Priority\040Index\040\050AGPI\051\040Triage\040Tool)
-/Subject (AI\040governance\040suite\040v3\0569\0563\040\0501\040October\0402026\051\040\267\040draft\040for\040Council\040review)
->>
-endobj
 3 0 obj
 <<
 /Type /Catalog
-/Pages 1 0 R
-/Outlines 12 0 R
+/Pages 2 0 R
 >>
 endobj
 4 0 obj
@@ -32,7 +31,7 @@ endobj
 /Trans <<
 >>
 /Type /Page
-/Parent 1 0 R
+/Parent 2 0 R
 >>
 endobj
 5 0 obj
@@ -77,48 +76,24 @@ endobj
 /Type /Font
 >>
 endobj
-10 0 obj
-<<
-/D [ 4 0 R /XYZ 72 805.8898 0.0 ]
-/S /GoTo
->>
-endobj
-11 0 obj
-<<
-/A 10 0 R
-/Title (AIG\055ASS\05501\040AI\040Governance\040Priority\040Index\040\050AGPI\051\040Triage\040Tool)
-/Parent 12 0 R
-/Count 0
->>
-endobj
-12 0 obj
-<<
-/First 11 0 R
-/Count 1
-/Last 11 0 R
->>
-endobj
 xref
-0 13
+0 10
 0000000000 65535 f 
 0000000015 00000 n 
-0000000074 00000 n 
-0000000326 00000 n 
-0000000392 00000 n 
-0000000591 00000 n 
-0000002453 00000 n 
-0000002504 00000 n 
-0000002611 00000 n 
-0000002723 00000 n 
-0000002800 00000 n 
-0000002865 00000 n 
-0000003022 00000 n 
+0000000157 00000 n 
+0000000216 00000 n 
+0000000265 00000 n 
+0000000464 00000 n 
+0000002326 00000 n 
+0000002377 00000 n 
+0000002484 00000 n 
+0000002596 00000 n 
 trailer
 <<
-/Size 13
+/Size 10
 /Root 3 0 R
-/Info 2 0 R
+/Info 1 0 R
 >>
 startxref
-3080
+2673
 %%EOF

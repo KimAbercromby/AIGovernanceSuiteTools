@@ -1,23 +1,22 @@
-%PDF-1.4
+%PDF-1.7
 %‚„œ”
 1 0 obj
+<<
+/Producer (pypdf)
+/Title (AIG\055AGT\05504 Agent Record \050Agentic System Bill of Materials\054 ASBOM\051 \204 workbook headings)
+>>
+endobj
+2 0 obj
 <<
 /Type /Pages
 /Count 2
 /Kids [ 4 0 R 9 0 R ]
 >>
 endobj
-2 0 obj
-<<
-/Title (AIG\055AGT\05504\040Agent\040Record\040\050Agentic\040System\040Bill\040of\040Materials\054\040ASBOM\051)
-/Subject (AI\040governance\040suite\040v3\0569\0563\040\0501\040October\0402026\051\040\267\040draft\040for\040Council\040review)
->>
-endobj
 3 0 obj
 <<
 /Type /Catalog
-/Pages 1 0 R
-/Outlines 13 0 R
+/Pages 2 0 R
 >>
 endobj
 4 0 obj
@@ -32,7 +31,7 @@ endobj
 /Trans <<
 >>
 /Type /Page
-/Parent 1 0 R
+/Parent 2 0 R
 >>
 endobj
 5 0 obj
@@ -80,7 +79,7 @@ endobj
 /Trans <<
 >>
 /Type /Page
-/Parent 1 0 R
+/Parent 2 0 R
 >>
 endobj
 10 0 obj
@@ -92,49 +91,25 @@ stream
 Gb!#Z9lo;R&A@7.oP'6:g44%S1-6ig8<t_P0ZK;T/rD6>-FUn71*lmK=s(arPBa!K3)$ji/6V7U]md.h/i`X9qDZOsY!_F/\DVZEDSR97#7rLq(1)C'E:(fA"68oOpZh&((%/jJ?"`BZHe08I`m+k$hT-WHL*2We2!,kHpE@c-[Kit1D>0=Wc9.FmCe-r;TF!,fn,^CE&H8Z!I_k3sn^),44u)L9P^V.`<gB"%ji#Q-8>,Pb,r$,Wp]1SKCDZ9'H;OqFH#Pd9_LjccK7A5qX^c]@'>Eh3R@E=.NjDtW&(WCYJBU\_R@o[Q4?(/SP_Fd+?KNsS0@j,P[p1W_!Y`D.K&qjF8gLB4ka[*">A,Wl6u(3%9[T6=-Rjrmj+'[XnQhK$67"0b`h`EL6WdM!okhQe8Q_RXFaL8SMeT=-ZY@[@G;_2Z,p"Y53YoQ\U=HC;+&oal]$ACg4ClCh]Y(K-_8""pCAPW^eAneZ$?WU5OsN\h1Ef1F9M^EE/]uRp+"A*QJ";kd+ieQPCB]`ncIZcBbNA8=a,k!uSCo]EW'\aP1fmXB7bP<+:`c0'l$f@`X2%QE$u!RJgm[5bp[Pp2pIDukFq_YGZ#;#clU8Fl*/]QIe2LW_gp-uP6e),3HMJG34pgST.#qZc]G-`l>2_8:*kHa_'Fu;PAqe9&k4;]K,?;JGRtbYco6elVOB3d?JmK3S)R0_q8rd\5&EB;;/a.orbm;4Va)@stm450bB6iR8>2Fmn<to!2PXR5ZX\:V*f(!rG_=u%5*\?j&!bk_7[ZDch=bii4GXa2\BQP:uWhQlm`)<$S<@A6]bm)(lMes2bXK7:_2RDS&mVKNeNtg\Uh5*P.;H*!O?*$)jb1JEcV2%[AXUK;@kG%uhe2Fqg8cPdd2B9J)rc>KY'bMo6'@T<=PJ:SiABWErm8$ZLd_qeA`GB?t2)C,(Xr8(u]JOa(e!(q(rZVD'0:E5%^)F],Ft7+#+BYoX:JZqaeI=kq17"DdTM0'*U8p>d&q!34`g37aFMm(jfPo%.MZ(]^PSPf)Z*k<Ti&&)Jl$h*Lc*h%Ok=4Cg+X7U'pD4NTQDkf/eh`U.;Nr*OiY*"?43j,nNL;&Q#i'uhVao%)\uei?j0N"pn&!api.ppc*R+!?0:`,;B+t2Yp&G"KT`>$lU'6F5"&oOdjYtRUoSKSW>8LVZAARgaS/'Q`?q^&mP84*`$C2t)\(eapRdE0.n"tOf?,Luo>g;2bhs,IIrA'2c.hHQKeXENld#)k3/_e@RUBhHP1W5Se>-:1IV0d7L@CE.a%2R4#d([6[W_QF"MJ1@ds%8t\g947di-[Hi=O@!]quQ-6@NNBsGo$\a,]%Vjom[MN_Sm#ofuG$~>
 endstream
 endobj
-11 0 obj
-<<
-/D [ 4 0 R /XYZ 72 805.8898 0.0 ]
-/S /GoTo
->>
-endobj
-12 0 obj
-<<
-/A 11 0 R
-/Title (AIG\055AGT\05504\040Agent\040Record\040\050Agentic\040System\040Bill\040of\040Materials\054\040ASBOM\051)
-/Parent 13 0 R
-/Count 0
->>
-endobj
-13 0 obj
-<<
-/First 12 0 R
-/Count 1
-/Last 12 0 R
->>
-endobj
 xref
-0 14
+0 11
 0000000000 65535 f 
 0000000015 00000 n 
-0000000080 00000 n 
-0000000345 00000 n 
-0000000411 00000 n 
-0000000610 00000 n 
-0000003458 00000 n 
-0000003499 00000 n 
-0000003606 00000 n 
-0000003718 00000 n 
-0000003918 00000 n 
-0000005372 00000 n 
-0000005437 00000 n 
-0000005607 00000 n 
+0000000167 00000 n 
+0000000232 00000 n 
+0000000281 00000 n 
+0000000480 00000 n 
+0000003328 00000 n 
+0000003369 00000 n 
+0000003476 00000 n 
+0000003588 00000 n 
+0000003788 00000 n 
 trailer
 <<
-/Size 14
+/Size 11
 /Root 3 0 R
-/Info 2 0 R
+/Info 1 0 R
 >>
 startxref
-5665
+5242
 %%EOF

@@ -1,23 +1,22 @@
-%PDF-1.4
+%PDF-1.7
 %‚„œ”
 1 0 obj
+<<
+/Producer (pypdf)
+/Title (AIG\055INV\05505 Capabilities and System Map \204 workbook headings)
+>>
+endobj
+2 0 obj
 <<
 /Type /Pages
 /Count 1
 /Kids [ 4 0 R ]
 >>
 endobj
-2 0 obj
-<<
-/Title (AIG\055INV\05505\040Capabilities\040and\040System\040Map)
-/Subject (AI\040governance\040suite\040v3\0569\0563\040\0501\040October\0402026\051\040\267\040draft\040for\040Council\040review)
->>
-endobj
 3 0 obj
 <<
 /Type /Catalog
-/Pages 1 0 R
-/Outlines 11 0 R
+/Pages 2 0 R
 >>
 endobj
 4 0 obj
@@ -32,7 +31,7 @@ endobj
 /Trans <<
 >>
 /Type /Page
-/Parent 1 0 R
+/Parent 2 0 R
 >>
 endobj
 5 0 obj
@@ -68,47 +67,23 @@ endobj
 /Type /Font
 >>
 endobj
-9 0 obj
-<<
-/D [ 4 0 R /XYZ 72 805.8898 0.0 ]
-/S /GoTo
->>
-endobj
-10 0 obj
-<<
-/A 9 0 R
-/Title (AIG\055INV\05505\040Capabilities\040and\040System\040Map)
-/Parent 11 0 R
-/Count 0
->>
-endobj
-11 0 obj
-<<
-/First 10 0 R
-/Count 1
-/Last 10 0 R
->>
-endobj
 xref
-0 12
+0 9
 0000000000 65535 f 
 0000000015 00000 n 
-0000000074 00000 n 
-0000000291 00000 n 
-0000000357 00000 n 
-0000000556 00000 n 
-0000002874 00000 n 
-0000002915 00000 n 
-0000003022 00000 n 
-0000003134 00000 n 
-0000003198 00000 n 
-0000003319 00000 n 
+0000000131 00000 n 
+0000000190 00000 n 
+0000000239 00000 n 
+0000000438 00000 n 
+0000002756 00000 n 
+0000002797 00000 n 
+0000002904 00000 n 
 trailer
 <<
-/Size 12
+/Size 9
 /Root 3 0 R
-/Info 2 0 R
+/Info 1 0 R
 >>
 startxref
-3377
+3016
 %%EOF

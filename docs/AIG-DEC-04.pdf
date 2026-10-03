@@ -1,23 +1,22 @@
-%PDF-1.4
+%PDF-1.7
 %‚„œ”
 1 0 obj
+<<
+/Producer (pypdf)
+/Title (AIG\055DEC\05504 AI Governance Gate Log \204 workbook headings)
+>>
+endobj
+2 0 obj
 <<
 /Type /Pages
 /Count 1
 /Kids [ 4 0 R ]
 >>
 endobj
-2 0 obj
-<<
-/Title (AIG\055DEC\05504\040AI\040Governance\040Gate\040Log)
-/Subject (AI\040governance\040suite\040v3\0569\0563\040\0501\040October\0402026\051\040\267\040draft\040for\040Council\040review)
->>
-endobj
 3 0 obj
 <<
 /Type /Catalog
-/Pages 1 0 R
-/Outlines 11 0 R
+/Pages 2 0 R
 >>
 endobj
 4 0 obj
@@ -32,7 +31,7 @@ endobj
 /Trans <<
 >>
 /Type /Page
-/Parent 1 0 R
+/Parent 2 0 R
 >>
 endobj
 5 0 obj
@@ -68,47 +67,23 @@ endobj
 /Type /Font
 >>
 endobj
-9 0 obj
-<<
-/D [ 4 0 R /XYZ 72 805.8898 0.0 ]
-/S /GoTo
->>
-endobj
-10 0 obj
-<<
-/A 9 0 R
-/Title (AIG\055DEC\05504\040AI\040Governance\040Gate\040Log)
-/Parent 11 0 R
-/Count 0
->>
-endobj
-11 0 obj
-<<
-/First 10 0 R
-/Count 1
-/Last 10 0 R
->>
-endobj
 xref
-0 12
+0 9
 0000000000 65535 f 
 0000000015 00000 n 
-0000000074 00000 n 
-0000000286 00000 n 
-0000000352 00000 n 
-0000000551 00000 n 
-0000002084 00000 n 
-0000002125 00000 n 
-0000002232 00000 n 
-0000002344 00000 n 
-0000002408 00000 n 
-0000002524 00000 n 
+0000000126 00000 n 
+0000000185 00000 n 
+0000000234 00000 n 
+0000000433 00000 n 
+0000001966 00000 n 
+0000002007 00000 n 
+0000002114 00000 n 
 trailer
 <<
-/Size 12
+/Size 9
 /Root 3 0 R
-/Info 2 0 R
+/Info 1 0 R
 >>
 startxref
-2582
+2226
 %%EOF

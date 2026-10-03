@@ -1,23 +1,22 @@
-%PDF-1.4
+%PDF-1.7
 %‚„œ”
 1 0 obj
+<<
+/Producer (pypdf)
+/Title (AIG\055AIMS\05508 AIMS Nonconformity and Corrective Action \204 workbook headings)
+>>
+endobj
+2 0 obj
 <<
 /Type /Pages
 /Count 1
 /Kids [ 4 0 R ]
 >>
 endobj
-2 0 obj
-<<
-/Title (AIG\055AIMS\05508\040AIMS\040Nonconformity\040and\040Corrective\040Action)
-/Subject (AI\040governance\040suite\040v3\0569\0563\040\0501\040October\0402026\051\040\267\040draft\040for\040Council\040review)
->>
-endobj
 3 0 obj
 <<
 /Type /Catalog
-/Pages 1 0 R
-/Outlines 11 0 R
+/Pages 2 0 R
 >>
 endobj
 4 0 obj
@@ -32,7 +31,7 @@ endobj
 /Trans <<
 >>
 /Type /Page
-/Parent 1 0 R
+/Parent 2 0 R
 >>
 endobj
 5 0 obj
@@ -68,47 +67,23 @@ endobj
 /Type /Font
 >>
 endobj
-9 0 obj
-<<
-/D [ 4 0 R /XYZ 72 805.8898 0.0 ]
-/S /GoTo
->>
-endobj
-10 0 obj
-<<
-/A 9 0 R
-/Title (AIG\055AIMS\05508\040AIMS\040Nonconformity\040and\040Corrective\040Action)
-/Parent 11 0 R
-/Count 0
->>
-endobj
-11 0 obj
-<<
-/First 10 0 R
-/Count 1
-/Last 10 0 R
->>
-endobj
 xref
-0 12
+0 9
 0000000000 65535 f 
 0000000015 00000 n 
-0000000074 00000 n 
-0000000308 00000 n 
-0000000374 00000 n 
-0000000573 00000 n 
-0000001719 00000 n 
-0000001760 00000 n 
-0000001867 00000 n 
-0000001979 00000 n 
-0000002043 00000 n 
-0000002181 00000 n 
+0000000145 00000 n 
+0000000204 00000 n 
+0000000253 00000 n 
+0000000452 00000 n 
+0000001598 00000 n 
+0000001639 00000 n 
+0000001746 00000 n 
 trailer
 <<
-/Size 12
+/Size 9
 /Root 3 0 R
-/Info 2 0 R
+/Info 1 0 R
 >>
 startxref
-2239
+1858
 %%EOF
