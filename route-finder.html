@@ -174,6 +174,8 @@ button.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
         <select id="proc" style="width:100%"><option value="">Not yet known</option><option value="new">New contract or contract change</option><option value="existing">Existing contract or licence</option><option value="free">Free public tool</option><option value="inhouse">Built in-house</option></select></div>
       <div class="q" id="invq"><p><span class="tag">Investment · Gates 1 and 3</span><label for="inv">Does this use need new investment?</label> <span class="help" style="display:block;margin-top:2px">New funding, extra licences or usage charges, a procurement or a business case. For a new use of a tool that's already approved, with no new investment, at Low or Medium and unable to act, Gates 1 and 3 (investment and strategic case) are N/A (Gate Map Gate 1 and 3 rule). Unsure counts as Yes.</span></p>
         <select id="inv" style="width:100%"><option value="">Unsure (counts as Yes)</option><option value="yes">Yes</option><option value="no">No: existing approved tool and licence, no new cost</option></select></div>
+      <div class="q" id="apprq"><p><span class="tag">Existing tool · Gates 1 and 3</span><label for="appr">Is the tool's approval current?</label> <span class="help" style="display:block;margin-top:2px">Only for a tool already on the AI Register. Check it shows Approved and Active and the review date hasn't passed. If not, or you're not sure, Gates 1 and 3 apply. The AI Governance Lead checks this against the Register.</span></p>
+        <select id="appr" style="width:100%"><option value="">Unsure (counts as No)</option><option value="yes">Yes: Approved and Active, review not overdue</option><option value="no">No: suspended, lapsed or review overdue</option></select></div>
       <p class="help">Mandatory escalation triggers (Playbook §4.4.6). Tick any that apply. Each one sets a minimum tier. A confirmed Severe impact (Impact 5) on any impact dimension also sets at least Medium, whatever the likelihood (Playbook §4.4.4).</p>
       <div class="checks" id="trigs"></div>
       <div class="q" style="border-top:1px solid var(--line);margin-top:6px"><p><span class="tag">Risk tier</span>If the case has already been triaged, what tier did the AI Risk Assessment Worksheet give? Otherwise leave as not yet known: the AI Governance Lead sets the tier with the <a href="docs/AIG-ASS-02.pdf" target="_blank" rel="noopener">AI Risk Assessment Worksheet (AIG-ASS-02)</a>. A confirmed Severe impact (Impact 5) sets at least Medium. The <a href="docs/AIG-ASS-01.pdf" target="_blank" rel="noopener">AI Governance Priority Index (AGPI) Triage Tool (AIG-ASS-01)</a> sets how quickly governance looks at the use, not the route.</p>
@@ -235,7 +237,7 @@ const val=n=>{const e=document.querySelector(`input[name="${n}"]:checked`);retur
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 function state(){
-  const s={sit:val('sit'),match:val('match'),ft:FT.map((_,i)=>val('ft'+i)),review:val('review'),tier:$('#tier').value,proc:$('#proc').value,inv:$('#inv').value,trig:TRIG.filter(t=>$('#tr-'+t[0]).checked).map(t=>t[0])};
+  const s={sit:val('sit'),match:val('match'),ft:FT.map((_,i)=>val('ft'+i)),review:val('review'),tier:$('#tier').value,proc:$('#proc').value,inv:$('#inv').value,appr:$('#appr').value,trig:TRIG.filter(t=>$('#tr-'+t[0]).checked).map(t=>t[0])};
   s.answered=s.ft.filter(Boolean).length;
   s.anyYes=s.ft.some(a=>a==='yes'||a==='unsure');
   s.allNo=s.answered===10&&!s.anyYes;
@@ -272,7 +274,7 @@ function show(){
   // Inputs on hidden panels never count: clear them when their panel hides
   if(s.sit!=='approved') clearInputs('input[name="match"]');
   if(!needScreen) clearInputs('#ftq input');
-  if(!full){clearInputs('#trigs input, input[name="review"]');$('#tier').value='';$('#agency').value='';$('#proc').value='';$('#inv').value=''}
+  if(!full){clearInputs('#trigs input, input[name="review"]');$('#tier').value='';$('#agency').value='';$('#proc').value='';$('#inv').value='';$('#appr').value=''}
   if(!(s.canAct||s.mayAct)){clearInputs('input[name="review"]');$('#agency').value=''}
   s=state();
   $('#s1b').hidden=s.sit!=='approved';
@@ -293,10 +295,11 @@ function gatePlan(s){
   const at=t=>tierAtLeast(s,t);
   // Gate 1 and 3 rule (Gate Map v1.12): Gate 3 (business case) N/A with no new investment, at Low or Medium, unable to act;
   // Gate 1 also N/A only for a new use of an already approved tool. A tool new to the Council always goes to Gate 1.
-  const noMoney=s.inv==='no'&&['existing','free','inhouse'].includes(s.proc)&&!act&&s.sit!=='found';
+  const existingTool=s.sit==='approved'||s.sit==='change';
+  const noMoney=s.inv==='no'&&['existing','free','inhouse'].includes(s.proc)&&!act&&s.sit!=='found'&&(!existingTool||s.appr==='yes');
   const byTier=ok=>ok?(at('High')===false?'na':at('High')===null?'cond':'apply'):'apply';
-  const g1=byTier(noMoney&&((s.sit==='approved'&&s.match==='no')||s.sit==='change')), g3=byTier(noMoney);
-  const g13why='Gate 1 and 3 rule: with no new investment, at Low or Medium and unable to act, Gate 3 (the business case) is N/A; Gate 1 is also N/A for a new use of, or a change to a use of, a tool that is already approved. A tool new to the Council always goes to Gate 1. Record N/A in the Gate Plan with the rule; the screening outcome (which can be by reference to existing assessments), purpose and benefits go to the next decision gate (Gate 5, otherwise Gate 6).';
+  const g1=byTier(noMoney&&existingTool&&(s.sit==='change'||s.match==='no')), g3=byTier(noMoney);
+  const g13why='Gate 1 and 3 rule: with no new investment, at Low or Medium and unable to act, Gate 3 (the business case) is N/A; Gate 1 is also N/A for a new use of, or a change to a use of, a tool that is already approved. A tool new to the Council always goes to Gate 1, and an existing tool only skips them if its approval is current. Record N/A in the Gate Plan with the rule; the screening outcome (which can be by reference to existing assessments), purpose and benefits go to the next decision gate (Gate 5, otherwise Gate 6).';
   const gpush=(g,num,name,forum,full)=>{if(g==='na')G.push([num,name,forum,'n','N/A: no new investment',g13why]);else if(g==='cond')G.push([num,name,forum,'c','If High or Critical','Applies at High or Critical; otherwise N/A here. '+g13why]);else G.push([num,name,forum,'a','Applies',full]);};
   gpush(g1,'Gate 1','Strategic prioritisation','Strategic planning forum',s.sit==='new'&&noMoney?'Should the Council take this new tool on at all? A tool new to the Council always comes here, even if free.':'Invest in discovery, or reject, on the AGPI score and provisional tier.');
   if(act) G.push(['Gate 2','Technical design review','Technical design authority (AI Governance Working Group input)','m','Mandatory',(s.mayAct?'Unsure counts as Yes until confirmed: ':'')+'Mandatory for every action-capable use (any agency tier, including T0), at any risk tier. The agentic control checkpoints (memory control, tool/interface authority, delegation chain, containment/kill switch, identity/credentials, rollback) are evidenced here'+(s.agyRank>=4?'; the AIG-ASS-11 Security Review (ASI01–ASI10) must be complete before this decision.':'.')+(s.mayAct?' If governance later confirms it cannot act, the normal rule applies (mandatory for High and Critical).':'')]);
@@ -481,7 +484,7 @@ function legendHTML(){return `<div class="legend">${['SO','GL','SP','FO'].map(k=
 function sampleNote(){return `<div class="card" style="margin-top:4px"><p class="help" style="margin:0">Not sure where to start? Choose <b>Try an example</b> to load a sample case: an agent that updates housing repair records.</p></div>`}
 
 document.addEventListener('change',show);
-$('#reset').onclick=()=>{document.querySelectorAll('input').forEach(i=>{i.checked=false});$('#tier').value='';$('#agency').value='';$('#proc').value='';$('#inv').value='';$('#copied').textContent='';const fb=$('#copyfallback');if(fb)fb.remove();show();window.scrollTo({top:0,behavior:'smooth'})};
+$('#reset').onclick=()=>{document.querySelectorAll('input').forEach(i=>{i.checked=false});$('#tier').value='';$('#agency').value='';$('#proc').value='';$('#inv').value='';$('#appr').value='';$('#copied').textContent='';const fb=$('#copyfallback');if(fb)fb.remove();show();window.scrollTo({top:0,behavior:'smooth'})};
 $('#example').onclick=()=>{$('#reset').onclick();$('#sit-new').checked=true;['yes','yes','yes','yes','no','yes','yes','yes','no','no'].forEach((v,i)=>{$(`#ft${i}-${v}`).checked=true});$('#rev-no').checked=true;$('#tr-vulnerable').checked=true;show();const fb=$('#copyfallback');if(fb)fb.remove();$('#copied').textContent='Example loaded: a new agent that updates housing repair records without a person checking each update.'};
 $('#copy').onclick=async()=>{
   const R=window.__route; const s=state();
