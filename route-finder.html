@@ -292,7 +292,7 @@ function gatePlan(s){
   const G=[],act=s.actCap,pre=s.mayAct?'If it can act: ':'';
   const at=t=>tierAtLeast(s,t);
   // Gate 1 and 3 rule (Gate Map v1.11): N/A only for a new use of an already approved tool with no new investment, at Low or Medium, that cannot act.
-  const g13=(s.sit==='approved'&&s.match==='no'&&s.inv==='no'&&s.proc!=='new'&&!act)?(at('High')===false?'na':at('High')===null?'cond':'apply'):'apply';
+  const g13=(s.sit==='approved'&&s.match==='no'&&s.inv==='no'&&['existing','free','inhouse'].includes(s.proc)&&!act)?(at('High')===false?'na':at('High')===null?'cond':'apply'):'apply';
   const g13why='Gate 1 and 3 rule: a new use of an already approved tool with no new investment, at Low or Medium and unable to act. Record N/A in the Gate Plan with the rule, and the screening outcome (which can be by reference to the tool\'s existing assessments), purpose and benefits go to the next decision gate (Gate 5, otherwise Gate 6).';
   if(g13==='na') G.push(['Gate 1','Strategic prioritisation','Strategic planning forum','n','N/A: no new investment',g13why]);
   else if(g13==='cond') G.push(['Gate 1','Strategic prioritisation','Strategic planning forum','c','If High or Critical','Applies at High or Critical; otherwise N/A here. '+g13why]);
