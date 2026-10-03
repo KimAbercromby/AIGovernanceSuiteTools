@@ -123,7 +123,7 @@ button.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
 
 <header class="top">
   <div class="wrap">
-    <div class="kicker">The Council · AI governance · suite v3.9.6 · Playbook v19.9.15 · README/Index GOV-01/03 v1.31 · Gate Map DEC-01 v1.10 · Agentic Triage AGT-03 v1.5 · Risk Worksheet ASS-02 v1.10 · Rollout Plan OPS-01 v1.10</div>
+    <div class="kicker">The Council · AI governance · suite v3.9.7 · Playbook v19.9.15 · README/Index GOV-01/03 v1.32 · Gate Map DEC-01 v1.10 · Agentic Triage AGT-03 v1.5 · Risk Worksheet ASS-02 v1.10 · Rollout Plan OPS-01 v1.10</div>
     <h1>Which governance route does my AI use take?</h1>
     <p class="lede">Answer the questions on the left. The route on the right shows only the steps your case needs, who does each one, and what to hand over before moving on. The AI Governance Lead confirms the route; this guide does not approve anything.</p>
 <nav class="sibs" aria-label="Related tools"><span>Also:</span><a href="suite-map.html">Suite map</a><a href="flow-builder.html">Flow builder</a></nav>
@@ -195,10 +195,10 @@ button.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
 (function(){
 const FT=[
  ["Action","Can it take or initiate any action, rather than only produce information for a person to act on (for example sending communications, updating records, invoking tools/APIs, creating transactions or instructing another system)?"],
- ["Data","Does it process personal data, special-category data, confidential/restricted data, or create profiles or inferences about identifiable people?"],
+ ["Data","Does it process special-category or criminal offence data or confidential/restricted data, create profiles or inferences about identifiable people, or give access to personal data the user could not already open? (Ordinary personal data the user already handles in their own work, such as names in their own emails or meeting notes, is No.)"],
  ["Individual decisions","Could its output influence or support a decision about a resident, employee or other individual, even where a human makes the final decision?"],
  ["Public service impact","Could it affect access to services, benefits, housing, care, safeguarding, enforcement, eligibility or another statutory function?"],
- ["External interaction","Does it interact directly with residents, staff or the public, or publish content externally?"],
+ ["External interaction","Does it interact directly with residents or the public, or publish content externally? (Staff using it themselves for their own work is No.)"],
  ["Live connections","Does it connect to live databases, operational systems, APIs, credentials or tools, including any write access?"],
  ["Change and agency","Is it novel, first-of-type, materially changed, fine-tuned, self-learning, agentic, multi-agent, or using dynamic model/tool routing?"],
  ["Plausible harm","Could an incorrect output or action cause material legal, equality, privacy, security, safety, financial, service-delivery or reputational harm?"],
@@ -376,7 +376,7 @@ function buildRoute(s,needScreen,full){
   const as=[];
   as.push(act('SP','Equality, human rights and data protection screening for every case, whatever the tier.','AIG-ASS-03'));
   const ra=condTier(s,'Medium'); if(ra!==null) as.push(act('SO','Complete the Responsible AI Assessment. The Governance Lead quality assures it.','AIG-ASS-04',ra));
-  if(s.personal) as.push(act('SP','DPO advises on DPIA screening. Complete a DPIA when the checklist requires it; the Service Owner supplies purpose, data flows, retention, risks and safeguards.','AIG-ASS-05','personal data'));
+  if(s.personal) as.push(act('SP','DPO advises on DPIA screening. Complete a DPIA when the checklist requires it; the Service Owner supplies purpose, data flows, retention, risks and safeguards.','AIG-ASS-05','sensitive personal data, or data the user could not already open'));
   const eia=condTier(s,'High'); if(eia!==null) as.push(act('SP','Equality Impact Assessment, reviewed by the Equalities lead. Required for High and Critical cases.','AIG-ASS-06',eia));
   else as.push(act('SP','Equality Impact Assessment where the checklist assigns it.','AIG-ASS-06','if assigned'));
   // D4: HRA required for Critical, and for High where Convention rights may be engaged (screened at every tier)
@@ -463,7 +463,7 @@ function render(s,needScreen,full){
     ${st.forum?forumHTML(s):''}
     ${st.hand&&st.hand.length?`<div class="hand"><h4>Before moving on</h4>${st.hand.map((h,j)=>`<label><input type="checkbox" id="h${i}-${j}"><span>${esc(h)}</span></label>`).join('')}</div>`:''}
   </article>`).join('');
-  el.innerHTML=head+legendHTML()+`<div class="stages">${stg}</div><p class="foot">Built from suite v3.9.6 (Playbook AIG-GOV-02 v19.9.15; Gate Map AIG-DEC-01 v1.10, including its Agentic pathway and Gate 4 rule; Agentic Triage AIG-AGT-03 v1.5; Security Review AIG-ASS-11 v1.9; Deployment and Rollout Plan AIG-OPS-01 v1.10; Monitoring Log AIG-OPS-02 v1.6): Staff Guide to Registering and Governing AI AIG-INV-01, AI Fast-Track Screening AIG-INV-02, AI Governance Checklist AIG-ASS-03, the Approval and Assurance Matrix in Playbook §3.10.1 and the triggers in Playbook §4.4.6. Draft for Council review; the AI Governance Lead confirms every route and tier.</p>`;
+  el.innerHTML=head+legendHTML()+`<div class="stages">${stg}</div><p class="foot">Built from suite v3.9.7 (Playbook AIG-GOV-02 v19.9.15; Gate Map AIG-DEC-01 v1.10, including its Agentic pathway and Gate 4 rule; Agentic Triage AIG-AGT-03 v1.5; Security Review AIG-ASS-11 v1.9; Deployment and Rollout Plan AIG-OPS-01 v1.10; Monitoring Log AIG-OPS-02 v1.6): Staff Guide to Registering and Governing AI AIG-INV-01, AI Fast-Track Screening AIG-INV-02, AI Governance Checklist AIG-ASS-03, the Approval and Assurance Matrix in Playbook §3.10.1 and the triggers in Playbook §4.4.6. Draft for Council review; the AI Governance Lead confirms every route and tier.</p>`;
   window.__route=R;
 }
 function forumHTML(s){return `<div class="hand" style="background:var(--panel)"><h4>Who decides, by tier (Playbook §3.10.1)</h4><div class="tblwrap"><table class="forum"><thead><tr><th>Tier</th><th>Delegated authority deciding each UC-ID</th><th>Use-specific governance response</th></tr></thead><tbody>${FORUM.map(f=>`<tr class="${s.effTier===f[0]?'on':''}"><td>${f[0]}</td><td>${esc(f[1])}</td><td>${esc(f[2])}</td></tr>`).join('')}</tbody></table></div></div>`}
