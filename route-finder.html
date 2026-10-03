@@ -291,19 +291,19 @@ function condAgy(s,min,label){const pre=s.mayAct?'if it can act, ':'';if(!s.actC
 function gatePlan(s){
   const G=[],act=s.actCap,pre=s.mayAct?'If it can act: ':'';
   const at=t=>tierAtLeast(s,t);
-  // Gate 1 and 3 rule (Gate Map v1.11): N/A only for a new use of an already approved tool with no new investment, at Low or Medium, that cannot act.
-  const g13=(s.sit==='approved'&&s.match==='no'&&s.inv==='no'&&['existing','free','inhouse'].includes(s.proc)&&!act)?(at('High')===false?'na':at('High')===null?'cond':'apply'):'apply';
-  const g13why='Gate 1 and 3 rule: a new use of an already approved tool with no new investment, at Low or Medium and unable to act. Record N/A in the Gate Plan with the rule, and the screening outcome (which can be by reference to the tool\'s existing assessments), purpose and benefits go to the next decision gate (Gate 5, otherwise Gate 6).';
-  if(g13==='na') G.push(['Gate 1','Strategic prioritisation','Strategic planning forum','n','N/A: no new investment',g13why]);
-  else if(g13==='cond') G.push(['Gate 1','Strategic prioritisation','Strategic planning forum','c','If High or Critical','Applies at High or Critical; otherwise N/A here. '+g13why]);
-  else G.push(['Gate 1','Strategic prioritisation','Strategic planning forum','a','Applies','Invest in discovery, or reject, on the AGPI score and provisional tier.']);
+  // Gate 1 and 3 rule (Gate Map v1.12): Gate 3 (business case) N/A with no new investment, at Low or Medium, unable to act;
+  // Gate 1 also N/A only for a new use of an already approved tool. A tool new to the Council always goes to Gate 1.
+  const noMoney=s.inv==='no'&&['existing','free','inhouse'].includes(s.proc)&&!act&&s.sit!=='found'&&s.sit!=='change';
+  const byTier=ok=>ok?(at('High')===false?'na':at('High')===null?'cond':'apply'):'apply';
+  const g1=byTier(noMoney&&s.sit==='approved'&&s.match==='no'), g3=byTier(noMoney);
+  const g13why='Gate 1 and 3 rule: with no new investment, at Low or Medium and unable to act, Gate 3 (the business case) is N/A; Gate 1 is also N/A for a new use of a tool that is already approved. A tool new to the Council always goes to Gate 1. Record N/A in the Gate Plan with the rule; the screening outcome (which can be by reference to existing assessments), purpose and benefits go to the next decision gate (Gate 5, otherwise Gate 6).';
+  const gpush=(g,num,name,forum,full)=>{if(g==='na')G.push([num,name,forum,'n','N/A: no new investment',g13why]);else if(g==='cond')G.push([num,name,forum,'c','If High or Critical','Applies at High or Critical; otherwise N/A here. '+g13why]);else G.push([num,name,forum,'a','Applies',full]);};
+  gpush(g1,'Gate 1','Strategic prioritisation','Strategic planning forum',s.sit==='new'&&noMoney?'Should the Council take this new tool on at all? A tool new to the Council always comes here, even if free.':'Invest in discovery, or reject, on the AGPI score and provisional tier.');
   if(act) G.push(['Gate 2','Technical design review','Technical design authority (AI Governance Working Group input)','m','Mandatory',(s.mayAct?'Unsure counts as Yes until confirmed: ':'')+'Mandatory for every action-capable use (any agency tier, including T0), at any risk tier. The agentic control checkpoints (memory control, tool/interface authority, delegation chain, containment/kill switch, identity/credentials, rollback) are evidenced here'+(s.agyRank>=4?'; the AIG-ASS-11 Security Review (ASI01–ASI10) must be complete before this decision.':'.')+(s.mayAct?' If governance later confirms it cannot act, the normal rule applies (mandatory for High and Critical).':'')]);
   else if(at('High')===true) G.push(['Gate 2','Technical design review','Technical design authority','m','Mandatory','Mandatory for High and Critical.']);
   else if(at('High')===null) G.push(['Gate 2','Technical design review','Technical design authority','c','If High or Critical','Mandatory for High and Critical; otherwise only where a fundamental architectural change is involved.']);
   else G.push(['Gate 2','Technical design review','Technical design authority','n','N/A unless architecture changes','Only where a fundamental architectural change is involved; otherwise mark N/A in the Gate Plan.']);
-  if(g13==='na') G.push(['Gate 3','Case for change / strategic alignment','Digital governance forum','n','N/A: no new investment',g13why]);
-  else if(g13==='cond') G.push(['Gate 3','Case for change / strategic alignment','Digital governance forum','c','If High or Critical','Applies at High or Critical; otherwise N/A here. '+g13why]);
-  else G.push(['Gate 3','Case for change / strategic alignment','Digital governance forum','a','Applies','Strategic alignment, cost-benefit and delivery dates; DPIA, EIA and HRA screening carried forward.']);
+  gpush(g3,'Gate 3','Case for change / strategic alignment','Digital governance forum','Strategic alignment, cost-benefit and delivery dates; DPIA, EIA and HRA screening carried forward.');
   {const ck='Still complete the data processing terms and the Supplier AI Due-Diligence Questionnaire (AIG-ASS-08) section 5 (data protection and security) and section 8 (business continuity and exit)';
    const P={new:['a','Applies (new contract, licence change or variation)','Supplier due diligence (AIG-ASS-08) and AI contract terms; the Procurement board decides within its delegated remit.'],
     existing:['n','N/A — existing contract / free tool','AI feature under an existing contract or licence: record Gate 4 as N/A in the Gate Plan with the reason. '+ck+'. If switching it on needs a licence change or contract variation, Gate 4 applies.'],
@@ -347,7 +347,7 @@ function buildRoute(s,needScreen,full){
       {t:'Decide and start',acts:[
         act('FO','The officer or forum with confirmed delegation (Service Owner/Service Manager only if delegated) makes a proportionate decision for this UC-ID, recorded in the Decision Record or approved minutes before use.','AIG-DEC-03'),
         act('GL','Log the Gate Event pointing to that decision before operation starts.','AIG-DEC-04'),
-        act('SO','Keep a proportionate Model Card for the model.','AIG-ASS-09')],hand:['Decision recorded for this UC-ID and Gate Event logged','The screen alone does not allow use','Gate plan: intake event, this single delegated decision (Gate 6) and the annual review. Gates 1 and 3 apply only if the use needs new investment or the tool is new to the Council (Gate Map Gate 1 and 3 rule)']},
+        act('SO','Keep a proportionate Model Card for the model.','AIG-ASS-09')],hand:['Decision recorded for this UC-ID and Gate Event logged','The screen alone does not allow use','Gate plan for a new use of a tool that is already approved: intake event, this single delegated decision (Gate 6) and the annual review. A tool new to the Council also goes to Gate 1, even if free; Gate 3 applies only where there is new money (Gate Map Gate 1 and 3 rule)']},
       {t:'Operate and review',acts:[
         act('SO','Confirm it is still low-risk at the review date (at least annually).','AIG-INV-02'),
         act('SO','Tell governance about any new data source, connection, audience, supplier, model, decision use or action. A material change ends light-touch eligibility: the changed use returns to full intake and triage before it continues.','AIG-INV-03')],hand:[]}]};
