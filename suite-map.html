@@ -189,7 +189,7 @@ td .was{color:var(--crit)} td .fix{color:var(--monitor,inherit);font-weight:600}
 
 <header class="top">
   <div class="wrap">
-    <div class="kicker">The Council · AI Governance Suite · suite v3.9.7 · Playbook v19.9.15 · README/Index GOV-01/03 v1.32 · Gate Map DEC-01 v1.10 · Agentic Triage AGT-03 v1.5 · Risk Worksheet ASS-02 v1.10 · Rollout Plan OPS-01 v1.10 · 30 Sep 2026</div>
+    <div class="kicker">The Council · AI Governance Suite · suite v3.9.7 · Playbook v19.9.16 · README/Index GOV-01/03 v1.32 · Gate Map DEC-01 v1.10 · Agentic Triage AGT-03 v1.5 · Risk Worksheet ASS-02 v1.10 · Rollout Plan OPS-01 v1.10 · 30 Sep 2026</div>
     <h1>AI Governance Suite Map</h1>
     <p class="lede">All 52 controlled artefacts and the UC-ID current view, arranged by lifecycle stage with the AI Register as the spine. Links are taken from each document's own cross-references. Select an artefact to see what it does, what feeds it and what it triggers.</p>
 <nav class="sibs" aria-label="Related tools"><span>Also:</span><a href="flow-builder.html">Flow builder</a><a href="route-finder.html">Route finder</a></nav>
@@ -317,7 +317,7 @@ const EDGES = [
  ["AIG-INV-01","AIG-INV-02","route","Possibly low-impact use → Fast-Track screen","Low-impact candidates only"],
  ["AIG-INV-01","AIG-INV-03","route","Otherwise, or AI discovered in use → full Intake",""],
  ["AIG-INV-02","AIG-INV-03","route","Any Yes or Unsure stops Fast Track → full Intake",""],
- ["AIG-INV-02","AIG-INV-04","feeds","All ten No + Governance Lead validation → Light-touch / Low / Priority 4 Register row","All answers No"],
+ ["AIG-INV-02","AIG-INV-04","feeds","All ten No + Governance Lead validation → Light-touch / Low / Priority 4 or 5 Register row","All answers No"],
  ["AIG-INV-02","AIG-AGT-03","trigger","System can act → Agentic Triage is mandatory","Action-capable"],
  ["AIG-INV-03","AIG-INV-04","feeds","Governance steward issues or reconciles the permanent AIR-ID",""],
  ["AIG-INV-03","AIG-INV-05","feeds","UC-ID handoff (Intake stays the source)","If the map is adopted"],
@@ -543,7 +543,7 @@ const DECISIONS = [
 ];
 const ENDS = [
  {id:"END-LIGHT",title:"Light-touch: registered and in use",who:"Service Owner",ref:"AIG-INV-04; AIG-DEC-03; AIG-DEC-04",
-  desc:"Light AI Register row (Light-touch / Low / Priority 4) with a review date. Before use, the officer or forum with confirmed delegation records a proportionate decision for the UC-ID (AIG-DEC-03 or approved minutes) and a Gate Event is logged (AIG-DEC-04). A material change returns the use to full intake; a Yes or Unsure ends light-touch eligibility."},
+  desc:"Light AI Register row (Light-touch / Low / Priority 4 or 5) with a review date. Before use, the officer or forum with confirmed delegation records a proportionate decision for the UC-ID (AIG-DEC-03 or approved minutes) and a Gate Event is logged (AIG-DEC-04). A material change returns the use to full intake; a Yes or Unsure ends light-touch eligibility."},
  {id:"END-LIVE",title:"Live and monitored",who:"Service Owner",ref:"AIG-OPS-02; AIG-INV-04",
   desc:"Within approved scope and thresholds. Monitoring continues at the agreed cadence and the Register shows Approved and Active."},
  {id:"END-STOPPED",title:"Stopped",who:"Officer or forum with confirmed delegation",ref:"AIG-DEC-03; AIG-DEC-04",
