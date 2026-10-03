@@ -189,7 +189,7 @@ td .was{color:var(--crit)} td .fix{color:var(--monitor,inherit);font-weight:600}
 
 <header class="top">
   <div class="wrap">
-    <div class="kicker">The Council · AI Governance Suite · suite v3.9.6 · Playbook v19.9.15 · README/Index GOV-01/03 v1.31 · Gate Map DEC-01 v1.10 · Agentic Triage AGT-03 v1.5 · Risk Worksheet ASS-02 v1.10 · Rollout Plan OPS-01 v1.10 · 30 Sep 2026</div>
+    <div class="kicker">The Council · AI Governance Suite · suite v3.9.7 · Playbook v19.9.16 · README/Index GOV-01/03 v1.32 · Gate Map DEC-01 v1.11 · Agentic Triage AGT-03 v1.5 · Risk Worksheet ASS-02 v1.10 · Rollout Plan OPS-01 v1.10 · 30 Sep 2026</div>
     <h1>AI Governance Suite Map</h1>
     <p class="lede">All 52 controlled artefacts and the UC-ID current view, arranged by lifecycle stage with the AI Register as the spine. Links are taken from each document's own cross-references. Select an artefact to see what it does, what feeds it and what it triggers.</p>
 <nav class="sibs" aria-label="Related tools"><span>Also:</span><a href="flow-builder.html">Flow builder</a><a href="route-finder.html">Route finder</a></nav>
@@ -266,7 +266,7 @@ const NODES = [
  ["AIG-ASS-02", "AI Risk Assessment Worksheet", "ASS", "Core record", "Risk assessment & review", "Service Owner", "§4.4", 2, 262, "Calculates inherent and residual risk and the risk tier, applying the seven escalation triggers and the impact floor (a confirmed Severe impact, Impact 5, sets at least Medium). Imports the triage result; tier drops need evidence and independent verification."],
  ["AIG-ASS-03", "AI Governance Checklist", "ASS", "Core record", "Pathway assignment", "AI Governance Lead", "§3.8 / §3.10.1", 2, 324, "Turns the tier into a case-specific list of required assessments, reviews and approvals. Adds agentic security, ASBOM and monitoring evidence whenever the AI can act."],
  // Decide
- ["AIG-DEC-01", "AI Governance Gate Map", "DEC", "Core record", "Routing configuration", "AI Governance Lead", "§3.4", 3, 200, "Maps each governance gate onto the Council's existing forums and what evidence each needs. Its Agentic pathway section sets a minimum pathway per agency tier; Gate 2 is mandatory for action-capable uses and Gate 6 grants the permitted autonomy level. Routes decisions; confers no authority."],
+ ["AIG-DEC-01", "AI Governance Gate Map", "DEC", "Core record", "Routing configuration", "AI Governance Lead", "§3.4", 3, 200, "Maps each governance gate onto the Council's existing forums and what evidence each needs. Its Agentic pathway section sets a minimum pathway per agency tier; Gate 2 is mandatory for action-capable uses and Gate 6 grants the permitted autonomy level. Its Gate 1 and 3 rule makes the investment gates N/A for a new use of an already approved system with no new investment, at Low or Medium. Routes decisions; confers no authority."],
  ["AIG-DEC-02", "Decision-Ready Paper", "DEC", "Core record", "Approval & assurance", "AI Governance Lead", "§3.10.4", 3, 262, "Forward-looking brief for the deciding forum. The paper asks; the Decision Record explains; the Gate Log tallies."],
  ["AIG-DEC-03", "Governance Decision Record", "DEC", "Core record", "Approval & assurance", "Officer or forum with confirmed delegation (recorded by the AI Governance Lead / secretariat)", "§3.10.4", 3, 324, "The authoritative decision, reasons, scope and conditions for each UC-ID (or approved forum minutes), including the permitted autonomy level granted at Gate 6 for an action-capable use. Everything else points here."],
  ["AIG-DEC-04", "AI Governance Gate Log", "DEC", "Core record", "Gate plans, events & conditions", "AI Governance Lead / secretariat", "§3.6 / §3.7 / §3.10.4", 3, 386, "Append-only history: prospective Gate Plans, dated Gate Events and event-linked Conditions, keyed to AIR-ID. A dated pointer, never the decision."],
@@ -317,7 +317,7 @@ const EDGES = [
  ["AIG-INV-01","AIG-INV-02","route","Possibly low-impact use → Fast-Track screen","Low-impact candidates only"],
  ["AIG-INV-01","AIG-INV-03","route","Otherwise, or AI discovered in use → full Intake",""],
  ["AIG-INV-02","AIG-INV-03","route","Any Yes or Unsure stops Fast Track → full Intake",""],
- ["AIG-INV-02","AIG-INV-04","feeds","All ten No + Governance Lead validation → Light-touch / Low / Priority 4 Register row","All answers No"],
+ ["AIG-INV-02","AIG-INV-04","feeds","All ten No + Governance Lead validation → Light-touch / Low / Priority 4 or 5 Register row","All answers No"],
  ["AIG-INV-02","AIG-AGT-03","trigger","System can act → Agentic Triage is mandatory","Action-capable"],
  ["AIG-INV-03","AIG-INV-04","feeds","Governance steward issues or reconciles the permanent AIR-ID",""],
  ["AIG-INV-03","AIG-INV-05","feeds","UC-ID handoff (Intake stays the source)","If the map is adopted"],
@@ -450,7 +450,9 @@ const ROUTES = [
   ["AIG-INV-01","AIG-INV-02","Possibly low-impact use goes to Fast-Track Screening."],
   ["AIG-INV-02","AIG-INV-04","All ten No + Governance Lead validation: Light-touch Register row."],
   ["AIG-INV-02","AIG-INV-03","Any Yes or Unsure: stop, go to full Intake and normal triage."],
-  ["AIG-INV-02","AIG-AGT-03","If the system can act, Agentic Triage is mandatory. Fast Track never bypasses it."]]},
+  ["AIG-INV-02","AIG-AGT-03","If the system can act, Agentic Triage is mandatory. Fast Track never bypasses it."],
+  ["AIG-INV-02","AIG-DEC-03","Screening (can be by reference to the tool's existing assessments) goes to the decision-maker: one delegated decision for the UC-ID."],
+  ["AIG-DEC-03","AIG-DEC-04","Gate Event logged before use. Gates 1 and 3 are N/A for a new use of an approved tool with no new investment."]]},
  {id:"agentic",name:"Normal governance route + agentic overlay",sub:"Can it act? = Yes (every action-capable use, any agency tier T0–T5)",steps:[
   ["AIG-INV-03","AIG-ASS-01","Normal spine: the registered case goes to priority triage (AGPI)."],
   ["AIG-ASS-01","AIG-ASS-02","Risk Worksheet sets the risk tier, including §4.4.6 trigger floors and the impact floor (Impact 5 sets at least Medium)."],
@@ -502,7 +504,7 @@ const ROUTES = [
 // edge from `from`, so the flow builder never shows the same step twice.
 const DECISIONS = [
  {id:"D-FASTTRACK",from:"AIG-INV-02",q:"All ten screening answers No?",who:"AI Governance Lead validates",ref:"AIG-INV-02; Playbook §3.8",
-  desc:"Fast-Track Screening is a routing check for one UC-ID within AI Intake. Only ten No answers with no mandatory trigger, validated by the AI Governance Lead, keep it on the light-touch route. It never creates an AIR-ID by itself or authorises use, and a materially changed use returns to full intake.",
+  desc:"Fast-Track Screening is a routing check for one UC-ID within AI Intake. Only ten No answers with no mandatory trigger, validated by the AI Governance Lead, keep it on the light-touch route. Equality, human rights and data protection screening still applies, and can be done by reference to a current assessment that already covers this kind of use (Playbook §4.6). For a new use of an already approved tool with no new investment, Gates 1 and 3 are N/A: the plan is the intake event, one delegated decision (Gate 6) and review. It never creates an AIR-ID by itself or authorises use, and a materially changed use returns to full intake.",
   branches:[
    {label:"Yes, all ten No",to:"END-LIGHT",why:"Light-touch Register row; delegated decision recorded and Gate Event logged before use",replaces:"AIG-INV-04"},
    {label:"Any Yes or Unsure",to:"AIG-INV-03",why:"Stop Fast Track; full Intake and normal triage",replaces:"AIG-INV-03"}]},
@@ -543,7 +545,7 @@ const DECISIONS = [
 ];
 const ENDS = [
  {id:"END-LIGHT",title:"Light-touch: registered and in use",who:"Service Owner",ref:"AIG-INV-04; AIG-DEC-03; AIG-DEC-04",
-  desc:"Light AI Register row (Light-touch / Low / Priority 4) with a review date. Before use, the officer or forum with confirmed delegation records a proportionate decision for the UC-ID (AIG-DEC-03 or approved minutes) and a Gate Event is logged (AIG-DEC-04). A material change returns the use to full intake; a Yes or Unsure ends light-touch eligibility."},
+  desc:"Light AI Register row (Light-touch / Low / Priority 4 or 5) with a review date. Before use, the officer or forum with confirmed delegation records a proportionate decision for the UC-ID (AIG-DEC-03 or approved minutes) and a Gate Event is logged (AIG-DEC-04). A material change returns the use to full intake; a Yes or Unsure ends light-touch eligibility."},
  {id:"END-LIVE",title:"Live and monitored",who:"Service Owner",ref:"AIG-OPS-02; AIG-INV-04",
   desc:"Within approved scope and thresholds. Monitoring continues at the agreed cadence and the Register shows Approved and Active."},
  {id:"END-STOPPED",title:"Stopped",who:"Officer or forum with confirmed delegation",ref:"AIG-DEC-03; AIG-DEC-04",
