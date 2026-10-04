@@ -123,7 +123,7 @@ button.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
 
 <header class="top">
   <div class="wrap">
-    <div class="kicker">The Council · AI governance · suite v3.9.8 · Playbook v19.9.17 · README/Index GOV-01/03 v1.33 · Gate Map DEC-01 v1.12 · Agentic Triage AGT-03 v1.5 · Risk Worksheet ASS-02 v1.10 · Rollout Plan OPS-01 v1.11</div>
+    <div class="kicker">The Council · AI governance · suite v3.9.9 · Playbook v19.9.18 · README/Index GOV-01/03 v1.34 · Gate Map DEC-01 v1.13 · Agentic Triage AGT-03 v1.6 · Risk Worksheet ASS-02 v1.10 · Rollout Plan OPS-01 v1.12</div>
     <h1>Which governance route does my AI use take?</h1>
     <p class="lede">Answer the questions on the left. The route on the right shows only the steps your case needs, who does each one, and what to hand over before moving on. The AI Governance Lead confirms the route; this guide does not approve anything.</p>
 <nav class="sibs" aria-label="Related tools"><span>Also:</span><a href="suite-map.html">Suite map</a><a href="flow-builder.html">Flow builder</a></nav>
@@ -382,7 +382,7 @@ function buildRoute(s,needScreen,full){
   const tri=[act('GL','Run AGPI for governance priority (how quickly and in what order governance looks at this use) and the AI Risk Assessment Worksheet for inherent and residual risk. Apply any trigger floor and the impact floor (a confirmed Severe impact, Impact 5, sets at least Medium), and issue the case-specific Governance Checklist with the confirmed tier, route and contact.','AIG-ASS-01 · AIG-ASS-02 · AIG-ASS-03'),
     act('SO','Check the priority and risk assumptions reflect how the service will actually use it.','AIG-ASS-02')];
   if(s.canAct||s.mayAct){
-    tri.push(act('GL','Run Agentic Triage (five agency dimensions, agency tier T0–T5) and open the Agent Record / ASBOM. The agency tier sets a minimum pathway (T0–T1 none, T2 Medium, T3–T4 High, T5 Critical); the governing pathway is the higher of that and the risk-tier pathway (including §4.4.6 trigger floors and the impact floor); neither lowers the other. Agentic triage routes and gathers evidence; it does not approve.','AIG-AGT-03 · AIG-DEC-01 · AIG-AGT-04',s.mayAct?'if it can act':''));
+    tri.push(act('GL','Run Agentic Triage (five agency dimensions, agency tier T0–T5) and open the Agent Record / ASBOM at the level it needs: a short core record for every agent that can act, extra sheets for persistence, memory, tool discovery, credential access or delegation, and the full ASBOM at T3 and above (Playbook F.3). The agency tier sets a minimum pathway (T0–T1 none, T2 Medium, T3–T4 High, T5 Critical); the governing pathway is the higher of that and the risk-tier pathway (including §4.4.6 trigger floors and the impact floor); neither lowers the other. Agentic triage routes and gathers evidence; it does not approve.','AIG-AGT-03 · AIG-DEC-01 · AIG-AGT-04',s.mayAct?'if it can act':''));
     tri.push(act('SO','Describe the approved purpose, tools, credentials, delegation, action limits, intervention and rollback. Provide demonstrations and test results.','AIG-AGT-04',s.mayAct?'if it can act':''));
   }
   stages.push({t:'Triage',note:'AGPI priority sets how quickly governance looks at this use; the route is set by the governing tier.',acts:tri,hand:['Impact, likelihood, failure modes and controls explained','Who can intervene is named'].concat(s.canAct?['Action limits, credentials and rollback described']:[])});
@@ -448,7 +448,7 @@ function buildRoute(s,needScreen,full){
    const txt=s.effTier?`Monitoring minimum for the ${s.effTier} governing tier (Playbook §6.4.4; AIG-OPS-02 Sampling Method): ${M[s.effTier].join('; ')}. Record the review type (operational, performance or formal) on each Monitoring Log row.`:`Monitoring minimum follows the governing tier once set (Playbook §6.4.4; AIG-OPS-02): ${['Low','Medium','High','Critical'].map(t=>t+': '+M[t].slice(0,3).join(', ')+', '+M[t][3]).join('. ')}.`;
    op.splice(1,0,act('GL',txt+ag,'AIG-OPS-02 · AIG-GOV-02',s.effTier?'':'set by tier'));}
   if(s.individuals||s.publicFacing){const c=s.individuals&&!s.individualsUnsure?'affects individuals':s.publicFacing&&!s.publicUnsure?'public-facing':'Unsure answer: to confirm';op.push(act('SO','Make sure people can challenge an AI-influenced decision and get a fresh human review.','AIG-OPS-04',c))}
-  if(s.canAct) op.push(act('GL','Record each consequential action with its Action ID against the exact ASBOM version.','AIG-AGT-06'));
+  if(s.canAct||s.mayAct) op.push(act('GL','Record each consequential action with its Action ID against the exact ASBOM version.','AIG-AGT-06',s.mayAct?'if it can act':''));
   op.push(act('SO','Tell the AI Governance Lead before any change to model, supplier, data, tool, authority or purpose proceeds; it re-enters triage.','AIG-INV-03'));
   stages.push({t:'Operate and monitor',acts:op,hand:[]});
 
@@ -477,7 +477,7 @@ function render(s,needScreen,full){
     ${st.forum?forumHTML(s):''}
     ${st.hand&&st.hand.length?`<div class="hand"><h4>Before moving on</h4>${st.hand.map((h,j)=>`<label><input type="checkbox" id="h${i}-${j}"><span>${esc(h)}</span></label>`).join('')}</div>`:''}
   </article>`).join('');
-  el.innerHTML=head+legendHTML()+`<div class="stages">${stg}</div><p class="foot">Built from suite v3.9.8 (Playbook AIG-GOV-02 v19.9.17; Gate Map AIG-DEC-01 v1.12, including its Agentic pathway and Gate 4 rule; Agentic Triage AIG-AGT-03 v1.5; Security Review AIG-ASS-11 v1.9; Deployment and Rollout Plan AIG-OPS-01 v1.11; Monitoring Log AIG-OPS-02 v1.6): Staff Guide to Registering and Governing AI AIG-INV-01, AI Fast-Track Screening AIG-INV-02, AI Governance Checklist AIG-ASS-03, the Approval and Assurance Matrix in Playbook §3.10.1 and the triggers in Playbook §4.4.6. Draft for Council review; the AI Governance Lead confirms every route and tier.</p>`;
+  el.innerHTML=head+legendHTML()+`<div class="stages">${stg}</div><p class="foot">Built from suite v3.9.9 (Playbook AIG-GOV-02 v19.9.18; Gate Map AIG-DEC-01 v1.13, including its Agentic pathway and Gate 4 rule; Agentic Triage AIG-AGT-03 v1.6; Security Review AIG-ASS-11 v1.10; Deployment and Rollout Plan AIG-OPS-01 v1.12; Monitoring Log AIG-OPS-02 v1.6): Staff Guide to Registering and Governing AI AIG-INV-01, AI Fast-Track Screening AIG-INV-02, AI Governance Checklist AIG-ASS-03, the Approval and Assurance Matrix in Playbook §3.10.1 and the triggers in Playbook §4.4.6. Draft for Council review; the AI Governance Lead confirms every route and tier.</p>`;
   window.__route=R;
 }
 function forumHTML(s){return `<div class="hand" style="background:var(--panel)"><h4>Who decides, by tier (Playbook §3.10.1)</h4><div class="tblwrap"><table class="forum"><thead><tr><th>Tier</th><th>Delegated authority deciding each UC-ID</th><th>Use-specific governance response</th></tr></thead><tbody>${FORUM.map(f=>`<tr class="${s.effTier===f[0]?'on':''}"><td>${f[0]}</td><td>${esc(f[1])}</td><td>${esc(f[2])}</td></tr>`).join('')}</tbody></table></div></div>`}
