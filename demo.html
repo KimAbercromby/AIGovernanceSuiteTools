@@ -1,0 +1,229 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Demo: One High-Risk AI System</title>
+<meta name="description" content="A short walkthrough of one high-risk AI system moving through the Council's proposed AI governance process, from idea to live service.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0D1520;--bar:#122C47;--ink:#E4EAF2;--muted:#9AA7B8;--gold:#D9BE55;--line:#2A3A51}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:15px/1.5 Arial,Helvetica,sans-serif}
+.top{display:flex;align-items:center;gap:12px;justify-content:space-between;background:var(--bar);padding:10px 16px;flex-wrap:wrap}
+.top a{color:var(--ink)}.k{font:600 11px ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.wrap{display:flex;flex-direction:column;align-items:center;padding:16px;gap:12px}
+#stage{position:relative;width:min(100%,1400px,calc((100vh - 150px) * 16 / 9));aspect-ratio:16/9;overflow:hidden;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,.4);background:#122C47}
+#canvas{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+#canvas section{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:none !important}
+#canvas section.on{display:flex !important}
+#canvas section *{margin:0;box-sizing:border-box}
+#canvas ul,#canvas ol{padding-left:1.2em}#canvas th,#canvas td{padding:.35em .6em;text-align:left;vertical-align:top;border-bottom:1px solid #E2DED3}#canvas table{border-collapse:separate;border-spacing:0;width:100%}
+#canvas aside{display:none !important}
+.ctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
+button{font:600 14px Arial,Helvetica,sans-serif;background:#1B2A3F;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:8px 14px;cursor:pointer}
+button:hover{border-color:var(--gold)}button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}button[disabled]{opacity:.4;cursor:default}
+#count{min-width:60px;text-align:center;color:var(--muted)}
+#notes{width:100%;max-width:1400px;background:#142031;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:8px;padding:14px 18px;font-size:16px;line-height:1.6}
+#notes[hidden]{display:none}.f{font-size:12.5px;color:var(--muted);max-width:1400px;text-align:center}
+</style></head><body>
+<div class="top"><div><div class="k">The Council · AI governance · demo</div><b>One high-risk AI system, start to finish</b></div><a href="index.html">← All AI governance tools</a></div>
+<div class="wrap">
+<div id="stage" aria-roledescription="slide deck"><div id="canvas">
+<section id="cover" data-transition="fade" style="background:#122C47;color:#F4F1E8;font-family:'Public Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:40px">
+<p style="font-size:28px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#C8AB36">AI governance in practice</p>
+<h1 style="font-family:'Libre Baskerville', Georgia, serif;font-size:96px;font-weight:700;line-height:1.1;color:#F4F1E8;width:1500px">One high-risk AI system, start to finish</h1>
+<div style="width:120px;height:6px;background:#C8AB36"></div>
+<p style="font-size:40px;line-height:1.4;color:#D6DEE6;width:1400px">How a new AI use moves from idea to live service, without anyone being asked the same thing twice.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#AEBBC8">Illustrative example · Proposed design, for Council confirmation</p>
+<aside>I want to show you one AI system going all the way through, start to finish. Not every route, not every document: just what actually happens to one high-risk case, and who does what. The thing I'd like you to notice is how little anyone has to repeat.</aside>
+</section>
+
+<section id="example" data-transition="fade" style="background:#F7F5EF;color:#1B2733;font-family:'Public Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#7A5F0E">The example</p>
+<h2 style="font-family:'Libre Baskerville', Georgia, serif;font-size:64px;font-weight:700;line-height:1.15;color:#122C47">A damp and mould urgency tool</h2>
+</div>
+<div style="display:flex;gap:64px;align-items:start">
+<div style="flex:1;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:34px;line-height:1.45;color:#1B2733">A new tool scores damp and mould reports and recommends an urgency band. <b>A housing officer confirms every band.</b></p>
+<p style="font-size:30px;line-height:1.45;color:#4A5568">Why it counts as high risk: it affects vulnerable residents, which is a mandatory escalation trigger, so the Lead and the AI Assurance Board are told straight away.</p>
+</div>
+<div style="width:720px;display:flex;flex-direction:column;background:#FDFCF8;border:1px solid #E2DED3;border-radius:16px;padding:40px;gap:28px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4A5568">What triage worked out</p>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:6px solid #C8AB36;padding:0 0 0 24px">
+<p style="font-size:44px;font-weight:700;color:#122C47">Priority 2 · High</p>
+<p style="font-size:26px;color:#4A5568">How quickly governance looks at it</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:6px solid #C8AB36;padding:0 0 0 24px">
+<p style="font-size:44px;font-weight:700;color:#122C47">High risk tier</p>
+<p style="font-size:26px;color:#4A5568">Sets the route and the decision-maker</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:6px solid #C8AB36;padding:0 0 0 24px">
+<p style="font-size:44px;font-weight:700;color:#122C47">16 evidence items</p>
+<p style="font-size:26px;color:#4A5568">Sized to this risk, not a fixed checklist</p>
+</div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6A7179">Results from the live triage tool for this illustrative case.</p>
+<aside>This is a made-up but realistic case. The service owner answers the intake once, and the triage tool works out three things on its own: how urgently governance needs to look at it, how serious the risk is, and exactly which evidence this case needs. A low-risk staff tool would get a much lighter route; this one is high because it touches vulnerable residents.</aside>
+</section>
+
+<section id="journey" data-section="The journey and who does what" data-transition="fade" style="background:#F7F5EF;color:#1B2733;font-family:'Public Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#7A5F0E">The journey</p>
+<h2 style="font-family:'Libre Baskerville', Georgia, serif;font-size:64px;font-weight:700;line-height:1.15;color:#122C47">Six steps, one record</h2>
+</div>
+<div style="display:grid;grid-template-columns:repeat(6, 1fr);gap:20px">
+<div style="grid-column:span 4;background:#122C47;border-radius:10px;padding:14px 24px"><p style="font-size:24px;font-weight:600;color:#F4F1E8">Before deployment</p></div>
+<div style="background:#2E4A66;border-radius:10px;padding:14px 24px"><p style="font-size:24px;font-weight:600;color:#F4F1E8">After pilot</p></div>
+<div style="background:#4A6785;border-radius:10px;padding:14px 24px"><p style="font-size:24px;font-weight:600;color:#F4F1E8">Ongoing</p></div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF8;border:1px solid #E2DED3;border-top:6px solid #C8AB36;border-radius:12px;padding:24px">
+<p style="font-size:44px;font-weight:700;color:#C8AB36">1</p>
+<h3 style="font-size:32px;font-weight:700;line-height:1.15;color:#122C47">Tell us once</h3>
+<p style="font-size:24px;font-weight:600;color:#7A5F0E">Service Owner</p>
+<p style="font-size:24px;line-height:1.35;color:#4A5568">One intake form. Never asked again.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF8;border:1px solid #E2DED3;border-top:6px solid #C8AB36;border-radius:12px;padding:24px">
+<p style="font-size:44px;font-weight:700;color:#C8AB36">2</p>
+<h3 style="font-size:32px;font-weight:700;line-height:1.15;color:#122C47">Triage</h3>
+<p style="font-size:24px;font-weight:600;color:#7A5F0E">AI Governance Lead</p>
+<p style="font-size:24px;line-height:1.35;color:#4A5568">Priority, risk and route worked out.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF8;border:1px solid #E2DED3;border-top:6px solid #C8AB36;border-radius:12px;padding:24px">
+<p style="font-size:44px;font-weight:700;color:#C8AB36">3</p>
+<h3 style="font-size:32px;font-weight:700;line-height:1.15;color:#122C47">Checks</h3>
+<p style="font-size:24px;font-weight:600;color:#7A5F0E">Specialists</p>
+<p style="font-size:24px;line-height:1.35;color:#4A5568">Only the checks this case needs, side by side.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF8;border:1px solid #E2DED3;border-top:6px solid #C8AB36;border-radius:12px;padding:24px">
+<p style="font-size:44px;font-weight:700;color:#C8AB36">4</p>
+<h3 style="font-size:32px;font-weight:700;line-height:1.15;color:#122C47">Decide</h3>
+<p style="font-size:24px;font-weight:600;color:#7A5F0E">Delegated forum</p>
+<p style="font-size:24px;line-height:1.35;color:#4A5568">One paper. The Board advises; the forum decides.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF8;border:1px solid #E2DED3;border-top:6px solid #C8AB36;border-radius:12px;padding:24px">
+<p style="font-size:44px;font-weight:700;color:#C8AB36">5</p>
+<h3 style="font-size:32px;font-weight:700;line-height:1.15;color:#122C47">Go live</h3>
+<p style="font-size:24px;font-weight:600;color:#7A5F0E">Service Owner</p>
+<p style="font-size:24px;line-height:1.35;color:#4A5568">Pilot evidence shown; conditions met first.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF8;border:1px solid #E2DED3;border-top:6px solid #C8AB36;border-radius:12px;padding:24px">
+<p style="font-size:44px;font-weight:700;color:#C8AB36">6</p>
+<h3 style="font-size:32px;font-weight:700;line-height:1.15;color:#122C47">Monitor</h3>
+<p style="font-size:24px;font-weight:600;color:#7A5F0E">Service Owner</p>
+<p style="font-size:24px;line-height:1.35;color:#4A5568">Monthly review; quarterly to the Board.</p>
+</div>
+<div style="grid-column:span 6;display:flex;gap:24px;align-items:center;background:#E9E3D2;border-radius:12px;padding:20px 28px">
+<p style="font-size:26px;font-weight:700;color:#122C47;white-space:nowrap">One AIR-ID throughout</p>
+<p style="font-size:26px;line-height:1.35;color:#1B2733">Every answer, check, decision and condition sits on one record that travels to each forum.</p>
+</div>
+</div>
+<aside>Here is the whole journey on one page, laid over the three checkpoints you already use: before deployment, after the pilot, and ongoing. Six steps. The service owner tells us once; triage works out the route; specialists only do the checks this case actually needs, at the same time rather than one after another; one decision paper goes to the forum that already holds the authority; the pilot proves the guardrails before go-live; and monitoring follows the risk tier. Underneath it all is one record, the AIR-ID, so nobody re-briefs the next board.</aside>
+</section>
+
+<section id="roles" data-transition="fade" style="background:#F7F5EF;color:#1B2733;font-family:'Public Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#7A5F0E">Who does what</p>
+<h2 style="font-family:'Libre Baskerville', Georgia, serif;font-size:64px;font-weight:700;line-height:1.15;color:#122C47">Everyone does their part once</h2>
+</div>
+<table style="font-family:'Public Sans', Arial, sans-serif;font-size:26px;color:#1B2733;background:#FDFCF8;border:1px solid #E2DED3;border-radius:12px;padding:16px">
+<tr style="background:#122C47"><th style="width:24%;color:#F4F1E8">Role</th><th style="width:40%;color:#F4F1E8">Does</th><th style="width:36%;color:#F4F1E8">No longer has to</th></tr>
+<tr><td><b>Service Owner</b></td><td>Tells us once; confirms the case; runs monitoring</td><td>Re-brief each board, or work out which checks apply</td></tr>
+<tr style="background:#F2EEE2"><td><b>AI Governance Lead</b></td><td>Triage, routing, the decision paper and the record</td><td>Chase history across boards; it is already on the record</td></tr>
+<tr><td><b>Specialists</b></td><td>Only the checks this case triggers (DPIA, equality, human rights, security)</td><td>Ask again what intake already captured</td></tr>
+<tr style="background:#F2EEE2"><td><b>AI Assurance Board</b></td><td>One assurance opinion every forum can rely on</td><td>Approve; authority stays with the delegated forum</td></tr>
+<tr><td><b>Decision-maker</b></td><td>Decides, with conditions, from one paper</td><td>Piece the story together from separate boards</td></tr>
+</table>
+<aside>This is where the ease comes from. Each person does their own part once. The service owner doesn't have to know the governance map. Specialists don't re-ask what intake already captured. The Board gives one assurance opinion that every forum can use, and the decision stays with the forum that already holds the delegation.</aside>
+</section>
+
+<section id="golive" data-section="After go-live, and the point of it all" data-transition="fade" style="background:#F7F5EF;color:#1B2733;font-family:'Public Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#7A5F0E">After go-live</p>
+<h2 style="font-family:'Libre Baskerville', Georgia, serif;font-size:64px;font-weight:700;line-height:1.15;color:#122C47">Watching it, and acting fast</h2>
+</div>
+<div style="display:flex;gap:40px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FDFCF8;border:1px solid #E2DED3;border-top:6px solid #C8AB36;border-radius:12px;padding:40px">
+<h3 style="font-size:36px;font-weight:700;color:#122C47">What we watch, for example</h3>
+<ul style="font-size:30px;line-height:1.5;color:#1B2733">
+<li>How often officers change the suggested band</li>
+<li>Whether accuracy holds across groups of residents</li>
+<li>Complaints and challenges to an outcome</li>
+</ul>
+<p style="font-size:26px;color:#4A5568">Monthly performance review; quarterly formal review to the AI Assurance Board.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FDFCF8;border:1px solid #E2DED3;border-top:6px solid #122C47;border-radius:12px;padding:40px">
+<h3 style="font-size:36px;font-weight:700;color:#122C47">If something goes wrong</h3>
+<ol style="font-size:30px;line-height:1.5;color:#1B2733">
+<li>The Service Owner pauses it straight away</li>
+<li>The Lead and the Board are told</li>
+<li>The delegated forum decides what happens next</li>
+</ol>
+<p style="font-size:26px;color:#4A5568">Logged on the same record, so the history is never lost.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6A7179">Measures shown are examples for this case; each system's monitoring plan sets its own.</p>
+<aside>Going live isn't the end. Because this case is high risk, it gets a monthly performance review and a quarterly formal review to the Board. For a tool like this I'd watch how often officers override the suggestion, whether it works equally well for different groups of residents, and complaints. And if something goes wrong, the service owner can pause it immediately without waiting for a meeting; the forum with the authority then decides what happens next.</aside>
+</section>
+
+<section id="close" data-transition="fade" style="background:#122C47;color:#F4F1E8;font-family:'Public Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:40px">
+<div style="width:120px;height:6px;background:#C8AB36"></div>
+<h2 style="font-family:'Libre Baskerville', Georgia, serif;font-size:88px;font-weight:700;line-height:1.15;color:#F4F1E8;width:1500px">Govern by exception, not by archaeology.</h2>
+<p style="font-size:38px;line-height:1.45;color:#D6DEE6;width:1400px">Every answer, check, decision and condition sits on one record, so nobody has to dig back through separate boards to find out what happened.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#AEBBC8">Proposed design, for Council confirmation</p>
+<aside>If I leave you with one thing, it's this. The aim is governance by exception, not by archaeology: the record is always there, so attention goes to the cases that need it, not to digging back through separate board papers to work out what was agreed.</aside>
+</section>
+
+<section id="legal" data-transition="fade" style="background:#F7F5EF;color:#1B2733;font-family:'Public Sans', Arial, sans-serif;padding:120px 128px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:14px">
+<p style="font-size:26px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#7A5F0E">The legal basis</p>
+<h2 style="font-family:'Libre Baskerville', Georgia, serif;font-size:64px;font-weight:700;line-height:1.15;color:#122C47">Grounded in law, guidance and standards</h2>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFCF8;border:1px solid #E2DED3;border-top:6px solid #C8AB36;border-radius:12px;padding:30px 32px">
+<h3 style="font-size:30px;font-weight:700;color:#122C47">AI law and policy</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5568">EU AI Act · ICO statutory code on AI and automated decisions (SI 2026/425) · UK Government AI Playbook · ATRS</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFCF8;border:1px solid #E2DED3;border-top:6px solid #C8AB36;border-radius:12px;padding:30px 32px">
+<h3 style="font-size:30px;font-weight:700;color:#122C47">Data protection</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5568">UK GDPR · Data Protection Act 2018 · Data (Use and Access) Act 2025 · ICO guidance on AI</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFCF8;border:1px solid #E2DED3;border-top:6px solid #C8AB36;border-radius:12px;padding:30px 32px">
+<h3 style="font-size:30px;font-weight:700;color:#122C47">Fairness and rights</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5568">Equality Act 2010 and the Public Sector Equality Duty · Human Rights Act 1998 · EHRC guidance on AI</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFCF8;border:1px solid #E2DED3;border-top:6px solid #122C47;border-radius:12px;padding:30px 32px">
+<h3 style="font-size:30px;font-weight:700;color:#122C47">Council governance</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5568">Local Government Act 1972 (s101 delegation) · Best Value Duty · FOI and the Transparency Code</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFCF8;border:1px solid #E2DED3;border-top:6px solid #122C47;border-radius:12px;padding:30px 32px">
+<h3 style="font-size:30px;font-weight:700;color:#122C47">Security and safety</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5568">NCSC secure AI guidelines · AI Cyber Security Code of Practice · Civil Contingencies Act 2004</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFCF8;border:1px solid #E2DED3;border-top:6px solid #122C47;border-radius:12px;padding:30px 32px">
+<h3 style="font-size:30px;font-weight:700;color:#122C47">International standards</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5568">ISO/IEC 42001, 23894 and 42005 · NIST AI 600-1 generative AI profile</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#122C47;border-radius:12px;padding:26px 32px">
+<p style="font-size:28px;font-weight:700;color:#F4F1E8">All 56 requirements, each linked to its official source</p>
+<p style="font-size:28px;color:#C8AB36"><a href="regulations.html" style="color:#C8AB36">kimabercromby.github.io/AIGovernanceSuiteTools/regulations.html</a></p>
+</div>
+<aside>And so you can see this isn't built on good intentions alone: every step sits on a register of 56 requirements. That's UK law like UK GDPR, the Equality Act and the new ICO statutory code on AI and automated decisions, the Council's own governance duties, security and resilience duties, and the international standards, ISO 42001 above all. The link takes you to the full list, each one linked to its official source. Applicability is still confirmed for each system at triage, so this is the basis, not a claim that everything applies to every case.</aside>
+</section>
+
+</div></div>
+<div class="ctl"><button id="prev" aria-label="Previous slide">← Previous</button><span id="count" aria-live="polite"></span><button id="next" aria-label="Next slide">Next →</button><button id="nb" aria-pressed="false">Show presenter notes</button><a href="demo.pdf" download style="color:var(--ink)">Download PDF</a></div>
+<div id="notes" hidden></div>
+<p class="f">Use the arrow keys or swipe to move between slides. Illustrative example; proposed design, for Council confirmation.</p>
+</div>
+<script>
+(function(){
+var S=[].slice.call(document.querySelectorAll('#canvas>section')),i=0,c=document.getElementById('canvas'),st=document.getElementById('stage'),N=document.getElementById('notes'),nb=document.getElementById('nb');
+function fit(){c.style.transform='scale('+(st.clientWidth/1920)+')';}
+function go(n){i=Math.max(0,Math.min(S.length-1,n));S.forEach(function(s,k){s.classList.toggle('on',k===i);s.setAttribute('aria-hidden',k===i?'false':'true');});
+document.getElementById('count').textContent=(i+1)+' / '+S.length;document.getElementById('prev').disabled=i===0;document.getElementById('next').disabled=i===S.length-1;
+var a=S[i].querySelector('aside');N.textContent=a?a.textContent:'';try{history.replaceState(null,'','#'+(i+1));}catch(e){}}
+document.getElementById('prev').onclick=function(){go(i-1)};document.getElementById('next').onclick=function(){go(i+1)};
+nb.onclick=function(){N.hidden=!N.hidden;nb.setAttribute('aria-pressed',String(!N.hidden));nb.textContent=N.hidden?'Show presenter notes':'Hide presenter notes';};
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();go(i+1)}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(i-1)}else if(e.key==='Home')go(0);else if(e.key==='End')go(S.length-1);});
+var x0=null;st.addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});st.addEventListener('touchend',function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>40)go(i+(dx<0?1:-1));x0=null;});
+window.addEventListener('resize',fit);fit();var h=parseInt(location.hash.slice(1),10);go(h>0?h-1:0);
+})();
+</script></body></html>
