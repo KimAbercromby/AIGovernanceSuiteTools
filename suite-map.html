@@ -189,7 +189,7 @@ td .was{color:var(--crit)} td .fix{color:var(--monitor,inherit);font-weight:600}
 
 <header class="top">
   <div class="wrap">
-    <div class="kicker">The Council · AI Governance Suite · suite v3.9.8 · Playbook v19.9.17 · README/Index GOV-01/03 v1.33 · Gate Map DEC-01 v1.12 · Agentic Triage AGT-03 v1.5 · Risk Worksheet ASS-02 v1.10 · Rollout Plan OPS-01 v1.11 · 30 Sep 2026</div>
+    <div class="kicker">The Council · AI Governance Suite · suite v3.9.9 · Playbook v19.9.18 · README/Index GOV-01/03 v1.34 · Gate Map DEC-01 v1.13 · Agentic Triage AGT-03 v1.6 · Risk Worksheet ASS-02 v1.10 · Rollout Plan OPS-01 v1.12 · 30 Sep 2026</div>
     <h1>AI Governance Suite Map</h1>
     <p class="lede">All 52 controlled artefacts and the UC-ID current view, arranged by lifecycle stage with the AI Register as the spine. Links are taken from each document's own cross-references. Select an artefact to see what it does, what feeds it and what it triggers.</p>
 <nav class="sibs" aria-label="Related tools"><span>Also:</span><a href="flow-builder.html">Flow builder</a><a href="route-finder.html">Route finder</a></nav>
@@ -511,7 +511,7 @@ const DECISIONS = [
  {id:"D-CANACT",from:"AIG-INV-03",q:"Can it act?",who:"AI Governance Lead",ref:"AIG-INV-03 §8; AIG-AGT-03",
   desc:"Can the AI take or initiate any action (send, update, invoke tools, transact or instruct another system), rather than only inform a person? If it can, Agentic Triage is mandatory at any risk tier, alongside normal priority and risk triage. The agency tier sets a minimum pathway, Gate 2 (Technical design review) is mandatory and Gate 6 grants the permitted autonomy level (Gate Map AIG-DEC-01, Agentic pathway).",
   branches:[
-   {label:"Yes",to:"AIG-AGT-03",why:"Agentic Triage is mandatory; open the Agent Record (ASBOM)",replaces:"AIG-AGT-03"},
+   {label:"Yes",to:"AIG-AGT-03",why:"Agentic Triage is mandatory; open the Agent Record (ASBOM): core record for every agent, full ASBOM at T3 and above",replaces:"AIG-AGT-03"},
    {label:"Yes",to:"AIG-ASS-01",why:"and priority triage as normal"},
    {label:"No",to:"AIG-ASS-01",why:"Priority triage",replaces:"AIG-ASS-01"}]},
  {id:"D-TIER",from:"AIG-ASS-03",q:"Effective tier Medium or above?",who:"AI Governance Lead",ref:"AIG-ASS-03; Playbook §3.10; AIG-DEC-01 Agentic pathway; AIG-AGT-03 §6",
