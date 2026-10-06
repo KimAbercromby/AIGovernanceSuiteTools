@@ -1,18 +1,110 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI Governance Tools</title>
-<style>:root{--bg:#F3F5F8;--ink:#16202E;--card:#fff;--line:#D5DCE6;--title:#122C47;--muted:#5A6678;--head:#122C47;--gold:#C8AB36}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0D1520;--ink:#E4EAF2;--card:#142031;--line:#2A3A51;--title:#E4EAF2;--muted:#9AA7B8;--head:#0A1A2C;--gold:#D9BE55}}
-:root[data-theme="dark"]{color-scheme:dark;--bg:#0D1520;--ink:#E4EAF2;--card:#142031;--line:#2A3A51;--title:#E4EAF2;--muted:#9AA7B8;--head:#0A1A2C;--gold:#D9BE55}
-body{margin:0;font:15px/1.5 Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}header{background:var(--head);color:#F4F6F9;padding:28px 20px}
-.w{max-width:880px;margin:0 auto;padding:0 16px}.k{font:600 11px "IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}h1{margin:4px 0 6px;font-size:26px}
-header p{color:#B9C5D6;margin:0}main{padding:24px 0}a.c{display:block;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:8px;padding:16px 18px;margin:0 0 12px;color:inherit;text-decoration:none}
-a.c:hover{border-color:var(--gold)}a.c:focus-visible{outline:2px solid var(--gold);outline-offset:2px}a.c b{font-size:17px;color:var(--title)}a.c span{display:block;color:var(--muted);font-size:14px;margin-top:3px}.f{font-size:12.5px;color:var(--muted)}code{font-size:12px}</style></head>
-<body><header><div class="w"><div class="k">The Council · AI governance · suite v3.9.9, 4 October 2026</div><h1>AI Governance Tools</h1><p>Draft for Council review. These guides approve nothing; the AI Governance Lead confirms every route and tier.</p></div></header>
-<main class="w">
-<a class="c" href="demo.html"><b>Demo: one high-risk system, start to finish</b><span>An eight-slide walkthrough: the fast lane for low-risk AI, then one high-risk use from idea to live service, and who does what at each step. Presenter notes included.</span></a>
-<a class="c" href="route-finder.html"><b>Route Finder</b><span>Answer the suite's own screening questions and see only your case's route, by role, with a handover checklist for each stage.</span></a>
-<a class="c" href="flow-builder.html"><b>Flow Builder</b><span>Start from a scenario or any artefact and open the next steps one at a time, with the conditions that decide each one. Role chips show who does each step; highlight a role to see where it is involved.</span></a>
-<a class="c" href="suite-map.html"><b>Suite Map</b><span>All 52 artefacts and the UC-ID view by lifecycle stage, with the AI Register as the spine, and the links between them. View as a role to see what that role does, decides and contributes to.</span></a>
-<a class="c" href="regulations.html"><b>Legal and Regulatory Basis</b><span>The laws, codes, regulator guidance and standards the suite is built on, grouped by theme, each linked to its official source.</span></a>
-<p class="f">Each artefact opens as a PDF from the <code>docs</code> folder (suite pack v3.9.9: README AIG-GOV-01 and Artefact Index AIG-GOV-03 v1.34, Playbook AIG-GOV-02 v19.9.18, Gate Map AIG-DEC-01 v1.13, Agentic Triage AIG-AGT-03 v1.6, Risk Worksheet AIG-ASS-02 v1.10, Deployment and Rollout Plan AIG-OPS-01 v1.12). Workbooks open as a heading summary; the Excel files hold the formulas and dropdowns.</p>
-<p class="f"><b>Roles are a pilot design.</b> They come from the draft role table of 29 September 2026, checked against suite v3.9, and are not adopted. Where the suite is silent or two documents disagree, the tools show a proposed pilot position, marked as such, until the Council confirms its own delegations and owners.</p>
-</main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Governance Tools</title>
+<style>
+  :root{--navy:#0A2342;--banner:#003865;--teal:#006272;--gold:#C9A442;--grey:#5A5A5A;--line:#D7DCE1;--light:#F4F6F8;--muted:#8A94A0;--ink:#1A1A1A}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#fff;line-height:1.5}
+  header{background:var(--navy);color:#fff;padding:34px 24px 26px}
+  header .wrap{max-width:1040px;margin:0 auto}
+  header .kicker{color:var(--gold);font-size:12px;letter-spacing:1px;font-weight:700}
+  h1{margin:8px 0 0;font-size:30px}
+  header .sub{color:#CBD5E1;font-size:14px;margin-top:8px;max-width:780px}
+  .rule{height:5px;background:var(--gold)}
+  main{max-width:1040px;margin:0 auto;padding:10px 20px 50px}
+  section{margin-top:28px}
+  .secttl{font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--teal);margin:0 0 12px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .card{border:1px solid var(--line);border-radius:10px;padding:16px 16px 14px;display:flex;flex-direction:column;background:#fff}
+  .card h2{margin:0 0 6px;font-size:16px;color:var(--navy)}
+  .card p{margin:0 0 14px;font-size:13px;color:var(--grey);flex:1}
+  .card a.open{align-self:flex-start;text-decoration:none;font-size:13px;font-weight:700;color:#fff;background:var(--navy);padding:8px 14px;border-radius:7px}
+  .card a.open:hover{background:var(--banner)}
+  .card .soon{align-self:flex-start;font-size:12px;font-weight:700;color:var(--muted);background:var(--light);padding:8px 14px;border-radius:7px;border:1px dashed var(--line)}
+  footer{max-width:1040px;margin:0 auto;padding:0 20px 46px;color:var(--grey);font-size:12px}
+  footer .n{border-top:1px solid var(--line);padding-top:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="kicker">AI GOVERNANCE</div>
+    <h1>AI governance tools</h1>
+    <div class="sub">Companion tools to the AI governance playbook: orientation and reference, then the operational tools grouped by where they sit in a system's life. Each tool runs in the browser and stores nothing. The guides are drafts for review; the AI Governance Lead confirms every route and tier.</div>
+  </div>
+</header>
+<div class="rule"></div>
+<main id="main"></main>
+<footer><div class="n">Illustrative companions to the playbook, not production systems. They structure human judgement; they do not replace it. Built and maintained by Kim Abercromby.</div></footer>
+
+<script>
+// EDIT HERE. Paste a live URL into "url". Leave "" to show "In development".
+const SUITE = "https://kimabercromby.github.io/AIGovernanceSuiteTools";
+const SECTIONS = [
+  { title:"Explore and orient", tools:[
+    { name:"Demo: one high-risk system, start to finish",
+      desc:"An eight-slide walkthrough of a single high-risk system from fast-track screening to full implementation, with presenter notes.",
+      url:SUITE+"/demo.html" },
+    { name:"Suite Map",
+      desc:"A visual map of the 52 artefacts by lifecycle stage, with the AI Register at the centre, filterable by role.",
+      url:SUITE+"/suite-map.html" },
+    { name:"Route Finder",
+      desc:"Answer a few screening questions and get the governance route for your role, with handover checklists.",
+      url:SUITE+"/route-finder.html" },
+    { name:"Flow Builder",
+      desc:"Build a scenario and see the sequential steps and conditions, with role indicators you can filter by function.",
+      url:SUITE+"/flow-builder.html" },
+    { name:"Legal and Regulatory Basis",
+      desc:"The laws, regulatory guidance and standards that apply to councils, with links to the official sources.",
+      url:SUITE+"/regulations.html" },
+  ]},
+  { title:"Before deployment", tools:[
+    { name:"Triage &amp; Governance Router",
+      desc:"Capture a system once, give it a permanent AIR-ID, and see its priority, risk tier and the governance route it needs. Includes triage for agentic AI that can take actions.",
+      url:"https://kimabercromby.github.io/AIGovernanceTriage-MultiBoard/" },
+    { name:"Triage Engines",
+      desc:"An interactive look at how the priority, risk and agency results are reached, with the full methodology behind each one.",
+      url:"https://kimabercromby.github.io/triage-engines-simulation/" },
+    { name:"Council AI Governance Maturity Ladder",
+      desc:"A six-domain self-assessment of a council's AI governance maturity, from Initial to Optimising, with a live profile and an adoption roadmap.",
+      url:"https://kimabercromby.github.io/AIGovernanceSuiteTools/maturity-ladder.html" },
+  ]},
+  { title:"Across the whole lifecycle", tools:[
+    { name:"Lifecycle Walkthrough",
+      desc:"Follow worked example systems stage by stage, from intake to change, and see which records and forums come into play at each step.",
+      url:"https://kimabercromby.github.io/AIGovernanceWalkthrough-MultiBoard/" },
+  ]},
+  { title:"After deployment", tools:[
+    { name:"Post-Deployment Governance Router",
+      desc:"Route incidents, reassess changes and prepare monitoring handovers once a system is live.",
+      url:"https://kimabercromby.github.io/AIGovernancePostDeployment/" },
+    { name:"Regulatory Horizon Scanner",
+      desc:"Tracks changes to the laws, guidance and Ombudsman decisions that apply to English councils, and maps each one to the parts of the framework it affects.",
+      url:"https://kimabercromby.github.io/AIRegScanner/" },
+    { name:"AI Incident Observatory",
+      desc:"A library of real-world AI incidents and how they were remediated, mapped to the controls that would have caught them.",
+      url:"" },
+  ]},
+];
+
+const main = document.getElementById("main");
+SECTIONS.forEach(s => {
+  const sec = document.createElement("section");
+  sec.innerHTML = `<div class="secttl">${s.title}</div>`;
+  const grid = document.createElement("div"); grid.className = "grid";
+  s.tools.forEach(t => {
+    const c = document.createElement("div"); c.className = "card";
+    const action = t.url
+      ? `<a class="open" href="${t.url}" target="_blank" rel="noopener">Open tool</a>`
+      : `<span class="soon">In development</span>`;
+    c.innerHTML = `<h2>${t.name}</h2><p>${t.desc}</p>${action}`;
+    grid.appendChild(c);
+  });
+  sec.appendChild(grid); main.appendChild(sec);
+});
+</script>
+</body>
+</html>
