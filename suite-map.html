@@ -75,6 +75,7 @@ svg#map{display:block}
 .node .nid{font:600 10.5px var(--mono);letter-spacing:.02em}
 .node .nt{font:12px var(--sans);fill:var(--ink)}
 .node.spine rect.box{stroke:var(--gold);stroke-width:2.4}
+.node.endstate rect.box{stroke-dasharray:5 3}
 .node .flag{fill:var(--crit)}
 .node.dim{opacity:.22}
 .node.sel rect.box{stroke-width:2.6}
@@ -191,7 +192,7 @@ td .was{color:var(--crit)} td .fix{color:var(--monitor,inherit);font-weight:600}
   <div class="wrap">
     <div class="kicker">The Council · AI Governance Suite · suite v3.9.9 · Playbook v19.9.18 · README/Index GOV-01/03 v1.34 · Gate Map DEC-01 v1.13 · Agentic Triage AGT-03 v1.6 · Risk Worksheet ASS-02 v1.10 · Rollout Plan OPS-01 v1.12 · 30 Sep 2026</div>
     <h1>AI Governance Suite Map</h1>
-    <p class="lede">All 52 controlled artefacts and the UC-ID current view, arranged by lifecycle stage with the AI Register as the spine. Links are taken from each document's own cross-references. Select an artefact to see what it does, what feeds it and what it triggers.</p>
+    <p class="lede">All 52 controlled artefacts, the UC-ID current view and the retirement end state, arranged by lifecycle stage with the AI Register as the spine. Links are taken from each document's own cross-references. Select an artefact to see what it does, what feeds it and what it triggers.</p>
 <nav class="sibs" aria-label="Related tools"><span>Also:</span><a href="flow-builder.html">Flow builder</a><a href="route-finder.html">Route finder</a></nav>
   </div>
   <div style="height:14px"></div>
@@ -266,7 +267,7 @@ const NODES = [
  ["AIG-ASS-02", "AI Risk Assessment Worksheet", "ASS", "Core record", "Risk assessment & review", "Service Owner", "§4.4", 2, 262, "Calculates inherent and residual risk and the risk tier, applying the seven escalation triggers and the impact floor (a confirmed Severe impact, Impact 5, sets at least Medium). Imports the triage result; tier drops need evidence and independent verification."],
  ["AIG-ASS-03", "AI Governance Checklist", "ASS", "Core record", "Pathway assignment", "AI Governance Lead", "§3.8 / §3.10.1", 2, 324, "Turns the tier into a case-specific list of required assessments, reviews and approvals. Adds agentic security, ASBOM and monitoring evidence whenever the AI can act."],
  // Decide
- ["AIG-DEC-01", "AI Governance Gate Map", "DEC", "Core record", "Routing configuration", "AI Governance Lead", "§3.4", 3, 200, "Maps each governance gate onto the Council's existing forums and what evidence each needs. Its Agentic pathway section sets a minimum pathway per agency tier; Gate 2 is mandatory for action-capable uses and Gate 6 grants the permitted autonomy level. Its Gate 1 and 3 rule makes Gate 3 (business case) N/A wherever there is no new investment at Low or Medium, and Gate 1 N/A too for a new use of an already approved system; a tool new to the Council always goes to Gate 1. Routes decisions; confers no authority."],
+ ["AIG-DEC-01", "AI Governance Gate Map", "DEC", "Core record", "Routing configuration", "AI Governance Lead", "§3.4", 3, 200, "Maps each governance gate onto the Council's existing forums and what evidence each needs. Its Agentic pathway section sets a minimum pathway per agency tier; Gate 2 is mandatory for action-capable uses and Gate 6 grants the permitted autonomy level. Its Gate 1 and 3 rule makes Gate 3 (business case) N/A wherever there is no new investment at Low or Medium, and Gate 1 N/A too for a new use of an already approved system; a tool new to the Council always goes to Gate 1. Gate 8 (Retirement / closure) closes the use at end of life. Routes decisions; confers no authority."],
  ["AIG-DEC-02", "Decision-Ready Paper", "DEC", "Core record", "Approval & assurance", "AI Governance Lead", "§3.10.4", 3, 262, "Forward-looking brief for the deciding forum. The paper asks; the Decision Record explains; the Gate Log tallies."],
  ["AIG-DEC-03", "Governance Decision Record", "DEC", "Core record", "Approval & assurance", "Officer or forum with confirmed delegation (recorded by the AI Governance Lead / secretariat)", "§3.10.4", 3, 324, "The authoritative decision, reasons, scope and conditions for each UC-ID (or approved forum minutes), including the permitted autonomy level granted at Gate 6 for an action-capable use. Everything else points here."],
  ["AIG-DEC-04", "AI Governance Gate Log", "DEC", "Core record", "Gate plans, events & conditions", "AI Governance Lead / secretariat", "§3.6 / §3.7 / §3.10.4", 3, 386, "Append-only history: prospective Gate Plans, dated Gate Events and event-linked Conditions, keyed to AIR-ID. A dated pointer, never the decision."],
@@ -277,6 +278,8 @@ const NODES = [
  ["AIG-OPS-04", "AI Contestability and Redress Control", "OPS", "Core record", "Monitoring & operation", "AI Governance Lead", "§5.7.1, §6.8.6.5; UK AI White Paper Principle 5 (contestability and redress)", 4, 386, "How a person affected by an AI-influenced decision can challenge it, and how the Council reviews, corrects and learns from it."],
  ["AIG-OPS-05", "AI Governance Reporting Templates", "OPS", "Core record", "Governance oversight", "AI Governance Lead", "§6.9", 5, 232, "Board, forum and service reports. Reconciled to Register state and dated Gate Log events."],
  ["AIG-OPS-06", "AI Governance Dashboard", "OPS", "Core record", "Governance oversight", "AI Governance Lead", "§6.9.7", 5, 294, "Point-in-time portfolio snapshot from the Register, Gate Log and UC-ID view. System metrics never imply UC-ID approval."],
+ // Retirement / closure
+ ["END-RETIRED", "Retired and closed", "OPS", "Lifecycle state", "Retirement & closure", "Service Owner, under a delegated retirement decision", "Playbook Appendix E.7; Gate 8 (AIG-DEC-01)", 6, 262, "A lifecycle end state, not an artefact. Service withdrawn, access removed, data and logs handled under retention rules, open actions closed or transferred, and the Register updated. The AIR-ID is kept, never reused. Reached two ways: planned retirement decided at a scheduled review, or withdrawal after an incident. Either way retirement needs a delegated decision and closure evidence."],
  // Specialist assessments
  ["AIG-ASS-04", "Responsible AI Assessment", "ASS", "Triggered specialist", "Risk assessment & review", "Service Owner (AI Governance Lead QA)", "§4.6.4", 1, 500, "Self-assessment against the Council's eight Responsible AI themes: public benefit, data quality, transparency and explainability, fairness, human oversight, accountability, privacy and security, and supplier governance."],
  ["AIG-ASS-05", "Data Protection Impact Assessment", "ASS", "Triggered specialist", "Risk assessment & review", "Service Owner (DPO advice / QA)", "§4.6.1", 2, 500, "Data protection impact assessment before approval where personal data is processed."],
@@ -374,7 +377,14 @@ const EDGES = [
  ["AIG-OPS-02","AIG-AIMS-08","escalate","Nonconformity → corrective action",""],
  ["AIG-OPS-02","AIG-OPS-06","feeds","Portfolio reporting draws from the log",""],
  ["AIG-OPS-02","AIG-DEC-04","event","Reassessment decisions and condition follow-up",""],
- ["AIG-OPS-02","AIG-OPS-01","feeds","Planned retirement: closure evidence recorded in the Rollout Plan (Playbook Appendix E.7)","Planned retirement"],
+ // Retirement / closure
+ ["AIG-OPS-02","END-RETIRED","route","Scheduled review decides planned retirement rather than continuing","Planned retirement"],
+ ["AIG-OPS-03","END-RETIRED","escalate","Withdrawal after an incident closes the use down","Withdraw"],
+ ["AIG-DEC-03","END-RETIRED","decision","Retirement is a delegated decision before closure begins (Gate 8)",""],
+ ["END-RETIRED","AIG-DEC-04","event","Gate 8 (Retirement / closure) logged as a dated Gate Event",""],
+ ["END-RETIRED","AIG-OPS-01","feeds","Closure evidence recorded in the Rollout Plan (Playbook Appendix E.7)",""],
+ ["END-RETIRED","AIG-INV-04","feeds","Register lifecycle set to Retired; the AIR-ID is kept, never reused",""],
+ ["END-RETIRED","AIG-AGT-04","feeds","Agent record closed at end of life: delegations revoked and access removed (ASBOM runs intake to retirement)","Action-capable use"],
  ["AIG-OPS-03","AIG-ASS-02","escalate","Update risk assessment",""],
  ["AIG-OPS-03","AIG-DEC-03","decision","Delegated decision on suspension, resumption or withdrawal",""],
  ["AIG-OPS-03","AIG-DEC-04","event","Decision / event recorded",""],
@@ -488,6 +498,14 @@ const ROUTES = [
   ["AIG-OPS-04","AIG-OPS-03","Fault found: Incident Report."],
   ["AIG-OPS-04","AIG-AIMS-08","Fault found: corrective action."],
   ["AIG-OPS-04","AIG-AIMS-09","Patterns reported into management review."]]},
+ {id:"retire",name:"Retirement",sub:"Planned retirement or withdrawal through to closure",steps:[
+  ["AIG-OPS-02","END-RETIRED","Planned: at a scheduled review the use is retired rather than continued."],
+  ["AIG-OPS-03","END-RETIRED","Or unplanned: after an incident the delegated authority withdraws the use."],
+  ["AIG-DEC-03","END-RETIRED","Either way retirement is a delegated decision before closure begins."],
+  ["END-RETIRED","AIG-DEC-04","Gate 8 (Retirement / closure) logged as a dated Gate Event."],
+  ["END-RETIRED","AIG-OPS-01","Closure evidence recorded in the Rollout Plan (Playbook Appendix E.7)."],
+  ["END-RETIRED","AIG-INV-04","Register lifecycle set to Retired. The AIR-ID is kept, never reused."],
+  ["END-RETIRED","AIG-AGT-04","For an action-capable use: delegations revoked, access removed, agent record closed."]]},
  {id:"aims",name:"AIMS cycle",sub:"ISO 42001 plan–do–check–act",steps:[
   ["AIG-AIMS-13","AIG-AIMS-05","Sources verified behind each requirement."],
   ["AIG-AIMS-05","AIG-AIMS-01","Requirements inform scope and context."],
@@ -589,13 +607,13 @@ FINDINGS.range.forEach(r=>addI(r[0],"med",`Range “${r[1]}” comes from the ol
 
 // ---- SVG
 const svg=document.getElementById("map"),NS="http://www.w3.org/2000/svg";
-const VW=X0*2+5*CW+W, VH=1060;
+const VW=X0*2+6*CW+W, VH=1060;
 let scale=1;
 function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
 const bands=[["Framework & authority",30,112],["Core route",146,310],["Triggered specialist assessments",462,158],["Agentic layer",642,158],["Management system (ISO/IEC 42001)",822,222]];
 const gB=el("g",{},svg);
 bands.forEach((b,i)=>{el("rect",{x:8,y:b[1],width:VW-16,height:b[2],rx:6,class:"bandrect"+(i%2?" alt":"")},gB);const t=el("text",{x:22,y:b[1]+18,class:"bandlabel"},gB);t.textContent=b[0]});
-const heads=["Discover & intake","Register","Assess","Decide & gate","Operate & monitor","Report"];
+const heads=["Discover & intake","Register","Assess","Decide & gate","Operate & monitor","Report","Retire & close"];
 heads.forEach((h,i)=>{const t=el("text",{x:X0+i*CW,y:190,class:"colhead"},gB);const n=el("tspan",{class:"n"},t);n.textContent=(i+1)+"  ";const s=el("tspan",{},t);s.textContent=h});
 const defs=el("defs",{},svg);
 Object.keys(ETYPES).forEach(t=>{const m=el("marker",{id:"ar-"+t,viewBox:"0 0 10 10",refX:"9",refY:"5",markerWidth:"7",markerHeight:"7",orient:"auto-start-reverse"},defs);el("path",{d:"M0,0 L10,5 L0,10 z",style:`fill:var(--e-${t})`},m)});
@@ -612,9 +630,9 @@ edges.forEach(e=>{const a=nodes[e.from],b=nodes[e.to];if(!a||!b){console.warn("m
 
 function wrap(t,max){const w=t.split(" ");const lines=[];let cur="";w.forEach(x=>{if((cur+" "+x).trim().length>max){if(cur)lines.push(cur);cur=x}else cur=(cur+" "+x).trim()});if(cur)lines.push(cur);if(lines.length>2){lines.length=2;lines[1]=lines[1].replace(/\s?\S*$/,"")+"…"}return lines}
 Object.values(nodes).forEach(n=>{
-  const g=el("g",{class:"node"+(n.id==="AIG-INV-04"?" spine":""),transform:`translate(${n.x},${n.y})`,tabindex:"0",role:"button","aria-label":`${n.id} ${n.title}`},gN);
+  const g=el("g",{class:"node"+(n.id==="AIG-INV-04"?" spine":"")+(n.cls==="Lifecycle state"?" endstate":""),transform:`translate(${n.x},${n.y})`,tabindex:"0",role:"button","aria-label":`${n.id} ${n.title}`},gN);
   el("rect",{class:"box",width:W,height:H,rx:5,style:`stroke:var(--g-${n.g})`},g);
-  const id=el("text",{class:"nid",x:9,y:14,style:`fill:var(--g-${n.g})`},g);id.textContent=n.id==="UCV"?"UC-ID VIEW":short(n.id);
+  const id=el("text",{class:"nid",x:9,y:14,style:`fill:var(--g-${n.g})`},g);id.textContent=n.id==="UCV"?"UC-ID VIEW":n.id==="END-RETIRED"?"END STATE":short(n.id);
   const lines=wrap(n.title,27);lines.forEach((l,i)=>{const t=el("text",{class:"nt",x:9,y:29+i*13},g);t.textContent=l});
   n.el=g;n.rt=el("g",{class:"rt"},g);
   g.addEventListener("click",ev=>{ev.stopPropagation();select(n.id)});
@@ -706,10 +724,10 @@ function select(id){
   const raw=FINDINGS.refs[id]||{};
   const boiler=["AIG-AIMS-05","AIG-AIMS-13"];
   const extra=Object.entries(raw).filter(([k,v])=>!linked.has(k)&&!(boiler.includes(k)&&v===1)).sort((a,b)=>b[1]-a[1]);
-  panel.innerHTML=`<div class="pid" style="color:var(--g-${n.g})">${id==="UCV"?"Supplementary workbook":id} · ${GROUPS[n.g]}</div>
+  panel.innerHTML=`<div class="pid" style="color:var(--g-${n.g})">${id==="UCV"?"Supplementary workbook":id==="END-RETIRED"?"Lifecycle end state":id} · ${GROUPS[n.g]}</div>
   <h2>${esc(n.title)}</h2>
   <p class="desc">${esc(n.desc)}</p>
-  <dl class="meta"><dt>Stage</dt><dd>${esc(n.stage)}</dd><dt>Completed by / process owner</dt><dd>${esc(n.owner)}</dd><dt>Document owner</dt><dd>${esc(DOC_OWNER[id]||"Not stated in the document; see AIG-GOV-03")}</dd><dt>Playbook ref</dt><dd>${esc(n.ref)}</dd><dt>Class</dt><dd>${esc(n.cls)}</dd></dl>
+  <dl class="meta"><dt>Stage</dt><dd>${esc(n.stage)}</dd><dt>Completed by / process owner</dt><dd>${esc(n.owner)}</dd>${n.cls==="Lifecycle state"?"":`<dt>Document owner</dt><dd>${esc(DOC_OWNER[id]||"Not stated in the document; see AIG-GOV-03")}</dd>`}<dt>Playbook ref</dt><dd>${esc(n.ref)}</dd><dt>Class</dt><dd>${esc(n.cls)}</dd></dl>
   ${DOCS[id]?`<p class="docrow"><a class="docbtn" href="${DOCS[id].file}" target="_blank" rel="noopener">${DOCS[id].kind==="workbook"?"Open workbook summary":"Open document"} <span>PDF · ${DOCS[id].pages} page${DOCS[id].pages>1?"s":""}</span></a>${DOCS[id].kind==="workbook"?`<span class="note"> Headings only; formulas and dropdowns are in the Excel file.</span>`:""}</p>`:""}
   ${roleSec(id)}
   <div class="sec"><h3>Leads to / feeds (${out.length})</h3>${out.length?out.map(e=>linkRow(e,"out")).join(""):`<p class="note">No outgoing workflow link. ${["AIG-GOV-01","AIG-GOV-02","AIG-GOV-03"].includes(id)?"It is a navigation or framework document that every artefact relies on.":""}</p>`}</div>
@@ -719,10 +737,11 @@ function select(id){
 }
 function scrollTo(id){const n=nodes[id],box=document.getElementById("mapbox");box.scrollTo({left:Math.max(0,(n.x-100)*scale),top:Math.max(0,(n.y-120)*scale),behavior:"smooth"})}
 function intro(){panel.innerHTML=`<div class="intro"><h2>How to read the map</h2>
-<p class="desc">Columns follow the lifecycle from discovery to reporting. Bands group artefacts by role: the core route, the specialist assessments the checklist triggers, the agentic layer and the ISO 42001 management system beneath it all.</p>
+<p class="desc">Columns follow the lifecycle from discovery to retirement. Bands group artefacts by role: the core route, the specialist assessments the checklist triggers, the agentic layer and the ISO 42001 management system beneath it all.</p>
 <p>The <b>AI Register</b> (gold outline) is the spine: every record joins to it by AIR-ID, and each distinct use carries a UC-ID.</p>
 <p>Dashed links are conditional; dotted links are derived views or mappings. On a narrow screen, choose <b>List view</b> to browse the artefacts by band.</p>
-<p class="note">${NODES.length-1} controlled artefacts plus the UC-ID current view · ${edges.length} workflow links drawn from the documents' cross-references.</p></div>`}
+<p>A <b>dashed box</b> is a lifecycle state rather than an artefact. <b>Retired and closed</b> in column 7 is the end of life: reached by planned retirement at a scheduled review or by withdrawal after an incident, closed under Gate 8, and recorded against an AIR-ID that is kept and never reused.</p>
+<p class="note">${NODES.filter(n=>n[3]!=="Lifecycle state").length-1} controlled artefacts plus the UC-ID current view and one lifecycle end state · ${edges.length} workflow links drawn from the documents' cross-references.</p></div>`}
 function clearAll(){sel=null;route=null;searchHits=null;routeSel.value="";document.getElementById("q").value="";refresh();role?roleSummary():intro()}
 document.getElementById("clear").onclick=clearAll;
 routeSel.onchange=()=>{const r=ROUTES.find(x=>x.id===routeSel.value);if(!r){clearAll();return}sel=null;searchHits=null;route=r;refresh();
