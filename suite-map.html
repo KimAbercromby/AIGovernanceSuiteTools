@@ -61,7 +61,7 @@ select{border:1px solid var(--line);background:var(--panel);color:var(--ink);bor
 .chip svg{flex:none}
 .sw{width:10px;height:10px;border-radius:2px;flex:none}
 
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:14px;align-items:start;padding-bottom:28px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;align-items:start;padding-bottom:28px}
 @media (max-width:960px){.layout{grid-template-columns:minmax(0,1fr)}}
 .mapbox{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:auto;max-height:78vh;position:relative}
 svg#map{display:block}
@@ -73,7 +73,7 @@ svg#map{display:block}
 .node{cursor:pointer}
 .node rect.box{fill:var(--panel);stroke-width:1.2}
 .node .nid{font:600 11.5px var(--mono);letter-spacing:.02em}
-.node .nt{font:13.5px var(--sans);fill:var(--ink)}
+.node .nt{font:13.8px var(--sans);fill:var(--ink)}
 .node.spine rect.box{stroke:var(--gold);stroke-width:2.4}
 .node.endstate rect.box{stroke-dasharray:5 3}
 .node .flag{fill:var(--crit)}
@@ -580,7 +580,7 @@ const DOC_OWNER={"AIG-AIMS-01": "AI Governance Lead", "AIG-AIMS-12": "AI Governa
 (function(){
 const GROUPS={GOV:"Governance",INV:"Inventory & intake",ASS:"Assessment",DEC:"Decision & gates",OPS:"Operations",AGT:"Agentic layer",AIMS:"AIMS (ISO 42001)",SUP:"Supplementary"};
 const ETYPES={route:["Next step","",""],feeds:["Feeds / populates","",""],decision:["Decision recorded in","",""],event:["Gate event logged in","dash",""],trigger:["Triggers (conditional)","dash",""],monitor:["Monitored in","",""],plan:["Planned for live use in (after go-live)","dash",""],escalate:["Escalates to","",""],derived:["Derived view / checked against","dot",""],govern:["Governs / maps","dot",""]};
-const W=196,H=52,CW=228,X0=22;
+const W=190,H=48,CW=212,X0=22;
 const nodes={};NODES.forEach(n=>{nodes[n[0]]={id:n[0],title:n[1],g:n[2],cls:n[3],stage:n[4],owner:n[5],ref:n[6],c:n[7],y:n[8],desc:n[9],x:X0+n[7]*CW}});
 const edges=EDGES.map((e,i)=>({i,from:e[0],to:e[1],type:e[2],label:e[3],cond:e[4]}));
 const short=id=>id.replace("AIG-","");
@@ -607,9 +607,9 @@ FINDINGS.range.forEach(r=>addI(r[0],"med",`Range “${r[1]}” comes from the ol
 
 // ---- SVG
 const svg=document.getElementById("map"),NS="http://www.w3.org/2000/svg";
-const VW=X0*2+6*CW+W, VH=1090;
+const VW=X0*2+6*CW+W, VH=1060;
 let scale=1;
-const MINFIT=1.18; // never auto-shrink past this; the pane scrolls instead
+const MINFIT=0; // never auto-shrink past this; the pane scrolls instead
 function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
 const bands=[["Framework & authority",30,112],["Core route",146,310],["Triggered specialist assessments",462,158],["Agentic layer",642,158],["Management system (ISO/IEC 42001)",822,222]];
 const gB=el("g",{},svg);
@@ -633,8 +633,8 @@ function wrap(t,max){const w=t.split(" ");const lines=[];let cur="";w.forEach(x=
 Object.values(nodes).forEach(n=>{
   const g=el("g",{class:"node"+(n.id==="AIG-INV-04"?" spine":"")+(n.cls==="Lifecycle state"?" endstate":""),transform:`translate(${n.x},${n.y})`,tabindex:"0",role:"button","aria-label":`${n.id} ${n.title}`},gN);
   el("rect",{class:"box",width:W,height:H,rx:5,style:`stroke:var(--g-${n.g})`},g);
-  const id=el("text",{class:"nid",x:9,y:15,style:`fill:var(--g-${n.g})`},g);id.textContent=n.id==="UCV"?"UC-ID VIEW":n.id==="END-RETIRED"?"END STATE":short(n.id);
-  const lines=wrap(n.title,26);lines.forEach((l,i)=>{const t=el("text",{class:"nt",x:9,y:31+i*14.5},g);t.textContent=l});
+  const id=el("text",{class:"nid",x:9,y:14,style:`fill:var(--g-${n.g})`},g);id.textContent=n.id==="UCV"?"UC-ID VIEW":n.id==="END-RETIRED"?"END STATE":short(n.id);
+  const lines=wrap(n.title,26);lines.forEach((l,i)=>{const t=el("text",{class:"nt",x:9,y:29+i*13.5},g);t.textContent=l});
   n.el=g;n.rt=el("g",{class:"rt"},g);
   g.addEventListener("click",ev=>{ev.stopPropagation();select(n.id)});
   g.addEventListener("keydown",ev=>{if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();select(n.id)}});
