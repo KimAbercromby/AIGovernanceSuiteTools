@@ -67,13 +67,13 @@ select{border:1px solid var(--line);background:var(--panel);color:var(--ink);bor
 svg#map{display:block}
 .bandrect{fill:var(--band)}
 .bandrect.alt{fill:var(--band2)}
-.bandlabel{font:700 11px var(--mono);letter-spacing:.07em;text-transform:uppercase;fill:var(--muted)}
-.colhead{font:600 11.5px var(--sans);fill:var(--muted)}
+.bandlabel{font:700 12px var(--mono);letter-spacing:.07em;text-transform:uppercase;fill:var(--muted)}
+.colhead{font:600 13px var(--sans);fill:var(--muted)}
 .colhead .n{font-family:var(--mono);fill:var(--gold-ink)}
 .node{cursor:pointer}
 .node rect.box{fill:var(--panel);stroke-width:1.2}
-.node .nid{font:600 10.5px var(--mono);letter-spacing:.02em}
-.node .nt{font:12px var(--sans);fill:var(--ink)}
+.node .nid{font:600 11.5px var(--mono);letter-spacing:.02em}
+.node .nt{font:13.5px var(--sans);fill:var(--ink)}
 .node.spine rect.box{stroke:var(--gold);stroke-width:2.4}
 .node.endstate rect.box{stroke-dasharray:5 3}
 .node .flag{fill:var(--crit)}
@@ -87,7 +87,7 @@ svg#map{display:block}
 .edge.dash{stroke-dasharray:5 4}
 .edge.dot{stroke-dasharray:1.5 3.5}
 .stepbadge circle{fill:var(--gold)}
-.stepbadge text{font:700 10px var(--mono);fill:#122C47}
+.stepbadge text{font:700 11px var(--mono);fill:#122C47}
 
 aside.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 10px);max-height:78vh;overflow:auto}
 @media (max-width:960px){aside.panel{position:static;max-height:none}}
@@ -166,7 +166,7 @@ td .was{color:var(--crit)} td .fix{color:var(--monitor,inherit);font-weight:600}
 .qm{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;font:700 10px var(--mono);color:#fff;background:var(--high)}
 .qm.cf{background:var(--crit)}
 .node .rt rect{stroke-width:1}
-.node .rt text{font:700 9px var(--mono);letter-spacing:.05em}
+.node .rt text{font:700 9.5px var(--mono);letter-spacing:.05em}
 .node .rt.does rect{fill:var(--ink);stroke:var(--ink)} .node .rt.does text{fill:var(--panel)}
 .node .rt.dec rect{fill:var(--e-decision);stroke:var(--e-decision)} .node .rt.dec text{fill:#fff}
 .node .rt.con rect{fill:var(--panel);stroke:var(--muted)} .node .rt.con text{fill:var(--ink)}
@@ -207,7 +207,7 @@ td .was{color:var(--crit)} td .fix{color:var(--monitor,inherit);font-weight:600}
       <select id="route"><option value="">None</option></select>
       <div class="zoom" aria-label="Zoom">
         <button class="btn" id="zout" aria-label="Zoom out">−</button>
-        <button class="btn" id="zfit">Fit</button>
+        <button class="btn" id="zfit" title="Fit the whole map in view">Fit</button>
         <button class="btn" id="zin" aria-label="Zoom in">+</button>
       </div>
       <button class="btn" id="clear">Clear selection</button>
@@ -580,7 +580,7 @@ const DOC_OWNER={"AIG-AIMS-01": "AI Governance Lead", "AIG-AIMS-12": "AI Governa
 (function(){
 const GROUPS={GOV:"Governance",INV:"Inventory & intake",ASS:"Assessment",DEC:"Decision & gates",OPS:"Operations",AGT:"Agentic layer",AIMS:"AIMS (ISO 42001)",SUP:"Supplementary"};
 const ETYPES={route:["Next step","",""],feeds:["Feeds / populates","",""],decision:["Decision recorded in","",""],event:["Gate event logged in","dash",""],trigger:["Triggers (conditional)","dash",""],monitor:["Monitored in","",""],plan:["Planned for live use in (after go-live)","dash",""],escalate:["Escalates to","",""],derived:["Derived view / checked against","dot",""],govern:["Governs / maps","dot",""]};
-const W=182,H=48,CW=214,X0=22;
+const W=196,H=52,CW=228,X0=22;
 const nodes={};NODES.forEach(n=>{nodes[n[0]]={id:n[0],title:n[1],g:n[2],cls:n[3],stage:n[4],owner:n[5],ref:n[6],c:n[7],y:n[8],desc:n[9],x:X0+n[7]*CW}});
 const edges=EDGES.map((e,i)=>({i,from:e[0],to:e[1],type:e[2],label:e[3],cond:e[4]}));
 const short=id=>id.replace("AIG-","");
@@ -607,8 +607,9 @@ FINDINGS.range.forEach(r=>addI(r[0],"med",`Range “${r[1]}” comes from the ol
 
 // ---- SVG
 const svg=document.getElementById("map"),NS="http://www.w3.org/2000/svg";
-const VW=X0*2+6*CW+W, VH=1060;
+const VW=X0*2+6*CW+W, VH=1090;
 let scale=1;
+const MINFIT=1.18; // never auto-shrink past this; the pane scrolls instead
 function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
 const bands=[["Framework & authority",30,112],["Core route",146,310],["Triggered specialist assessments",462,158],["Agentic layer",642,158],["Management system (ISO/IEC 42001)",822,222]];
 const gB=el("g",{},svg);
@@ -632,18 +633,20 @@ function wrap(t,max){const w=t.split(" ");const lines=[];let cur="";w.forEach(x=
 Object.values(nodes).forEach(n=>{
   const g=el("g",{class:"node"+(n.id==="AIG-INV-04"?" spine":"")+(n.cls==="Lifecycle state"?" endstate":""),transform:`translate(${n.x},${n.y})`,tabindex:"0",role:"button","aria-label":`${n.id} ${n.title}`},gN);
   el("rect",{class:"box",width:W,height:H,rx:5,style:`stroke:var(--g-${n.g})`},g);
-  const id=el("text",{class:"nid",x:9,y:14,style:`fill:var(--g-${n.g})`},g);id.textContent=n.id==="UCV"?"UC-ID VIEW":n.id==="END-RETIRED"?"END STATE":short(n.id);
-  const lines=wrap(n.title,27);lines.forEach((l,i)=>{const t=el("text",{class:"nt",x:9,y:29+i*13},g);t.textContent=l});
+  const id=el("text",{class:"nid",x:9,y:15,style:`fill:var(--g-${n.g})`},g);id.textContent=n.id==="UCV"?"UC-ID VIEW":n.id==="END-RETIRED"?"END STATE":short(n.id);
+  const lines=wrap(n.title,26);lines.forEach((l,i)=>{const t=el("text",{class:"nt",x:9,y:31+i*14.5},g);t.textContent=l});
   n.el=g;n.rt=el("g",{class:"rt"},g);
   g.addEventListener("click",ev=>{ev.stopPropagation();select(n.id)});
   g.addEventListener("keydown",ev=>{if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();select(n.id)}});
 });
 svg.addEventListener("click",()=>{if(!routeSel.value)clearAll()});
 function setScale(s){scale=Math.max(.2,Math.min(1.6,s));svg.setAttribute("viewBox",`0 0 ${VW} ${VH}`);svg.setAttribute("width",VW*scale);svg.setAttribute("height",VH*scale)}
-function fit(){const w=document.getElementById("mapbox").clientWidth-2;setScale(Math.min(1,w/VW))}
+// readable=true keeps text comfortable and lets the pane scroll sideways (the default on load).
+// readable=false is a true fit-to-width, so the Fit button can still show the whole map at once.
+function fit(readable){const w=document.getElementById("mapbox").clientWidth-2,s=Math.min(1,w/VW);setScale(readable?Math.max(MINFIT,s):s)}
 document.getElementById("zin").onclick=()=>setScale(scale+.12);
 document.getElementById("zout").onclick=()=>setScale(scale-.12);
-document.getElementById("zfit").onclick=fit;
+document.getElementById("zfit").onclick=()=>fit(false);
 
 // ---- legends / filters
 const gOn=new Set(Object.keys(GROUPS)), eOn=new Set(Object.keys(ETYPES));
@@ -683,7 +686,7 @@ function refresh(){
 function drawTag(n,o){
   n.rt.innerHTML="";if(!o)return;
   const t=relLabel(o),k=o.does?"does":o.dec?"dec":"con",st=RD[n.id].st;
-  const w=Math.round(t.length*5.9+12),x=W-w-6;
+  const w=Math.round(t.length*6.2+12),x=W-w-6;
   n.rt.setAttribute("class","rt "+k);
   el("rect",{x,y:-8,width:w,height:15,rx:3},n.rt);
   const tx=el("text",{x:x+6,y:3.3},n.rt);tx.textContent=t;
@@ -771,14 +774,14 @@ function renderList(){const by=bands.map(()=>[]);Object.values(nodes).forEach(n=
   listEl.innerHTML=by.map((arr,i)=>arr.length?`<h3>${esc(bands[i][0])}</h3><ul>${arr.sort((a,b)=>a.c-b.c||a.y-b.y).map(n=>`<li><button type="button" data-go="${n.id}"${n.id===sel?' aria-current="true"':""}><span class="lid" style="color:var(--g-${n.g})">${esc(n.id==="UCV"?"UC-ID VIEW":short(n.id))}</span><span>${esc(n.title)}${listTag(n.id)}</span><span class="lst">${esc(heads[n.c]||"")} · ${esc(GROUPS[n.g])}</span></button></li>`).join("")}</ul>`:"").join("");
   listEl.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{select(b.dataset.go);renderList();if(window.matchMedia("(max-width:960px)").matches)panel.scrollIntoView({behavior:"smooth",block:"start"})})}
 let listMode=null;
-function setView(list){listMode=list;listEl.hidden=!list;mapboxEl.hidden=list;vt.setAttribute("aria-pressed",list);vt.textContent=list?"Map view":"List view";if(list)renderList();else fit()}
+function setView(list){listMode=list;listEl.hidden=!list;mapboxEl.hidden=list;vt.setAttribute("aria-pressed",list);vt.textContent=list?"Map view":"List view";if(list)renderList();else fit(true)}
 vt.onclick=()=>setView(!listMode);
 const narrowMq=window.matchMedia("(max-width:600px)");
 
 setScale(1);intro();refresh();
 setView(narrowMq.matches);
 narrowMq.addEventListener("change",ev=>setView(ev.matches));
-requestAnimationFrame(()=>{if(!listMode)fit()});
-window.addEventListener("resize",()=>{if(!listMode)fit()});
+requestAnimationFrame(()=>{if(!listMode)fit(true)});
+window.addEventListener("resize",()=>{if(!listMode)fit(true)});
 })();
 </script>
