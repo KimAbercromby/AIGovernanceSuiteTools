@@ -609,7 +609,7 @@ FINDINGS.range.forEach(r=>addI(r[0],"med",`Range “${r[1]}” comes from the ol
 const svg=document.getElementById("map"),NS="http://www.w3.org/2000/svg";
 const VW=X0*2+6*CW+W, VH=1090;
 let scale=1;
-const MINFIT=0.92; // never auto-shrink past this; the pane scrolls instead
+const MINFIT=1.18; // never auto-shrink past this; the pane scrolls instead
 function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
 const bands=[["Framework & authority",30,112],["Core route",146,310],["Triggered specialist assessments",462,158],["Agentic layer",642,158],["Management system (ISO/IEC 42001)",822,222]];
 const gB=el("g",{},svg);
