@@ -1,8 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AI Governance Flow Builder</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
 :root{
   --bg:#F2F4F7; --canvas:#F7F8FA; --dot:#D3D9E2; --layer:#FFFFFF; --layer2:#EEF1F5; --ink:#161B24; --muted:#5B6574; --line:#C9D1DC; --line2:#E1E6ED;
@@ -693,3 +691,5 @@ path.forEach(id=>{cur.expanded=true;const k=kidsOf(cur).find(x=>x.id===id);if(k)
 cur.expanded=true;sel=cur;render();showProps(cur);requestAnimationFrame(()=>canvas.scrollTo({left:Math.max(0,(sel.x-CW/2)*zoom),top:Math.max(0,(sel.py-200)*zoom)}));
 })();
 </script>
+<aside id="data-privacy-note" aria-label="Data and privacy" style="max-width:1100px;margin:28px auto 24px;padding:12px 16px;border-top:2px solid #C8AB36;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.5;color:#5A5A5A;background:transparent"><strong style="color:#122C47">Data and privacy.</strong> This tool runs entirely in your web browser. It uses no cookies, analytics or tracking, and loads nothing from other websites. Nothing you enter is saved or sent anywhere; it is cleared when you close or reload the page. It is hosted on GitHub Pages, which keeps standard server logs of visits, as any website host does. Please do not enter personal data about residents or staff.</aside>
+
