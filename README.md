@@ -1,6 +1,6 @@
 # AI Governance Suite Tools
 
-Interactive navigation tools for the 52-artefact AI governance suite (v3.9.10, 12 October 2026: Playbook v19.9.19, README/Index v1.35). Draft for Council review.
+Interactive navigation tools for the 52-artefact AI governance suite (v3.9.11, 16 October 2026: Playbook v19.9.23, README/Index v1.37). Draft for Council review.
 
 These tools approve nothing. The AI Governance Lead confirms every route and tier, and every decision sits with the delegated decision-maker named in the suite.
 
@@ -12,7 +12,8 @@ These tools approve nothing. The AI Governance Lead confirms every route and tie
 | `suite-map.html` | All 52 artefacts and the UC-ID current view, arranged by lifecycle stage with the AI Register as the spine. Select an artefact to see what feeds it and what it triggers, trace a route, or **view as a role** to see what that role does, decides and contributes to. |
 | `flow-builder.html` | Start from a scenario or any artefact and open the next steps one at a time, with the conditions that decide each one. **Role chips** show who does each step; highlight a role to see where it is involved. |
 | `route-finder.html` | Answer the suite's own screening questions and see only your case's route, by role, with a handover checklist for each stage. |
-| `docs/` | One PDF per artefact, opened from the tools. Workbooks open as a heading summary; the Excel files hold the formulas and dropdowns. |
+| `docs/` | One PDF per artefact, opened from the tools: the full document, or a print view of each real workbook. |
+| `files/` | The original Word and Excel artefacts (suite v3.9.11), downloadable from the Suite Map and Flow Builder. The Excel files carry the live formulas, dropdowns and validations. |
 
 Everything is plain HTML with no build step. Open `index.html` in a browser, or serve the folder with GitHub Pages (Settings > Pages > Deploy from a branch > main, / (root)).
 
