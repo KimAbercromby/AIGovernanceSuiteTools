@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Governance Route Finder</title>
+<style>
+[hidden]{display:none!important}
+:root{
+  --navy:#122C47; --gold:#C8AB36; --gold-ink:#8A7318;
+  --bg:#F3F5F8; --panel:#FFFFFF; --ink:#16202E; --muted:#58647A; --line:#D6DCE5; --soft:#EEF1F5;
+  --head-bg:#122C47; --head-ink:#F4F6F9; --head-muted:#B9C5D6;
+  --accent:#1F4E86; --accent-soft:#E3EBF6;
+  --so:#1B7485; --gl:#122C47; --sp:#A5661A; --fo:#76498A;
+  --ok:#2E7D48; --ok-bg:#E6F2EA; --warn:#8F5813; --warn-bg:#FBF0E0; --crit:#B8322A; --crit-bg:#FBEAE8;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:Arial,"Helvetica Neue",Helvetica,"Liberation Sans",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --gold:#D9BE55; --gold-ink:#D9BE55;
+  --bg:#0D1520; --panel:#142031; --ink:#E4EAF2; --muted:#9AA7B8; --line:#2A3A51; --soft:#1A283B;
+  --head-bg:#0A1A2C; --head-ink:#EEF2F7; --head-muted:#9FB0C6;
+  --accent:#7FA8E0; --accent-soft:#1C2A40;
+  --so:#5EC0D1; --gl:#9DB6DA; --sp:#E0A355; --fo:#C39AD6;
+  --ok:#71C58B; --ok-bg:#16291E; --warn:#E6A94A; --warn-bg:#35270F; --crit:#F07A6E; --crit-bg:#3A1C1B;}}
+:root[data-theme="dark"]{color-scheme:dark;
+  --gold:#D9BE55; --gold-ink:#D9BE55;
+  --bg:#0D1520; --panel:#142031; --ink:#E4EAF2; --muted:#9AA7B8; --line:#2A3A51; --soft:#1A283B;
+  --head-bg:#0A1A2C; --head-ink:#EEF2F7; --head-muted:#9FB0C6;
+  --accent:#7FA8E0; --accent-soft:#1C2A40;
+  --so:#5EC0D1; --gl:#9DB6DA; --sp:#E0A355; --fo:#C39AD6;
+  --ok:#71C58B; --ok-bg:#16291E; --warn:#E6A94A; --warn-bg:#35270F; --crit:#F07A6E; --crit-bg:#3A1C1B;}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{padding-inline:16px;max-width:1320px;margin:0 auto}
+header.top{background:var(--head-bg);color:var(--head-ink);padding-block:22px 20px}
+.kicker{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+h1{margin:6px 0 6px;font-size:26px;line-height:1.2;text-wrap:balance}
+.lede{margin:0;color:var(--head-muted);max-width:72ch;font-size:14px}
+.layout{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:20px;padding-block:20px 40px;align-items:start}
+@media (max-width:980px){.layout{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px}
+.qcol{display:grid;gap:14px}
+.step{display:grid;gap:10px}
+.step h2{margin:0;font-size:16px;display:flex;gap:10px;align-items:baseline}
+.step h2 .n{font:600 12px var(--mono);color:var(--gold-ink)}
+.help{margin:0;color:var(--muted);font-size:13px}
+.choices{display:grid;gap:8px}
+.choice{display:grid;grid-template-columns:18px 1fr;gap:10px;align-items:start;border:1px solid var(--line);border-radius:6px;padding:10px 12px;cursor:pointer;background:var(--panel)}
+.choice:hover{border-color:var(--muted)}
+.choice input{margin:3px 0 0}
+.choice b{display:block;font-size:14px}
+.choice span{font-size:13px;color:var(--muted)}
+.choice:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.q{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.q>select{max-width:300px;min-width:0}
+.q.stack{grid-template-columns:1fr;align-items:start}
+.q.stack>select{max-width:none;width:100%}
+.q:first-of-type{border-top:0}
+.q p{margin:0;font-size:14px}
+.q .tag{font:600 10.5px var(--mono);color:var(--muted);letter-spacing:.04em;text-transform:uppercase;display:block;margin-bottom:2px}
+@media (max-width:560px){.q{grid-template-columns:1fr}.q>select{max-width:none;width:100%}}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.seg span{display:block;padding:6px 11px;font-size:13px;font-weight:600;color:var(--muted);border-left:1px solid var(--line);min-width:52px;text-align:center}
+.seg label:first-child span{border-left:0}
+.seg input:checked+span{background:var(--navy);color:#fff}
+:root[data-theme="dark"] .seg input:checked+span{background:var(--accent);color:#0B1426}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .seg input:checked+span{background:var(--accent);color:#0B1426}}
+.seg input:focus-visible+span{outline:2px solid var(--gold);outline-offset:-2px}
+.checks{display:grid;gap:6px}
+.checks label{display:grid;grid-template-columns:18px 1fr;gap:10px;font-size:14px;align-items:start}
+.checks small{display:block;color:var(--muted);font:600 10.5px var(--mono);letter-spacing:.03em}
+select{font:14px var(--sans);padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);max-width:100%}
+a{color:var(--accent)}
+.note{font-size:13px;border-radius:6px;padding:10px 12px;background:var(--soft)}
+.note.warn{background:var(--warn-bg)} .note.crit{background:var(--crit-bg)} .note.ok{background:var(--ok-bg)}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+button{font:600 13px var(--sans);border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 12px;cursor:pointer}
+button.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.rcol{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+@media (max-width:980px){.rcol{position:static}}
+.verdict{display:grid;gap:6px;border-radius:8px;padding:16px 18px;background:var(--navy);color:#fff}
+.verdict .k{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.verdict h2{margin:0;font-size:21px;text-wrap:balance}
+.verdict p{margin:0;font-size:14px;color:#D5DEEA}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.pill{font:600 11px var(--mono);border-radius:12px;padding:3px 9px;background:rgba(255,255,255,.12);color:#fff}
+.pill.crit{background:#B8322A} .pill.high{background:#A5661A} .pill.gold{background:var(--gold);color:#122C47}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--muted);margin:12px 2px}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+.stages{display:grid;gap:12px}
+.stage{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.stage > header{display:flex;gap:10px;align-items:baseline;padding:12px 16px;border-bottom:1px solid var(--line)}
+.stage > header .n{font:600 12px var(--mono);color:var(--gold-ink)}
+.stage > header h3{margin:0;font-size:15.5px}
+.acts{display:grid}
+.act{display:grid;grid-template-columns:132px 1fr;gap:12px;padding:10px 16px;border-top:1px solid var(--line)}
+.act:first-child{border-top:0}
+.role{font:600 11px var(--mono);letter-spacing:.03em;display:flex;gap:7px;align-items:flex-start;padding-top:2px}
+.act p{margin:0;font-size:14px}
+.act .id{font:600 11.5px var(--mono);color:var(--muted);white-space:nowrap}
+.act .cond{display:inline-block;margin-left:6px;font-size:11.5px;font-weight:600;color:var(--warn);background:var(--warn-bg);border-radius:4px;padding:0 6px}
+@media (max-width:560px){.act{grid-template-columns:1fr;gap:4px}}
+.hand{padding:10px 16px 14px;background:var(--soft);border-top:1px solid var(--line)}
+.hand h4{margin:0 0 6px;font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.hand label{display:grid;grid-template-columns:18px 1fr;gap:8px;font-size:13.5px;padding:2px 0}
+.forum{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+.forum td,.forum th{padding:6px 8px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+.forum th{font:600 10.5px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-top:0}
+.forum tr.on td{background:var(--accent-soft);font-weight:600}
+.tblwrap{overflow-x:auto}
+.foot{font-size:12.5px;color:var(--muted);margin-top:14px}
+.gates td:first-child{font-weight:600;min-width:9em}
+@media (max-width:560px){.gates thead{display:none}.gates tr{display:block;border-top:1px solid var(--line);padding:6px 0}.gates td{display:block;border-top:0;padding:2px 8px}.gates td:nth-child(2){color:var(--muted)}}
+.gst{display:inline-block;font:600 10.5px var(--mono);letter-spacing:.03em;text-transform:uppercase;border-radius:4px;padding:1px 6px;margin-bottom:2px}
+.gst.m{background:var(--crit-bg);color:var(--crit)} .gst.a{background:var(--ok-bg);color:var(--ok)} .gst.c{background:var(--warn-bg);color:var(--warn)} .gst.n{background:var(--soft);color:var(--muted)}
+.empty{color:var(--muted);font-size:14px}
+#copyfallback{width:100%;height:160px;font:12.5px var(--mono);background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px}
+.sibs{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;margin:10px 0 0}.sibs a{color:#C8AB36;text-decoration:none;border-bottom:1px solid rgba(200,171,54,.45)}.sibs a:hover{border-bottom-color:#C8AB36}.sibs span{color:rgba(255,255,255,.6)}
+.idlink{color:inherit;text-decoration:underline;text-decoration-color:var(--gold,#C8AB36);text-underline-offset:2px}.idlink:hover{color:var(--gold,#C8AB36)}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="kicker">The Council · AI governance · suite version 1.0 draft</div>
+    <h1>Which governance route does my AI use take?</h1>
+    <p class="lede">Answer the questions on the left. The route on the right shows only the steps your case needs, who does each one, and what to hand over before moving on. The AI Governance Lead confirms the route; this guide does not approve anything.</p>
+<nav class="sibs" aria-label="Related tools"><span>Also:</span><a href="suite-map.html">Suite map</a><a href="flow-builder.html">Flow builder</a></nav>
+  </div>
+</header>
+
+<main class="wrap layout">
+  <section class="qcol" aria-label="Questions">
+    <div class="card step" id="s1">
+      <h2><span class="n">1</span>What's happening?</h2>
+      <div class="choices" role="radiogroup" aria-label="Situation">
+        <label class="choice"><input type="radio" name="sit" value="new" id="sit-new"><div><b>A new AI use is proposed</b><span>Buying, building, commissioning or switching on an AI capability.</span></div></label>
+        <label class="choice"><input type="radio" name="sit" value="change" id="sit-change"><div><b>A use already in governance is changing</b><span>New purpose, data, supplier, model, connection, audience or action.</span></div></label>
+        <label class="choice"><input type="radio" name="sit" value="found" id="sit-found"><div><b>AI is already in use but isn't registered</b><span>Discovered, inherited or switched on without going through governance.</span></div></label>
+        <label class="choice"><input type="radio" name="sit" value="approved" id="sit-approved"><div><b>I want to use a tool that's already approved</b><span>It's on the AI Register and I want to check my use is covered.</span></div></label>
+      </div>
+    </div>
+
+    <div class="card step" id="s1b" hidden>
+      <h2><span class="n">1a</span>Does your use match the approval exactly?</h2>
+      <p class="help">Check the AIR-ID, the exact UC-ID, the approved purpose, data, users and conditions in the decision record, and that the Register shows Approved and Active. If the approval is for another team, answer No: your team's use gets its own UC-ID and its own decision.</p>
+      <div class="seg" role="radiogroup" aria-label="Use matches approval">
+        <label><input type="radio" name="match" value="yes" id="match-yes"><span>Yes</span></label>
+        <label><input type="radio" name="match" value="no" id="match-no"><span>No</span></label>
+        <label><input type="radio" name="match" value="unsure" id="match-unsure"><span>Unsure</span></label>
+      </div>
+    </div>
+
+    <div class="card step" id="s2" hidden>
+      <h2><span class="n">2</span>The ten screening questions</h2>
+      <p class="help">These are the Fast-Track Screening questions (AIG-INV-02), word for word. They are factual checks, not a score: one Yes or Unsure means full intake. Don't mark Unsure as No.</p>
+      <div id="ftq"></div>
+    </div>
+
+    <div class="card step" id="s3" hidden>
+      <h2><span class="n">3</span>A few more facts for full triage</h2>
+      <div id="actq" hidden>
+        <div class="q"><p><span class="tag">Action control · answer required</span>Does a person review each individual action before it takes effect? <span class="help" style="display:block;margin-top:2px">Unsure is treated as No until per-action review is evidenced (Playbook §4.4.6).</span></p>
+          <div class="seg" role="radiogroup" aria-label="Human review of each action">
+            <label><input type="radio" name="review" value="yes" id="rev-yes"><span>Yes</span></label>
+            <label><input type="radio" name="review" value="no" id="rev-no"><span>No</span></label>
+            <label><input type="radio" name="review" value="unsure" id="rev-unsure"><span>Unsure</span></label>
+          </div></div>
+        <div class="q"><p><span class="tag">Agentic pathway</span><label for="agency">Agency tier from Agentic Triage (<a href="docs/AIG-AGT-03.pdf" target="_blank" rel="noopener">AIG-AGT-03</a>)</label> <span class="help" style="display:block;margin-top:2px">The agency tier sets a minimum pathway (T2 Medium, T3–T4 High, T5 Critical); the higher of it and the risk tier governs. Leave as not yet assessed if Agentic Triage hasn't run.</span></p>
+          <select id="agency"><option value="">Not yet assessed</option><option value="T0">T0 · informational</option><option value="T1">T1 · assisted</option><option value="T2">T2 · bounded agent</option><option value="T3">T3 · consequential agent</option><option value="T4">T4 · high-agency</option><option value="T5">T5 · exceptional / high-consequence</option></select></div>
+      </div>
+      <div class="q" id="procq"><p><span class="tag">Procurement · Gate 4</span><label for="proc">Is it bought, licensed or supplied by a third party?</label> <span class="help" style="display:block;margin-top:2px">Gate 4 (Procurement) applies wherever a procurement, new contract, licence change or contract variation is needed (choose “New contract or contract change” for any of these). An AI feature under an existing contract or licence, or a free public tool, records Gate 4 as N/A with the reason, but the supplier checks that still apply are completed (Gate Map <a href="docs/AIG-DEC-01.pdf" target="_blank" rel="noopener">AIG-DEC-01</a>; proposed, for Council confirmation).</span></p>
+        <select id="proc" style="width:100%"><option value="">Not yet known</option><option value="new">New contract or contract change</option><option value="existing">Existing contract or licence</option><option value="free">Free public tool</option><option value="inhouse">Built in-house</option></select></div>
+      <div class="q stack" id="invq"><p><span class="tag">Investment · Gates 1 and 3</span><label for="inv">Does this use need new investment?</label> <span class="help" style="display:block;margin-top:2px">New funding, extra licences or usage charges, a procurement or a business case. For a new use of a tool that's already approved, with no new investment, at Low or Medium and unable to act, Gates 1 and 3 (investment and strategic case) are N/A (Gate Map Gate 1 and 3 rule). Unsure counts as Yes.</span></p>
+        <select id="inv" style="width:100%"><option value="">Unsure (counts as Yes)</option><option value="yes">Yes</option><option value="no">No: no new funding, licences, charges, procurement, contract or licence change</option></select>
+        <p class="note warn" id="invwarn" role="status" hidden>You said no new investment, but a new contract or contract change is new investment. Gates 1, 3 and 4 apply. Check your answers.</p></div>
+      <div class="q stack" id="apprq"><p><span class="tag">Existing tool · Gates 1 and 3</span><label for="appr">Is the tool's approval current?</label> <span class="help" style="display:block;margin-top:2px">Only for a tool already on the AI Register. Check it shows Approved (or Approved with conditions) and Active and the review date hasn't passed. If not, or you're not sure, Gates 1 and 3 apply. The AI Governance Lead checks this against the Register.</span></p>
+        <select id="appr" style="width:100%"><option value="">Unsure (counts as No)</option><option value="yes">Yes: Approved (or Approved with conditions) and Active, review not overdue</option><option value="no">No: suspended, lapsed or review overdue</option></select></div>
+      <p class="help">Mandatory escalation triggers (Playbook §4.4.6). Tick any that apply. Each one sets a minimum tier. A confirmed Severe impact (Impact 5) on any impact dimension also sets at least Medium, whatever the likelihood (Playbook §4.4.4).</p>
+      <div class="checks" id="trigs"></div>
+      <div class="q" style="border-top:1px solid var(--line);margin-top:6px"><p><span class="tag">Risk tier</span>If the case has already been triaged, what tier did the AI Risk Assessment Worksheet give? Otherwise leave as not yet known: the AI Governance Lead sets the tier with the <a href="docs/AIG-ASS-02.pdf" target="_blank" rel="noopener">AI Risk Assessment Worksheet (AIG-ASS-02)</a>. A confirmed Severe impact (Impact 5) sets at least Medium. The <a href="docs/AIG-ASS-01.pdf" target="_blank" rel="noopener">AI Governance Priority Index (AGPI) Triage Tool (AIG-ASS-01)</a> sets how quickly governance looks at the use, not the route.</p>
+        <select id="tier" aria-label="Risk tier"><option value="">Not yet known</option><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></div>
+    </div>
+
+    <div class="btnrow">
+      <button type="button" class="primary" id="copy">Copy route summary</button>
+      <button type="button" id="reset">Start again</button>
+      <button type="button" id="example">Try an example</button>
+    </div>
+    <p class="foot" id="copied" aria-live="polite"></p>
+  </section>
+
+  <section class="rcol" aria-label="Your route" aria-live="polite">
+    <div id="route"></div>
+  </section>
+</main>
+
+<script>
+(function(){
+const FT=[
+ ["Action","Can it take or initiate any action, rather than only produce information for a person to act on (for example sending communications, updating records, invoking tools/APIs, creating transactions or instructing another system)?"],
+ ["Data","Does it process special-category or criminal offence data or confidential/restricted data, create profiles or inferences about identifiable people, or give access to personal data the user could not already open? (Ordinary personal data the user already handles in their own work, such as names in their own emails or meeting notes, is No.)"],
+ ["Individual decisions","Could its output influence or support a decision about a resident, employee or other individual, even where a human makes the final decision?"],
+ ["Public service impact","Could it affect access to services, benefits, housing, care, safeguarding, enforcement, eligibility or another statutory function?"],
+ ["External interaction","Does it interact directly with residents or the public, or publish content externally? (Staff using it themselves for their own work is No.)"],
+ ["Live connections","Does it connect to live databases, operational systems, APIs, credentials or tools, including any write access?"],
+ ["Change and agency","Is it novel, first-of-type, materially changed, fine-tuned, self-learning, agentic, multi-agent, or using dynamic model/tool routing?"],
+ ["Plausible harm","Could an incorrect output or action cause material legal, equality, privacy, security, safety, financial, service-delivery or reputational harm?"],
+ ["Supplier dependence","Does it create significant procurement exposure, a new supplier dependency or material operational reliance on a supplier/service?"],
+ ["Unknowns","Is anything about its data, capability, integration, authority, intended use or operating environment currently unknown or uncertain?"]];
+const TRIG=[
+ ["special","Processing of special category personal data (UK GDPR)","High"],
+ ["vulnerable","Use in relation to vulnerable residents (children, adults with care/support needs, people experiencing homelessness)","High"],
+ ["housing","Directly influences housing allocation, social care assessments or homelessness prevention decisions","High"],
+ ["novel","Novel or first-of-type AI deployment with no prior Council operational experience","High"],
+ ["statutory","Produces or directly informs statutory decisions","Critical"],
+ ["change","Significant supplier, model, data or scope change that materially alters the risk profile","High"]];
+const ROLES={SO:["Service Owner","var(--so)"],GL:["AI Governance Lead","var(--gl)"],SP:["Specialists","var(--sp)"],FO:["Delegated decision-maker","var(--fo)"],AB:["AI Assurance Board","var(--accent)"],ALL:["Anyone using AI","var(--muted)"]};
+const FORUM=[["Low","The officer or forum with confirmed delegation (Service Owner/Service Manager only if delegated)","Record the UC-ID under the AIR-ID, complete the required assessment (basic assessment, policy compliance review) and obtain or cite the delegated decision before operation"],
+ ["Medium","Competent delegated forum/officer under confirmed delegation (AI Governance Working Group detailed review; AI Assurance Board reviews and provides an assurance opinion/recommendation)","Structured risk assessment, Responsible AI Assessment, governance review, monitoring requirements"],
+ ["High","Competent delegated forum/officer under confirmed delegation (Assurance Board formal recommendation and single assurance opinion)","Enhanced assessment; DPIA where screening requires; EIA; Legal and Security review; Responsible AI Assessment; independent assurance review (Playbook §4.5.3, §4.5.9)"],
+ ["Critical","Competent delegated forum/officer under confirmed delegation, with Senior Responsible Owner (SRO) and Executive Sponsor oversight; escalation to the relevant executive member or committee (Cabinet Member/Cabinet or the equivalent committee) and the Audit and Risk Committee (or equivalent)","All High controls plus Human Rights Assessment, executive oversight, independent challenge and independent assurance (Playbook §3.10.2) and formal reporting"]];
+const RANK={Low:1,Medium:2,High:3,Critical:4};
+// Gate Map AIG-DEC-01, Agentic pathway (Proposed, for Council confirmation): minimum risk-tier pathway per agency tier.
+// T4 is Critical where actions run without evidenced per-action human review; that case is the §4.4.6 floor below.
+const AGMIN={T0:'',T1:'',T2:'Medium',T3:'High',T4:'High',T5:'Critical'};
+const hi=(a,b)=>!a?(b||''):!b?a:(RANK[a]>=RANK[b]?a:b);
+
+// build question UI
+const ftq=document.getElementById('ftq');
+FT.forEach((q,i)=>{ftq.insertAdjacentHTML('beforeend',`<div class="q"><p><span class="tag">${i+1} · ${q[0]}</span>${q[1]}</p><div class="seg" role="radiogroup" aria-label="Question ${i+1}">${['yes','no','unsure'].map(v=>`<label><input type="radio" name="ft${i}" value="${v}" id="ft${i}-${v}"><span>${v[0].toUpperCase()+v.slice(1)}</span></label>`).join('')}</div></div>`)});
+const trigs=document.getElementById('trigs');
+TRIG.forEach(t=>trigs.insertAdjacentHTML('beforeend',`<label><input type="checkbox" id="tr-${t[0]}" value="${t[0]}"><span>${t[1]}<small>MINIMUM ${t[2].toUpperCase()}</small></span></label>`));
+
+const $=s=>document.querySelector(s);
+const val=n=>{const e=document.querySelector(`input[name="${n}"]:checked`);return e?e.value:''};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function state(){
+  const s={sit:val('sit'),match:val('match'),ft:FT.map((_,i)=>val('ft'+i)),review:val('review'),tier:$('#tier').value,proc:$('#proc').value,inv:$('#inv').value,appr:$('#appr').value,trig:TRIG.filter(t=>$('#tr-'+t[0]).checked).map(t=>t[0])};
+  s.answered=s.ft.filter(Boolean).length;
+  s.anyYes=s.ft.some(a=>a==='yes'||a==='unsure');
+  s.allNo=s.answered===10&&!s.anyYes;
+  s.act=s.ft[0]; s.canAct=s.act==='yes'; s.mayAct=s.act==='unsure';
+  s.personal=s.ft[1]==='yes'||s.ft[1]==='unsure'||s.trig.includes('special');
+  // 'Unsure' counts as Yes (Playbook §3.10.1: uncertainty -> higher scrutiny); flagged 'to confirm'
+  s.individuals=['yes','unsure'].includes(s.ft[2])||['yes','unsure'].includes(s.ft[3]);
+  s.individualsUnsure=s.individuals&&s.ft[2]!=='yes'&&s.ft[3]!=='yes';
+  s.publicFacing=['yes','unsure'].includes(s.ft[4]);
+  s.publicUnsure=s.ft[4]==='unsure';
+  s.supplier=s.ft[8]==='yes'||s.ft[8]==='unsure';
+  // D7: 'Unsure' about per-action review is treated as 'No'; a blank answer must be completed before a route is shown
+  s.needReview=(s.canAct||s.mayAct)&&!s.review;
+  s.agentTrig=(s.canAct||s.mayAct)&&(s.review==='no'||s.review==='unsure');
+  s.trigs=[...s.trig];if(s.agentTrig)s.trigs.push('agentic');
+  s.floor=(s.trigs.includes('statutory')||s.agentTrig)?'Critical':(s.trigs.length?'High':'');
+  s.floored=s.floor&&s.tier&&RANK[s.floor]>RANK[s.tier];
+  // Risk-tier pathway (§4.4 incl. §4.4.6 floors), then the agency-tier minimum (AIG-DEC-01 Agentic pathway): the higher governs
+  s.actCap=s.canAct||s.mayAct;
+  s.agency=s.actCap?$('#agency').value:'';
+  s.agencyMin=AGMIN[s.agency]||'';
+  s.riskTier=hi(s.tier,s.floor);
+  s.effTier=hi(s.riskTier,s.agencyMin);
+  s.agencyRaised=!!s.agencyMin&&(!s.riskTier||RANK[s.agencyMin]>RANK[s.riskTier]);
+  s.agyRank=s.agency?+s.agency.slice(1):null;
+  return s;
+}
+function clearInputs(sel){document.querySelectorAll(sel).forEach(i=>{i.checked=false})}
+function show(){
+  let s=state();
+  {const w=document.getElementById('invwarn'); if(w) w.hidden=!(s.inv==='no'&&s.proc==='new');}
+  const needScreen=s.sit&&!(s.sit==='approved'&&(s.match==='yes'||!s.match));
+  // Step 3 stays open while any mandatory trigger is ticked, so a tick can never sit hidden
+  const full=needScreen&&(s.anyYes||s.sit==='found'||s.sit==='change'||s.trig.length>0);
+  // Inputs on hidden panels never count: clear them when their panel hides
+  if(s.sit!=='approved') clearInputs('input[name="match"]');
+  if(!needScreen) clearInputs('#ftq input');
+  if(!full){clearInputs('#trigs input, input[name="review"]');$('#tier').value='';$('#agency').value='';$('#proc').value='';$('#inv').value='';$('#appr').value=''}
+  if(!(s.canAct||s.mayAct)){clearInputs('input[name="review"]');$('#agency').value=''}
+  s=state();
+  $('#s1b').hidden=s.sit!=='approved';
+  $('#s2').hidden=!needScreen;
+  $('#s3').hidden=!full;
+  $('#actq').hidden=!(s.canAct||s.mayAct);
+  render(s,needScreen,full);
+}
+function act(role,text,id,cond){return {role,text,id,cond}}
+const DOCS={"AIG-GOV-02": "docs/AIG-GOV-02.pdf", "AIG-AGT-01": "docs/AIG-AGT-01.pdf", "AIG-AGT-02": "docs/AIG-AGT-02.pdf", "AIG-AGT-03": "docs/AIG-AGT-03.pdf", "AIG-AGT-05": "docs/AIG-AGT-05.pdf", "AIG-AGT-06": "docs/AIG-AGT-06.pdf", "AIG-AIMS-01": "docs/AIG-AIMS-01.pdf", "AIG-AIMS-11": "docs/AIG-AIMS-11.pdf", "AIG-AIMS-12": "docs/AIG-AIMS-12.pdf", "AIG-ASS-03": "docs/AIG-ASS-03.pdf", "AIG-ASS-04": "docs/AIG-ASS-04.pdf", "AIG-ASS-05": "docs/AIG-ASS-05.pdf", "AIG-ASS-06": "docs/AIG-ASS-06.pdf", "AIG-ASS-07": "docs/AIG-ASS-07.pdf", "AIG-ASS-08": "docs/AIG-ASS-08.pdf", "AIG-ASS-09": "docs/AIG-ASS-09.pdf", "AIG-ASS-10": "docs/AIG-ASS-10.pdf", "AIG-ASS-11": "docs/AIG-ASS-11.pdf", "AIG-ASS-12": "docs/AIG-ASS-12.pdf", "AIG-DEC-01": "docs/AIG-DEC-01.pdf", "AIG-DEC-02": "docs/AIG-DEC-02.pdf", "AIG-DEC-03": "docs/AIG-DEC-03.pdf", "AIG-GOV-01": "docs/AIG-GOV-01.pdf", "AIG-GOV-03": "docs/AIG-GOV-03.pdf", "AIG-GOV-04": "docs/AIG-GOV-04.pdf", "AIG-GOV-05": "docs/AIG-GOV-05.pdf", "AIG-GOV-06": "docs/AIG-GOV-06.pdf", "AIG-INV-01": "docs/AIG-INV-01.pdf", "AIG-INV-02": "docs/AIG-INV-02.pdf", "AIG-INV-03": "docs/AIG-INV-03.pdf", "AIG-OPS-01": "docs/AIG-OPS-01.pdf", "AIG-OPS-03": "docs/AIG-OPS-03.pdf", "AIG-OPS-04": "docs/AIG-OPS-04.pdf", "AIG-OPS-05": "docs/AIG-OPS-05.pdf", "AIG-AGT-04": "docs/AIG-AGT-04.pdf", "AIG-AIMS-02": "docs/AIG-AIMS-02.pdf", "AIG-AIMS-03": "docs/AIG-AIMS-03.pdf", "AIG-AIMS-04": "docs/AIG-AIMS-04.pdf", "AIG-AIMS-05": "docs/AIG-AIMS-05.pdf", "AIG-AIMS-06": "docs/AIG-AIMS-06.pdf", "AIG-AIMS-07": "docs/AIG-AIMS-07.pdf", "AIG-AIMS-08": "docs/AIG-AIMS-08.pdf", "AIG-AIMS-09": "docs/AIG-AIMS-09.pdf", "AIG-AIMS-10": "docs/AIG-AIMS-10.pdf", "AIG-AIMS-13": "docs/AIG-AIMS-13.pdf", "AIG-ASS-01": "docs/AIG-ASS-01.pdf", "AIG-ASS-02": "docs/AIG-ASS-02.pdf", "AIG-DEC-04": "docs/AIG-DEC-04.pdf", "AIG-INV-04": "docs/AIG-INV-04.pdf", "AIG-INV-05": "docs/AIG-INV-05.pdf", "AIG-OPS-02": "docs/AIG-OPS-02.pdf", "AIG-OPS-06": "docs/AIG-OPS-06.pdf", "UCV": "docs/UCV.pdf"};
+function idLinks(s){return esc(s).replace(/AIG-[A-Z]+-\d+/g,m=>DOCS[m]?`<a class="idlink" href="${DOCS[m]}" target="_blank" rel="noopener" title="Open ${m} (PDF)">${m}</a>`:m)}
+function tierAtLeast(s,t){return s.effTier?RANK[s.effTier]>=RANK[t]:null}
+function condTier(s,t){const r=tierAtLeast(s,t);return r===null?`if tier is ${t} or above`:(r?'':null)}
+// Agency-tier condition: '' applies, null does not apply, string = conditional label
+function condAgy(s,min,label){const pre=s.mayAct?'if it can act, ':'';if(!s.actCap)return null;if(s.agyRank===null)return pre+label;return s.agyRank>=min?(s.mayAct?'if it can act':''):null}
+function gatePlan(s){
+  const G=[],act=s.actCap,pre=s.mayAct?'If it can act: ':'';
+  const at=t=>tierAtLeast(s,t);
+  // Gate 1 and 3 rule (Gate Map): Gate 3 (business case) N/A with no new investment, at Low or Medium, unable to act;
+  // Gate 1 also N/A only for a new use of an already approved tool. A tool new to the Council always goes to Gate 1.
+  const existingTool=s.sit==='approved'||s.sit==='change';
+  const noMoney=s.inv==='no'&&['existing','free','inhouse'].includes(s.proc)&&!act&&s.sit!=='found'&&(!existingTool||s.appr==='yes');
+  const byTier=ok=>ok?(at('High')===false?'na':at('High')===null?'cond':'apply'):'apply';
+  const g1=byTier(noMoney&&existingTool&&(s.sit==='change'||s.match==='no')), g3=byTier(noMoney);
+  const g13why='Gate 1 and 3 rule: with no new investment, at Low or Medium and unable to act, Gate 3 (the business case) is N/A; Gate 1 is also N/A for a new use of, or a change to a use of, a tool that is already approved. A tool new to the Council always goes to Gate 1, and an existing tool only skips them if its approval is current. Record N/A in the Gate Plan with the rule; the screening outcome (which can be by reference to existing assessments), purpose and benefits go to the next decision gate (Gate 5, otherwise Gate 6).';
+  const gpush=(g,num,name,forum,full)=>{if(g==='na')G.push([num,name,forum,'n','N/A: no new investment',g13why]);else if(g==='cond')G.push([num,name,forum,'c','If High or Critical','Applies at High or Critical; otherwise N/A here. '+g13why]);else G.push([num,name,forum,'a','Applies',full]);};
+  gpush(g1,'Gate 1','Strategic prioritisation','Strategic planning forum',s.sit==='new'&&noMoney?'Should the Council take this new tool on at all? A tool new to the Council always comes here, even if free.':'Invest in discovery, or reject, on the AGPI score and provisional tier.');
+  if(act) G.push(['Gate 2','Technical design review','Technical design authority (AI Governance Working Group input)','m','Mandatory',(s.mayAct?'Unsure counts as Yes until confirmed: ':'')+'Mandatory for every action-capable use (any agency tier, including T0), at any risk tier. The agentic control checkpoints (memory control, tool/interface authority, delegation chain, containment/kill switch, identity/credentials, rollback) are evidenced here'+(s.agyRank>=4?'; the AIG-ASS-11 Security Review (ASI01–ASI10) must be complete before this decision.':'.')+(s.mayAct?' If governance later confirms it cannot act, the normal rule applies (mandatory for High and Critical).':'')]);
+  else if(at('High')===true) G.push(['Gate 2','Technical design review','Technical design authority','m','Mandatory','Mandatory for High and Critical.']);
+  else if(at('High')===null) G.push(['Gate 2','Technical design review','Technical design authority','c','If High or Critical','Mandatory for High and Critical; otherwise only where a fundamental architectural change is involved.']);
+  else G.push(['Gate 2','Technical design review','Technical design authority','n','N/A unless architecture changes','Only where a fundamental architectural change is involved; otherwise mark N/A in the Gate Plan.']);
+  gpush(g3,'Gate 3','Case for change / strategic alignment','Digital governance forum','Strategic alignment, cost-benefit and delivery dates; DPIA, EIA and HRA screening carried forward.');
+  {const ck='Still complete the data processing terms and the Supplier AI Due-Diligence Questionnaire (AIG-ASS-08) section 5 (data protection and security) and section 8 (business continuity and exit)';
+   const P={new:['a','Applies (new contract, licence change or variation)','Supplier due diligence (AIG-ASS-08) and AI contract terms; the Procurement board decides within its delegated remit.'],
+    existing:['n','N/A — existing contract / free tool','AI feature under an existing contract or licence: record Gate 4 as N/A in the Gate Plan with the reason. '+ck+'. If switching it on needs a licence change or contract variation, Gate 4 applies.'],
+    free:['n','N/A — existing contract / free tool','Free public tool, no contract: record Gate 4 as N/A in the Gate Plan with the reason. '+ck+', answered from the published terms, with any gaps recorded.'],
+    inhouse:['n','N/A (built in-house)','Built in-house: mark Gate 4 N/A in the Gate Plan with the reason.']};
+   const g=P[s.proc]||['c','If a procurement, new contract, licence change or contract variation is needed','Answer the procurement question in step 3. Gate 4 applies wherever a procurement, new contract, licence change or contract variation is needed; for an existing contract or licence, or a free public tool, it is N/A with the reason, and the remaining supplier checks are completed.'];
+   G.push(['Gate 4','Procurement','Procurement board',g[0],g[1],g[2]]);}
+  const e=at('Medium');
+  G.push(['Gate 5','Ethics assessment (before delivery)','Ethics decision owner (configuration item)',e===true?'a':e===null?'c':'n',e===true?'Applies':e===null?'If Medium or above':'N/A unless assigned','Responsible AI Assessment (AIG-ASS-04), bias testing and human-in-the-loop validation, applies from Medium (Playbook §4.6.4; Gate Map AIG-DEC-01 Gate 5 rule); at Low only where the Governance Checklist (AIG-ASS-03) assigns it, otherwise mark N/A in the Gate Plan.']);
+  G.push(['Gate 6','Deployment / go-live','Go-live decision-maker for the UC-ID',act?'m':'a',act?'Mandatory':'Applies',act?(s.mayAct?'Unsure counts as Yes until confirmed: ':'')+'Mandatory for every action-capable use (any agency tier, including T0). Grants the permitted autonomy level for this UC-ID (may be lower than requested), recorded in AIG-DEC-03 and written to AIG-AGT-04 "Permitted autonomy level (decision ref)". Agentic control checkpoints re-confirmed; Security Review outcome confirmed.':'Authorises go-live once conditions are closed or formally accepted'+(at('High')!==false?'; Security Review outcome confirmed for High and Critical.':'.')]);
+  G.push(['Gate 7','Operate, monitor, review and change','Service Owner; re-entry to the relevant forum on change or incident','a','Ongoing','Continue or re-assess. The Service Owner applies an immediate precautionary pause where there is a real risk of harm, without waiting for a decision (logged in AIG-DEC-04 as a Precautionary pause event); continued suspension, resumption or withdrawal is decided by the officer or forum with confirmed delegation (Playbook §4.7.17). Material change re-enters Intake.']);
+  G.push(['Gate 8','Retirement / closure','Retirement decision-maker for the UC-ID','n','At end of use','Retirement decision per UC-ID and closure evidence.']);
+  return G;
+}
+
+function buildRoute(s,needScreen,full){
+  if(!s.sit) return null;
+  if(s.sit==='approved'&&s.match==='yes'){
+    return {kind:'ok',k:'Your route',title:'Use it within the approved scope',sub:'No new governance step is needed while your use matches the approval exactly.',pills:[],stages:[
+      {t:'Before each use',acts:[
+        act('ALL','Check the AI Register shows Governance Approval Status Approved and Status Active, and that your use matches the approved purpose, conditions and any required training.','AIG-INV-04'),
+        act('ALL','Check the AIR-ID and exact UC-ID, purpose and conditions in the decision record. An Approved/Active system row alone is not enough.','AIG-DEC-03'),
+        act('ALL','Check outputs and stay accountable for what you use or publish. Don\'t put special-category or highly sensitive data in without data protection approval, or make a final statutory decision without meaningful human review.','AIG-INV-01')],
+       hand:['Use matches the approved purpose, data, users and conditions','Required training done']},
+      {t:'If anything changes or goes wrong',acts:[
+        act('ALL','If the use is new, changed or not clearly approved, pause that use and contact the AI Governance Lead.','AIG-INV-01'),
+        act('SO','Report changes and incidents against the AIR-ID and each affected UC-ID.','AIG-OPS-03')],hand:[]}]};
+  }
+  if(!needScreen) return null;
+  if(s.answered<10&&!s.anyYes&&s.sit!=='found'&&s.sit!=='change') return {kind:'pending',answered:s.answered};
+  if(s.needReview) return {kind:'needreview'};
+
+  // Light-touch route (D5): only a new use with all ten No and no mandatory trigger; a changed use returns to full intake
+  if(s.allNo&&s.sit!=='found'&&s.sit!=='change'&&!s.trig.length){
+    return {kind:'light',k:'Provisional route',title:'Light-touch: Fast-Track Screening',sub:'All ten answers are No, so this use is provisionally eligible for the light-touch route. Only the AI Governance Lead can confirm it.',pills:[['Light-touch · Low · Priority 4 or 5','gold']],stages:[
+      {t:'Screen and register',acts:[
+        act('SO','Submit Fast-Track Screening with all ten answers and the facts about the tool.','AIG-INV-02'),
+        act('GL','Validate that every answer is No, the intake facts are complete and no mandatory trigger applies. The screen is a step within AI Intake: it never creates an AIR-ID or authorises use by itself. After validation, create the light AI Register row: AIR-ID, UC-ID link, name, owner, purpose, lifecycle, Light-touch / Low / Priority 4 or 5 and the next review date.','AIG-INV-04'),
+        act('GL','Complete equality, human rights and data protection screening. A low classification doesn\'t waive these duties. Where the tool already has a current assessment that covers this kind of use (for example its DPIA), screen by reference: cite its Evidence ID, check it was completed or reviewed in the last 12 months, confirm this use is within its scope (same kind of data, people, purpose and decision impact) and record a short reasoned outcome in the Fast-Track Part C box. The DPO confirms the privacy side; the decision-maker sees the outcome before deciding (Playbook §4.6).','AIG-ASS-03')],
+       hand:['All ten answers evidenced, none guessed','Tool facts and supplier details supplied','Named Service Owner and review date agreed']},
+      {t:'Decide and start',acts:[
+        act('FO','The officer or forum with confirmed delegation (Service Owner/Service Manager only if delegated) makes a proportionate decision for this UC-ID, recorded in the Decision Record or approved minutes before use.','AIG-DEC-03'),
+        act('GL','Log the Gate Event pointing to that decision before operation starts.','AIG-DEC-04'),
+        act('SO','Keep a proportionate Model Card for the model.','AIG-ASS-09')],hand:['Decision recorded for this UC-ID and Gate Event logged','The screen alone does not allow use','Gate plan for a new use of a tool that is already approved: intake event, this single delegated decision (Gate 6) and the annual review. A tool new to the Council also goes to Gate 1, even if free; Gate 3 applies only where there is new money (Gate Map Gate 1 and 3 rule)']},
+      {t:'Operate and review',acts:[
+        act('SO','Confirm it is still low-risk at the review date (at least annually).','AIG-INV-02'),
+        act('SO','Tell governance about any new data source, connection, audience, supplier, model, decision use or action. A material change ends light-touch eligibility: the changed use returns to full intake and triage before it continues.','AIG-INV-03')],hand:[]}]};
+  }
+
+  // Full route
+  const pills=[];
+  const tcls=t=>t==='Critical'?'crit':t==='High'?'high':'';
+  if(s.actCap){
+    const risk=s.tier?(s.floored?`${s.riskTier} (floor)`:s.riskTier):(s.floor?`at least ${s.floor} (floor)`:'not yet known');
+    const gov=s.effTier?((s.tier&&(s.agency||s.effTier==='Critical'))?s.effTier:`at least ${s.effTier}`):'set at triage';
+    pills.push([`Risk: ${risk} · Agency: ${s.agency||'not yet assessed'} → governing: ${gov}`,tcls(s.effTier)]);
+  }
+  else if(s.effTier) pills.push([`${s.effTier} tier${s.floored||(!s.tier&&s.floor)?' (minimum from triggers)':''}`, tcls(s.effTier)]);
+  else pills.push(['Tier set at triage','']);
+  if(s.canAct) pills.push(['Can act: agentic triage','']); else if(s.mayAct) pills.push(['May act: governance to confirm','']);
+  if(s.trigs.length) pills.push([`${s.trigs.length} escalation trigger${s.trigs.length>1?'s':''}`,'high']);
+  const stages=[];
+  const intake=[];
+  if(s.sit==='found') intake.push(act('SO','Disclose it promptly through Intake: describe when it was first used, how, and who has been exposed. Don\'t treat any existing approval as covering this use.','AIG-INV-03'));
+  if(s.sit==='change') intake.push(act('SO','Tell the AI Governance Lead before the changed use proceeds, and supply the change facts. The case re-enters on the same AIR-ID.','AIG-INV-03'));
+  intake.push(act('SO','Complete Service Owner sections 1 to 7 of the AI Intake Form: tool and version, purpose and public benefit, supplier, data, people affected, outputs, decisions influenced, actions, connected tools, human control and potential harm. Mark unknowns as unknown.','AIG-INV-03'));
+  intake.push(act('GL','Complete the screening, register and pathway sections. Issue or confirm the permanent AIR-ID and a UC-ID for this use.','AIG-INV-04'));
+  if(s.sit==='found') intake.push(act('GL','Decide on investigation, re-triage, extra controls or suspension while the case is assessed.','AIG-INV-01'));
+  stages.push({t:'Intake and registration',acts:intake,hand:['Product description','Data-flow sketch','Supplier information','Any existing assessment or decision record','References given once, against the AIR-ID']});
+
+  const tri=[act('GL','Run AGPI for governance priority (how quickly and in what order governance looks at this use) and the AI Risk Assessment Worksheet for inherent and residual risk. Apply any trigger floor and the impact floor (a confirmed Severe impact, Impact 5, sets at least Medium), and issue the case-specific Governance Checklist with the confirmed tier, route and contact.','AIG-ASS-01 · AIG-ASS-02 · AIG-ASS-03'),
+    act('SO','Check the priority and risk assumptions reflect how the service will actually use it.','AIG-ASS-02')];
+  if(s.canAct||s.mayAct){
+    tri.push(act('GL','Run Agentic Triage (five agency dimensions, agency tier T0–T5) and open the Agent Record / ASBOM at the level it needs: a short core record for every agent that can act, extra sheets for persistence, memory, tool discovery, credential access or delegation, and the full ASBOM at T3 and above (Playbook F.3). The agency tier sets a minimum pathway (T0–T1 none, T2 Medium, T3–T4 High, T5 Critical); the governing pathway is the higher of that and the risk-tier pathway (including §4.4.6 trigger floors and the impact floor); neither lowers the other. Agentic triage routes and gathers evidence; it does not approve.','AIG-AGT-03 · AIG-DEC-01 · AIG-AGT-04',s.mayAct?'if it can act':''));
+    tri.push(act('SO','Describe the approved purpose, tools, credentials, delegation, action limits, intervention and rollback. Provide demonstrations and test results.','AIG-AGT-04',s.mayAct?'if it can act':''));
+  }
+  stages.push({t:'Triage',note:'AGPI priority sets how quickly governance looks at this use; the route is set by the governing tier.',acts:tri,hand:['Impact, likelihood, failure modes and controls explained','Who can intervene is named'].concat(s.canAct?['Action limits, credentials and rollback described']:[])});
+
+  const as=[];
+  as.push(act('SP','Equality, human rights and data protection screening for every case, whatever the tier.','AIG-ASS-03'));
+  const ra=condTier(s,'Medium'); if(ra!==null) as.push(act('SO','Complete the Responsible AI Assessment. The Governance Lead quality assures it.','AIG-ASS-04',ra));
+  if(s.personal) as.push(act('SP','DPO advises on DPIA screening. Complete a DPIA when the checklist requires it; the Service Owner supplies purpose, data flows, retention, risks and safeguards.','AIG-ASS-05','sensitive personal data, or data the user could not already open'));
+  const eia=condTier(s,'High'); if(eia!==null) as.push(act('SP','Equality Impact Assessment, reviewed by the Equalities lead. Required for High and Critical cases.','AIG-ASS-06',eia));
+  else as.push(act('SP','Equality Impact Assessment where the checklist assigns it.','AIG-ASS-06','if assigned'));
+  // D4: HRA required for Critical, and for High where Convention rights may be engaged (screened at every tier)
+  const hraC=tierAtLeast(s,'Critical');
+  if(hraC===true) as.push(act('SP','Legal Services leads the Human Rights Assessment (required for Critical).','AIG-ASS-07'));
+  else if(s.effTier==='High') as.push(act('SP','Legal Services leads the Human Rights Assessment where Convention rights may be engaged.','AIG-ASS-07','High: if rights may be engaged'));
+  else if(hraC===null) as.push(act('SP','Legal Services leads the Human Rights Assessment: required for Critical, and for High where Convention rights may be engaged.','AIG-ASS-07','if Critical, or High with rights engaged'));
+  else if(s.individuals||s.trigs.includes('statutory')) as.push(act('SP','Legal Services leads a Human Rights Assessment when screening shows rights, statutory decisions or legal uncertainty are engaged.','AIG-ASS-07','if triggered'));
+  const lg=condTier(s,'High'); if(lg!==null) as.push(act('SP','Legal advice recorded.','AIG-ASS-03',lg));
+  if(s.canAct||s.mayAct){const t4=condAgy(s,4,'if T4 or above');as.push(act('SP','Security Review, starting with a threat model (Section 8; proposed, for Council confirmation), including the OWASP ASI01 to ASI10 tests for an action-capable agent, at any tier. Record runtime control evidence in the ASBOM.'+(t4!==null?' At agency tier T4 or above it must be complete before the Gate 2 decision.':''),'AIG-ASS-11 · AIG-AGT-04',s.mayAct?'if it can act':'can act'))}
+  else { const sec=condTier(s,'High'); if(sec!==null||s.supplier) as.push(act('SP','AI Security Review; at High and Critical it starts with a threat model (Section 8; proposed, for Council confirmation).','AIG-ASS-11',s.supplier&&sec!==''?'supplier or security exposure':sec)); }
+  {const md=tierAtLeast(s,'Medium'),hi=tierAtLeast(s,'High');if(md!==false&&hi!==true&&['yes','unsure'].includes(s.ft[4])) as.push(act('SP','If this is resident-facing generative AI: a documented adversarial test (prompt injection, harmful or wrong advice, bias probes, data leakage, harmful content and safeguarding) before go-live at Gate 6. Proposed, for Council confirmation.','AIG-ASS-11',md===null?'if Medium and resident-facing generative AI':'if resident-facing generative AI'));}
+  if(s.proc==='new') as.push(act('SP','Procurement runs the Supplier AI Due-Diligence Questionnaire; the Service Owner obtains supplier answers, architecture and contract facts.','AIG-ASS-08','new contract or change'));
+  else if(s.proc==='existing'||s.proc==='free') as.push(act('SO','No Gate 4 ('+(s.proc==='free'?'free public tool':'existing contract or licence')+'): record it N/A with the reason. Still complete the data processing terms and Supplier AI Due-Diligence Questionnaire sections 5 (data protection and security) and 8 (business continuity and exit)'+(s.proc==='free'?', from the published terms':'')+'.','AIG-ASS-08',s.proc==='free'?'free public tool':'existing contract'));
+  else if(s.proc!=='inhouse'&&s.supplier) as.push(act('SP','Procurement runs the Supplier AI Due-Diligence Questionnaire where a procurement, new contract, licence change or contract variation is needed; the Service Owner obtains supplier answers, architecture and contract facts.','AIG-ASS-08','if a contract is needed'));
+  as.push(act('SO','Complete the Model Card for each model.','AIG-ASS-09'));
+  as.push(act('GL','Check ATRS reportability (the standard is voluntary for local authorities).','AIG-ASS-10'));
+  as.push(act('GL','Agree the monitoring plan and thresholds'+(s.canAct?', including agentic thresholds,':'')+' before go-live, and record who agreed them (AIG-OPS-01 section 7).','AIG-OPS-02'));
+  stages.push({t:'Assessments the checklist assigns',note:'You only complete what the Governance Checklist assigns to you. "Proportionate" means evidenced decisions about applicability, not skipping a triggered check.',acts:as,hand:['Each assigned assessment complete or marked N/A with written reasons','Evidence referenced by AIR-ID, not copied','Specialist sign-offs requested']});
+
+  const dec=[act('GL','Route the gate to the right forum using the Gate Map and prepare the Decision-Ready Paper.','AIG-DEC-01 · AIG-DEC-02'),
+    act('SO','Confirm the case is accurate: purpose, configuration, affected people, human oversight, known limits and residual risks. You cannot self-waive an unresolved specialist issue.','AIG-DEC-02'),
+    act('FO',s.effTier?FORUM.find(f=>f[0]===s.effTier)[1]+'.':'The officer or forum with confirmed delegation depends on the confirmed tier (see table). The AI Assurance Board gives assurance and recommendations; it does not decide.','AIG-GOV-06 · AIG-DEC-01'),
+    act('GL','Record the decision, conditions and next gate in the Decision Record and Gate Log. Approval with conditions doesn\'t close those conditions.','AIG-DEC-03 · AIG-DEC-04')];
+  const ic=condTier(s,'Critical'); if(ic!==null) dec.splice(2,0,act('SP','Independent challenge and executive oversight before the decision (Critical tier, Playbook §3.10.1).','AIG-GOV-02',ic));
+  const ia=condTier(s,'High'); if(ia!==null) dec.splice(2,0,act('SP',s.effTier==='Critical'?'Independent assurance (Critical tier, Playbook §3.10.2), alongside independent challenge; continuing through operation.':'Independent assurance review (High tier, Playbook §4.5.3, §4.5.9); at Critical, independent assurance alongside independent challenge (§3.10.2).','AIG-GOV-02',ia));
+  let dnote='';
+  if(s.actCap){
+    const pos=dec.length-2; const ins=[];
+    ins.push(act('SP',(s.agyRank>=4?'Gate 2 (Technical design review) is mandatory for this action-capable use. The AIG-ASS-11 Security Review (ASI01–ASI10) must be complete before the Gate 2 decision (agency tier T4 or above). ':'Gate 2 (Technical design review) is mandatory for this action-capable use, whatever the tier. ')+'The Technical design authority, with AI Governance Working Group input, reviews the agentic control checkpoints (memory control, tool/interface authority, delegation chain, containment/kill switch, identity/credentials, rollback); they are re-confirmed at Gate 6.','AIG-DEC-01 · AIG-AGT-04 · AIG-ASS-11',s.mayAct?'mandatory (Unsure counts as Yes)':'mandatory'));
+    const t3=condAgy(s,3,'if T3 or above'); if(t3!==null) ins.push(act('AB','AI Assurance Board formal recommendation before the decision (agency tier T3 or above). The Board recommends; the delegated forum for the governing tier decides.','AIG-GOV-06 · AIG-DEC-01',t3));
+    const t4=condAgy(s,4,'if T4 or above'); if(t4!==null&&!(s.agyRank>=4)) ins.push(act('SP','AIG-ASS-11 Security Review (ASI01–ASI10) complete before the Gate 2 decision (agency tier T4 or above).','AIG-ASS-11',t4));
+    const t5=condAgy(s,5,'if T5'); if(t5!==null) ins.push(act('FO','Executive and safety escalation (agency tier T5): SRO and Executive Sponsor oversight with independent challenge. No consequential production use until resolved.','AIG-DEC-01 · AIG-GOV-02',t5));
+    dec.splice(pos,0,...ins);
+    dec.push(act('FO','Gate 6 (go-live) grants the permitted autonomy level for this UC-ID, which may be lower than requested. The go-live decision-maker records it in the Decision Record, and it is written to the Agent Record field "Permitted autonomy level (decision ref)".','AIG-DEC-03 · AIG-AGT-04',s.mayAct?'Gate 6 (Unsure counts as Yes)':'Gate 6'));
+    dnote=s.agency?`Agentic pathway (Gate Map AIG-DEC-01; proposed, for Council confirmation): agency tier ${s.agency} sets ${s.agencyMin?`a minimum pathway of ${s.agencyMin}`:'no minimum pathway'}; the governing tier is ${s.tier?s.effTier:`at least ${s.effTier||'the tier set at triage'}`}. Decisions stay with the delegated forum or officer.`:'Minimum pathway depends on the agency tier; Gate 2 is mandatory regardless. Steps marked "if T3 or above" and similar apply once Agentic Triage sets the tier.';
+  }
+  dec.push(act('GL','Record the applicable gates below in the Gate Plan and mark N/A gates there with reasons. Gate 0 (intake) is covered by stage 1.','AIG-DEC-04'));
+  stages.push({t:'Decision',note:dnote,acts:dec,gates:gatePlan(s),forum:true,hand:['Specialists have signed off their areas','Conditions have owners and due dates'].concat(s.canAct?['Agentic control checkpoints evidenced for Gate 2']:[])});
+
+  const go=[act('SO','Work through the Deployment and Rollout Plan with governance: readiness, staff training, human oversight, monitoring, rollback and fallback (section 8 also asks whether the service is a prioritised activity in the Council’s business continuity plan and, if so, for the plan reference; proposed), and closure or formal acceptance of each condition.','AIG-OPS-01'),
+    act('GL','Confirm the Register shows Approved and Active for the actual configuration and this UC-ID. Operational use starts only then.','AIG-INV-04')];
+  if(s.canAct||s.mayAct) go.push(act('SP','Each required runtime control Implemented and Evidenced, or an authorised time-bounded compensating control. Otherwise it is No-go for consequential production autonomy.','AIG-AGT-04 · AIG-OPS-01',s.mayAct?'if it can act':''));
+  if(s.canAct||s.mayAct) go.push(act('FO','Gate 6 decision: the go-live decision-maker grants the permitted autonomy level for this UC-ID and re-confirms the agentic control checkpoints. The agent runs only at the permitted level.','AIG-DEC-03 · AIG-AGT-04',s.mayAct?'if it can act':''));
+  {const t5=condAgy(s,5,'if T5'); if(t5!==null) go.push(act('FO','Agency tier T5: no consequential production use until the executive and safety escalation is resolved.','AIG-DEC-01',t5));}
+  stages.push({t:'Go-live',acts:go,hand:['Every condition closed or formally accepted','Rollback tested','Register Approved and Active']});
+
+  const op=[act('SO','Monitor the assigned measures: performance, errors, fairness, complaints, human overrides, supplier performance and condition breaches.','AIG-OPS-02'),
+    act('SO','Harm, suspected breach, unsafe output or unexpected action: contain or pause the use, protect residents and report it to the AI Governance Lead the same working day using Part A of the Incident Report, linked to the AIR-ID. Refer a suspected personal-data breach to the DPO immediately.','AIG-OPS-03')];
+  {const M={Low:['routine operational monitoring by the Service Owner','performance review annual','formal review annual','minimum sample 10 per review (census if 10 or fewer)'],
+    Medium:['operational monitoring monthly','performance review quarterly','formal review annual (AI Governance Working Group)','minimum sample 20 per review (census if 20 or fewer)'],
+    High:['operational monitoring continuous (logged at least monthly)','performance review monthly','formal review quarterly, reported to the AI Assurance Board','minimum sample the greater of 30 or 5% of the window’s population (census if at or below the minimum)'],
+    Critical:['operational monitoring continuous (logged at least monthly)','performance review at least monthly','continuous monitoring with a formal review at least monthly, reported to each AI Assurance Board meeting','minimum sample the greater of 30 or 5% of the window’s population, plus 100% of adverse or fully automated decisions']};
+   const ag=s.actCap?' Action-capable: the Monitoring and Review Plan raises (never lowers) this cadence; the size of the raise is to be set by the Council (AIG-OPS-02 column AP).':'';
+   const txt=s.effTier?`Monitoring minimum for the ${s.effTier} governing tier (Playbook §6.4.4; AIG-OPS-02 Sampling Method): ${M[s.effTier].join('; ')}. Record the review type (operational, performance or formal) on each Monitoring Log row.`:`Monitoring minimum follows the governing tier once set (Playbook §6.4.4; AIG-OPS-02): ${['Low','Medium','High','Critical'].map(t=>t+': '+M[t].slice(0,3).join(', ')+', '+M[t][3]).join('. ')}.`;
+   op.splice(1,0,act('GL',txt+ag,'AIG-OPS-02 · AIG-GOV-02',s.effTier?'':'set by tier'));}
+  if(s.individuals||s.publicFacing){const c=s.individuals&&!s.individualsUnsure?'affects individuals':s.publicFacing&&!s.publicUnsure?'public-facing':'Unsure answer: to confirm';op.push(act('SO','Make sure people can challenge an AI-influenced decision and get a fresh human review.','AIG-OPS-04',c))}
+  if(s.canAct||s.mayAct) op.push(act('GL','Record each consequential action with its Action ID against the exact ASBOM version.','AIG-AGT-06',s.mayAct?'if it can act':''));
+  op.push(act('SO','Tell the AI Governance Lead before any change to model, supplier, data, tool, authority or purpose proceeds; it re-enters triage.','AIG-INV-03'));
+  stages.push({t:'Operate and monitor',acts:op,hand:[]});
+
+  let title='Full intake and triage', sub=s.anyYes?'At least one answer was Yes or Unsure, so this use needs full intake and triage.':'A mandatory escalation trigger applies, so this use cannot take the light-touch route and needs full intake and triage.';
+  if(s.sit==='found'){title='Retrospective intake';sub='AI already in use always goes through full Intake, never Fast Track.';}
+  if(s.sit==='change'){title='Full intake and triage for the changed use';sub='A change to a use already in governance is a material change: it returns to full intake and triage on the same AIR-ID, never the light-touch route.';}
+  if(s.canAct||s.mayAct) {title+=' with Agentic Triage'; sub+=' It can (or may) act, so Agentic Triage is mandatory and Gate 2 (Technical design review) and Gate 6 (go-live) apply.';
+    if(!s.agency) sub+=' Minimum pathway depends on the agency tier; Gate 2 is mandatory regardless.';
+    else if(s.agencyRaised) sub+=` Agency tier ${s.agency} sets a minimum pathway of ${s.agencyMin}, which governs.`;}
+  if(s.floor){const why=s.agentTrig&&s.trig.length?'The triggers that apply (including autonomous action without per-action review)':s.agentTrig?'Autonomous action without evidenced per-action review':'The triggers ticked';sub+=` ${why} set${s.agentTrig&&!s.trig.length?'s':''} a minimum tier of ${s.floor}.`;}
+  return {kind:'full',k:'Your route',title,sub,pills,stages};
+}
+
+function render(s,needScreen,full){
+  const R=buildRoute(s,needScreen,full);
+  const el=$('#route');
+  if(!R||R.kind==='pending') window.__route=null;
+  if(!R){el.innerHTML=`<div class="card empty">${s.sit==='approved'?'Answer question 1a to see your route.':'Choose what\'s happening to start.'}</div>${legendHTML()}${sampleNote()}`;return}
+  if(R.kind==='needreview'){el.innerHTML=`<div class="card"><p class="empty" style="margin:0">Step 3: answer whether a person reviews each individual action before it takes effect. The route depends on it (Unsure is treated as No until per-action review is evidenced).</p></div>`;window.__route=null;return}
+  if(R.kind==='pending'){el.innerHTML=`<div class="card"><p class="empty" style="margin:0">Answer all ten screening questions (${R.answered} of 10 so far). One Yes or Unsure is enough to show the full route.</p></div>`;return}
+  const head=`<div class="verdict"><div class="k">${esc(R.k)}</div><h2>${esc(R.title)}</h2><p>${esc(R.sub)}</p><div class="pills">${R.pills.map(p=>`<span class="pill ${p[1]}">${esc(p[0])}</span>`).join('')}</div></div>`;
+  const stg=R.stages.map((st,i)=>`<article class="stage"><header><span class="n">${String(i+1).padStart(2,'0')}</span><h3>${esc(st.t)}</h3></header>
+    ${st.note?`<div class="note" style="margin:10px 16px 0">${esc(st.note)}</div>`:''}
+    <div class="acts">${st.acts.map(a=>`<div class="act"><div class="role" style="color:${ROLES[a.role][1]}"><span class="dot" style="background:${ROLES[a.role][1]};margin-top:2px"></span>${ROLES[a.role][0]}</div><p>${esc(a.text)} <span class="id">${idLinks(a.id)}</span>${a.cond?`<span class="cond">${esc(a.cond)}</span>`:''}</p></div>`).join('')}</div>
+    ${st.gates?gatesHTML(st.gates):''}
+    ${st.forum?forumHTML(s):''}
+    ${st.hand&&st.hand.length?`<div class="hand"><h4>Before moving on</h4>${st.hand.map((h,j)=>`<label><input type="checkbox" id="h${i}-${j}"><span>${esc(h)}</span></label>`).join('')}</div>`:''}
+  </article>`).join('');
+  el.innerHTML=head+legendHTML()+`<div class="stages">${stg}</div><p class="foot">Built from the suite (version 1.0 draft): Staff Guide to Registering and Governing AI AIG-INV-01, AI Fast-Track Screening AIG-INV-02, AI Governance Checklist AIG-ASS-03, the Approval and Assurance Matrix in Playbook §3.10.1 and the triggers in Playbook §4.4.6. Draft for Council review; the AI Governance Lead confirms every route and tier.</p>`;
+  window.__route=R;
+}
+function forumHTML(s){return `<div class="hand" style="background:var(--panel)"><h4>Who decides, by tier (Playbook §3.10.1)</h4><div class="tblwrap"><table class="forum"><thead><tr><th>Tier</th><th>Delegated authority deciding each UC-ID</th><th>Use-specific governance response</th></tr></thead><tbody>${FORUM.map(f=>`<tr class="${s.effTier===f[0]?'on':''}"><td>${f[0]}</td><td>${esc(f[1])}</td><td>${esc(f[2])}</td></tr>`).join('')}</tbody></table></div></div>`}
+function gatesHTML(G){return `<div class="hand" style="background:var(--panel)"><h4>Council gates for this case (Gate Map AIG-DEC-01)</h4><div class="tblwrap"><table class="forum gates"><thead><tr><th>Gate</th><th>Forum or officer</th><th>For this case</th></tr></thead><tbody>${G.map(g=>`<tr><td>${esc(g[0])}<br><span style="font-weight:400">${esc(g[1])}</span></td><td>${esc(g[2])}</td><td><span class="gst ${g[3]}">${esc(g[4])}</span><br>${idLinks(g[5])}</td></tr>`).join('')}</tbody></table></div></div>`}
+function legendHTML(){return `<div class="legend">${['SO','GL','SP','FO'].map(k=>`<span><i class="dot" style="background:${ROLES[k][1]}"></i>${ROLES[k][0]}</span>`).join('')}</div>`}
+function sampleNote(){return `<div class="card" style="margin-top:4px"><p class="help" style="margin:0">Not sure where to start? Choose <b>Try an example</b> to load a sample case: an agent that updates housing repair records.</p></div>`}
+
+document.addEventListener('change',show);
+$('#reset').onclick=()=>{document.querySelectorAll('input').forEach(i=>{i.checked=false});$('#tier').value='';$('#agency').value='';$('#proc').value='';$('#inv').value='';$('#appr').value='';$('#copied').textContent='';const fb=$('#copyfallback');if(fb)fb.remove();show();window.scrollTo({top:0,behavior:'smooth'})};
+$('#example').onclick=()=>{$('#reset').onclick();$('#sit-new').checked=true;['yes','yes','yes','yes','no','yes','yes','yes','no','no'].forEach((v,i)=>{$(`#ft${i}-${v}`).checked=true});$('#rev-no').checked=true;$('#tr-vulnerable').checked=true;show();const fb=$('#copyfallback');if(fb)fb.remove();$('#copied').textContent='Example loaded: a new agent that updates housing repair records without a person checking each update.'};
+$('#copy').onclick=async()=>{
+  const R=window.__route; const s=state();
+  if(!R||!R.stages){$('#copied').textContent='Answer the questions first to build a route.';return}
+  const lines=[`AI governance route: ${R.title}`,R.sub,R.pills.map(p=>p[0]).join(' · '),''];
+  R.stages.forEach((st,i)=>{lines.push(`${i+1}. ${st.t}`);if(st.note)lines.push(`   Note: ${st.note}`);st.acts.forEach(a=>lines.push(`   - ${ROLES[a.role][0]}: ${a.text} [${a.id}]${a.cond?` (${a.cond})`:''}`));if(st.gates)st.gates.forEach(g=>lines.push(`   * ${g[0]} ${g[1]} (${g[2]}): ${g[4]}. ${g[5]}`));if(st.hand&&st.hand.length)lines.push(`   Before moving on: ${st.hand.join('; ')}`);lines.push('')});
+  lines.push('Draft suite for Council review. The AI Governance Lead confirms the route and tier.');
+  const txt=lines.join('\n');
+  try{await navigator.clipboard.writeText(txt);$('#copied').textContent='Route summary copied.'}
+  catch(e){let ta=$('#copyfallback');if(!ta){ta=document.createElement('textarea');ta.id='copyfallback';ta.setAttribute('aria-label','Route summary to copy');ta.readOnly=true;$('#copied').after(ta)}ta.value=txt;ta.select();$('#copied').textContent='Copying isn\'t available here. The summary is selected below; press Ctrl+C to copy.'}
+};
+show();
+})();
+</script>
+<aside id="data-privacy-note" aria-label="Data and privacy" style="max-width:1100px;margin:28px auto 24px;padding:12px 16px;border-top:2px solid #C8AB36;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.5;color:#5A5A5A;background:transparent"><strong style="color:#122C47">Data and privacy.</strong> This tool runs entirely in your web browser. It uses no cookies, analytics or tracking, and loads nothing from other websites. Nothing you enter is saved or sent anywhere; it is cleared when you close or reload the page. It is hosted on GitHub Pages, which keeps standard server logs of visits, as any website host does. Please do not enter personal data about residents or staff.</aside>
+
