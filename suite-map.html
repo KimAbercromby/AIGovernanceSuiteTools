@@ -184,6 +184,35 @@ td .was{color:var(--crit)} td .fix{color:var(--monitor,inherit);font-weight:600}
 .rsec .cfl.done{color:var(--muted)}
 .rsec .src{font-size:11.5px;color:var(--muted);margin-top:6px}
 .listview .rtag{margin-left:6px;vertical-align:1px}.listview .qm{margin-left:4px;vertical-align:-2px}
+
+.keybox{margin:0 0 6px}
+.keybox>summary{cursor:pointer;font:600 12px var(--sans);color:var(--muted);padding:2px 0;list-style:revert}
+.btn.primary{background:var(--navy,#0b2545);color:#fff;border-color:transparent}
+.tour{background:var(--panel);border:2px solid var(--gold-ink,#8a6d00);border-radius:8px;padding:10px 12px;margin-bottom:14px}
+.tour .tk{font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--gold-ink,#8a6d00)}
+.tour p{margin:6px 0 10px;font-size:15px}
+.tour .tn{display:flex;gap:8px;flex-wrap:wrap}
+.tour .btn[disabled]{opacity:.45;cursor:default}
+@media print{
+  @page{size:A4 landscape;margin:10mm}
+  body{background:#fff!important;color:#000!important}
+  .sibs,.bar,.keybox,.rolekey,aside.panel,.pilotbadge,#listview,.zoom{display:none!important}
+  header.top{background:none!important;color:#000!important;padding:0!important}
+  header.top .lede{display:none}
+  header.top .kicker,header.top h1{color:#000!important}
+  .layout{display:block!important}
+  .mapbox{overflow:visible!important;max-height:none!important;border:0!important}
+  svg#map{width:100%!important;height:150mm!important;display:block}
+  header.top>div[style]{display:none}
+  header.top h1{font-size:18px!important;margin:2px 0 4px!important}
+  .wrap{padding:0!important;max-width:none!important}
+  #data-privacy-note{display:none!important}
+  .layout{gap:0!important}
+  main,section#view-map{padding:0!important;margin:0!important}
+  #mapbox[hidden]{display:block!important}
+  .printnote{display:block!important}
+}
+.printnote{display:none;font-size:11px;margin-top:6px}
 </style>
 
 <header class="top">
@@ -210,6 +239,8 @@ td .was{color:var(--crit)} td .fix{color:var(--monitor,inherit);font-weight:600}
       </div>
       <button class="btn" id="clear">Clear selection</button>
       <button class="btn" id="viewtoggle" aria-pressed="false">List view</button>
+      <button class="btn primary" id="tourbtn">Guided tour</button>
+      <button class="btn" id="printbtn" title="Print the whole map on one page, or save it as a PDF">Print / save as PDF</button>
     </div>
     <div class="bar rolebar" style="padding-top:0">
       <label for="role">View as role</label>
@@ -224,15 +255,19 @@ td .was{color:var(--crit)} td .fix{color:var(--monitor,inherit);font-weight:600}
       <span class="rk"><span class="qm">?</span>pilot position: the suite doesn't settle it yet</span>
       <span class="rk"><span class="qm cf">!</span>documents disagree: decision needed</span>
     </div>
-    <div class="bar" style="padding-top:0">
-      <div class="legend" id="glegend" aria-label="Purpose groups"></div>
-    </div>
-    <div class="bar" style="padding-top:0">
-      <div class="legend" id="elegend" aria-label="Link types"></div>
-    </div>
+    <details class="keybox" id="keybox">
+      <summary>Key and filters: colours show purpose, line styles show link types. Select any to show or hide it.</summary>
+      <div class="bar" style="padding-top:6px">
+        <div class="legend" id="glegend" aria-label="Purpose groups"></div>
+      </div>
+      <div class="bar" style="padding-top:0">
+        <div class="legend" id="elegend" aria-label="Link types"></div>
+      </div>
+    </details>
     <div class="layout">
       <div class="mapwrap"><div class="mapbox" id="mapbox"><svg id="map" role="group" aria-label="Architecture map of the AI governance suite: each artefact is a button; select one to see its links"></svg></div><nav class="listview" id="listview" aria-label="Artefacts by lifecycle band" hidden></nav></div>
       <aside class="panel" id="panel" aria-live="polite"></aside>
+      <p class="printnote">Draft for review. Solid lines are workflow steps; dashed lines are conditional; dotted lines are derived views or mappings. Printed from the AI Governance Suite Map, suite version 1.0 draft.</p>
     </div>
   </div>
 </section>
@@ -739,6 +774,7 @@ function select(id){
 function scrollTo(id){const n=nodes[id],box=document.getElementById("mapbox");box.scrollTo({left:Math.max(0,(n.x-100)*scale),top:Math.max(0,(n.y-120)*scale),behavior:"smooth"})}
 function intro(){panel.innerHTML=`<div class="intro"><h2>How to read the map</h2>
 <p class="desc">Columns follow the lifecycle from discovery to retirement. Bands group artefacts by role: the core route, the specialist assessments the checklist triggers, the agentic layer and the ISO 42001 management system beneath it all.</p>
+<p>New here? Choose <b>Guided tour</b> to follow one AI use through the core route, one step at a time. <b>Print / save as PDF</b> puts the whole map on one page.</p>
 <p>The <b>AI Register</b> (gold outline) is the spine: every record joins to it by AIR-ID, and each distinct use carries a UC-ID.</p>
 <p>Dashed links are conditional; dotted links are derived views or mappings. On a narrow screen, choose <b>List view</b> to browse the artefacts by band.</p>
 <p>A <b>dashed box</b> is a lifecycle state rather than an artefact. <b>Retired and closed</b> in column 7 is the end of life: reached by planned retirement at a scheduled review or by withdrawal after an incident, closed under Gate 8, and recorded against an AIR-ID that is kept and never reused.</p>
@@ -756,6 +792,26 @@ document.getElementById("q").addEventListener("input",ev=>{const q=ev.target.val
   panel.innerHTML=hs.length?`<div class="pid">Search</div><h2>${hs.length} artefacts match “${esc(q)}”</h2><ul class="hits">${hs.map(h=>`<li><a data-go="${h}">${esc(h==="UCV"?"UC-ID view":short(h))} · ${esc(nodes[h].title)}</a></li>`).join("")}</ul>`:`<div class="pid">Search</div><h2>No artefact matches “${esc(q)}”</h2>`;
   panel.querySelectorAll("[data-go]").forEach(a=>a.onclick=()=>{select(a.dataset.go);scrollTo(a.dataset.go)});
   renderList()});
+
+
+// ---- guided tour (steps through the standard route, one artefact at a time)
+const TOUR=(()=>{const r=ROUTES.find(x=>x.id==="standard"),s=[["AIG-INV-01","Every AI use starts here: a staff member checks the guide to see whether it needs registering."]];r.steps.forEach(x=>s.push([x[1],x[2]]));return s})();
+let tourI=-1,tourBusy=false;
+const _select=select;
+select=function(id){if(!tourBusy)tourI=-1;_select(id)};
+function tourGo(i){
+  if(i<0)return;
+  if(i>=TOUR.length){tourI=-1;clearAll();return}
+  if(typeof listMode!=="undefined"&&listMode)setView(false);
+  tourBusy=true;tourI=i;select(TOUR[i][0]);tourBusy=false;scrollTo(TOUR[i][0]);
+  panel.insertAdjacentHTML("afterbegin",`<div class="tour"><div class="tk">Guided tour · step ${i+1} of ${TOUR.length}</div><p>${esc(TOUR[i][1])}</p><div class="tn"><button class="btn" id="tprev"${i===0?" disabled":""}>Back</button><button class="btn primary" id="tnext">${i===TOUR.length-1?"Finish":"Next"}</button><button class="btn" id="tend">End tour</button></div></div>`);
+  document.getElementById("tprev").onclick=()=>tourGo(i-1);
+  document.getElementById("tnext").onclick=()=>tourGo(i+1);
+  document.getElementById("tend").onclick=()=>{tourI=-1;clearAll()};
+  document.getElementById("tnext").focus({preventScroll:true});
+}
+document.getElementById("tourbtn").onclick=()=>tourGo(0);
+document.getElementById("printbtn").onclick=()=>{if(typeof listMode!=="undefined"&&listMode)setView(false);tourI=-1;clearAll();window.print()};
 
 // ---- role picker
 const roleSel=document.getElementById("role"),mineBtn=document.getElementById("onlymine");
