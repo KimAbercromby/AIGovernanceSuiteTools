@@ -24,6 +24,15 @@
   .card a.open{align-self:flex-start;text-decoration:none;font-size:13px;font-weight:700;color:#fff;background:var(--navy);padding:8px 14px;border-radius:7px}
   .card a.open:hover{background:var(--banner)}
   .card .soon{align-self:flex-start;font-size:12px;font-weight:700;color:var(--muted);background:var(--light);padding:8px 14px;border-radius:7px;border:1px dashed var(--line)}
+  .start{margin-top:26px;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:10px;padding:16px 18px;background:var(--light);display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
+  .start .t{flex:1;min-width:260px}
+  .start h2{margin:0 0 4px;font-size:17px;color:var(--navy)}
+  .start p{margin:0;font-size:13px;color:var(--grey)}
+  .start .acts{display:flex;gap:8px;flex-wrap:wrap}
+  .start a{text-decoration:none;font-size:13px;font-weight:700;padding:8px 14px;border-radius:7px}
+  .start a.pri{color:#fff;background:var(--navy)}
+  .start a.pri:hover{background:var(--banner)}
+  .start a.sec{color:var(--navy);background:#fff;border:1px solid var(--line)}
   footer{max-width:1040px;margin:0 auto;padding:0 20px 46px;color:var(--grey);font-size:12px}
   footer .n{border-top:1px solid var(--line);padding-top:12px}
 </style>
@@ -37,7 +46,10 @@
   </div>
 </header>
 <div class="rule"></div>
-<main id="main"></main>
+<main id="main"><section class="start" aria-label="Start here">
+  <div class="t"><h2>Start here: what this is</h2><p>A three-page overview of the AI governance playbook and toolkit: what it covers from intake to retirement, the laws it is built around, and how the 52 artefacts and these tools fit together.</p></div>
+  <div class="acts"><a class="pri" href="docs/AI_Governance_Overview.pdf" target="_blank" rel="noopener">Read the overview</a><a class="sec" href="files/AI_Governance_Overview.docx" download>Download (Word)</a></div>
+</section></main>
 <footer><div class="n">Illustrative companions to the playbook, not production systems. They structure human judgement; they do not replace it. Built by Kim Abercromby.</div></footer>
 
 <script>
