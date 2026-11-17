@@ -24,15 +24,22 @@
   .card a.open{align-self:flex-start;text-decoration:none;font-size:13px;font-weight:700;color:#fff;background:var(--navy);padding:8px 14px;border-radius:7px}
   .card a.open:hover{background:var(--banner)}
   .card .soon{align-self:flex-start;font-size:12px;font-weight:700;color:var(--muted);background:var(--light);padding:8px 14px;border-radius:7px;border:1px dashed var(--line)}
-  .start{margin-top:26px;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:10px;padding:16px 18px;background:var(--light);display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
-  .start .t{flex:1;min-width:260px}
-  .start h2{margin:0 0 4px;font-size:17px;color:var(--navy)}
-  .start p{margin:0;font-size:13px;color:var(--grey)}
-  .start .acts{display:flex;gap:8px;flex-wrap:wrap}
-  .start a{text-decoration:none;font-size:13px;font-weight:700;padding:8px 14px;border-radius:7px}
-  .start a.pri{color:#fff;background:var(--navy)}
-  .start a.pri:hover{background:var(--banner)}
-  .start a.sec{color:var(--navy);background:#fff;border:1px solid var(--line)}
+  .starthere{margin-top:30px}
+  .sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+  .scard{border:1px solid var(--line);border-top:5px solid var(--gold);border-radius:10px;padding:18px 18px 16px;background:var(--light);display:flex;flex-direction:column}
+  .scard.so{border-top-color:var(--teal)}
+  .scard .who{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--navy);background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px 10px;margin-bottom:10px}
+  .scard.so .who{color:var(--teal)}
+  .scard h3{margin:0 0 6px;font-size:18px;color:var(--navy)}
+  .scard p{margin:0 0 16px;font-size:13px;color:var(--grey);flex:1}
+  .scard .acts{display:flex;gap:8px;flex-wrap:wrap}
+  .scard a{text-decoration:none;font-size:13px;font-weight:700;padding:8px 14px;border-radius:7px}
+  .scard a.pri{color:#fff;background:var(--navy)}
+  .scard a.pri:hover{background:var(--banner)}
+  .scard.so a.pri{background:var(--teal)}
+  .scard.so a.pri:hover{background:#004c58}
+  .scard a.sec{color:var(--navy);background:#fff;border:1px solid var(--line)}
+  .scard a:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
   footer{max-width:1040px;margin:0 auto;padding:0 20px 46px;color:var(--grey);font-size:12px}
   footer .n{border-top:1px solid var(--line);padding-top:12px}
 </style>
@@ -46,13 +53,22 @@
   </div>
 </header>
 <div class="rule"></div>
-<main id="main"><section class="start" aria-label="Start here">
-  <div class="t"><h2>Start here: what this is</h2><p>A three-page overview of the AI governance playbook and toolkit: what it covers from intake to retirement, the laws it is built around, and how the 52 artefacts and these tools fit together.</p></div>
-  <div class="acts"><a class="pri" href="docs/AI_Governance_Overview.pdf" target="_blank" rel="noopener">Read the overview</a><a class="sec" href="files/AI_Governance_Overview.docx" download>Download (Word)</a></div>
-</section>
-<section class="start" aria-label="Service Owners start here">
-  <div class="t"><h2>Service Owners start here</h2><p>A one-page summary of your part, from first idea to switch-off: what you do at each stage, what you get back, and when to tell the AI Governance Lead straight away. It is page 2 of the Staff Guide (AIG-INV-01), which gives the detail.</p></div>
-  <div class="acts"><a class="pri" href="docs/AIG-INV-01.pdf#page=2" target="_blank" rel="noopener">Read the Service Owner summary</a><a class="sec" href="https://kimabercromby.github.io/AIGovernanceTriage-MultiBoard/#service-owner" target="_blank" rel="noopener">Answer the intake questions</a></div>
+<main id="main"><section class="starthere" aria-labelledby="start-ttl">
+  <h2 class="secttl" id="start-ttl">Start here</h2>
+  <div class="sgrid">
+    <article class="scard">
+      <span class="who">New here · everyone</span>
+      <h3>What this toolkit is</h3>
+      <p>A three-page overview: what the playbook covers from intake to retirement, the laws it is built around, and how the 52 artefacts and these tools fit together.</p>
+      <div class="acts"><a class="pri" href="docs/AI_Governance_Overview.pdf" target="_blank" rel="noopener">Read the overview</a><a class="sec" href="files/AI_Governance_Overview.docx" download>Download (Word)</a></div>
+    </article>
+    <article class="scard so">
+      <span class="who">Service Owners</span>
+      <h3>Your part, on one page</h3>
+      <p>What you do at each stage from first idea to switch-off, what you get back, and when to tell the AI Governance Lead straight away. It is page 2 of the Staff Guide (AIG-INV-01).</p>
+      <div class="acts"><a class="pri" href="docs/AIG-INV-01.pdf#page=2" target="_blank" rel="noopener">Read the summary</a><a class="sec" href="https://kimabercromby.github.io/AIGovernanceTriage-MultiBoard/#service-owner" target="_blank" rel="noopener">Start the intake questions</a></div>
+    </article>
+  </div>
 </section></main>
 <footer><div class="n">Illustrative companions to the playbook, not production systems. They structure human judgement; they do not replace it. Built by Kim Abercromby.</div></footer>
 
