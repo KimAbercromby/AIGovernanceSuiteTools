@@ -23,6 +23,9 @@
   .card p{margin:0 0 14px;font-size:13px;color:var(--grey);flex:1}
   .card a.open{align-self:flex-start;text-decoration:none;font-size:13px;font-weight:700;color:#fff;background:var(--navy);padding:8px 14px;border-radius:7px}
   .card a.open:hover{background:var(--banner)}
+  .card .links{display:flex;gap:8px;flex-wrap:wrap}
+  .card a.open.sec{color:var(--navy);background:#fff;border:1px solid var(--line)}
+  .card a.open.sec:hover{background:var(--light)}
   .card .soon{align-self:flex-start;font-size:12px;font-weight:700;color:var(--muted);background:var(--light);padding:8px 14px;border-radius:7px;border:1px dashed var(--line)}
   .starthere{margin-top:30px}
   .sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
@@ -91,6 +94,9 @@ const SECTIONS = [
     { name:"Legal and Regulatory Basis",
       desc:"The laws, regulatory guidance and standards that apply to councils, with links to the official sources.",
       url:SUITE+"/regulations.html" },
+    { name:"AI policies",
+      desc:"The AI Policy Statement sets the Council\u2019s commitment to using AI lawfully, safely, fairly and transparently. The Acceptable Use Policy sets out what staff may and may not do with AI at work.",
+      links:[{url:SUITE+"/docs/AIG-GOV-05.pdf",label:"Policy statement"},{url:SUITE+"/docs/AI_Acceptable_Use_Policy.pdf",label:"Acceptable use",sec:true}] },
   ]},
   { title:"Before deployment", tools:[
     { name:"Triage &amp; Governance Router",
@@ -131,8 +137,10 @@ SECTIONS.forEach(s => {
   const grid = document.createElement("div"); grid.className = "grid";
   s.tools.forEach(t => {
     const c = document.createElement("div"); c.className = "card";
-    const action = t.url
-      ? `<a class="open" href="${t.url}" target="_blank" rel="noopener">Open tool</a>`
+    const action = t.links
+      ? `<div class="links">${t.links.map(l=>`<a class="open${l.sec?" sec":""}" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join("")}</div>`
+      : t.url
+      ? `<a class="open" href="${t.url}" target="_blank" rel="noopener">${t.label||"Open tool"}</a>`
       : `<span class="soon">In development</span>`;
     c.innerHTML = `<h2>${t.name}</h2><p>${t.desc}</p>${action}`;
     grid.appendChild(c);
