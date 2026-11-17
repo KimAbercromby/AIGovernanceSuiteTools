@@ -91,6 +91,9 @@ const SECTIONS = [
     { name:"Legal and Regulatory Basis",
       desc:"The laws, regulatory guidance and standards that apply to councils, with links to the official sources.",
       url:SUITE+"/regulations.html" },
+    { name:"AI Policy Statement",
+      desc:"The Council\u2019s commitment to using AI lawfully, safely, fairly and transparently, and to keep improving how it governs AI. Three pages that set the direction for everything else in the toolkit.",
+      url:SUITE+"/docs/AIG-GOV-05.pdf", label:"Read the policy" },
   ]},
   { title:"Before deployment", tools:[
     { name:"Triage &amp; Governance Router",
@@ -132,7 +135,7 @@ SECTIONS.forEach(s => {
   s.tools.forEach(t => {
     const c = document.createElement("div"); c.className = "card";
     const action = t.url
-      ? `<a class="open" href="${t.url}" target="_blank" rel="noopener">Open tool</a>`
+      ? `<a class="open" href="${t.url}" target="_blank" rel="noopener">${t.label||"Open tool"}</a>`
       : `<span class="soon">In development</span>`;
     c.innerHTML = `<h2>${t.name}</h2><p>${t.desc}</p>${action}`;
     grid.appendChild(c);
