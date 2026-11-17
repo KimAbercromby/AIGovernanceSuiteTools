@@ -7,58 +7,97 @@
 <style>
   :root{
     --navy:#0A2342; --banner:#003865; --teal:#006272; --gold:#C9A442;
-    --grey:#5A5A5A; --line:#D7DCE1; --light:#F4F6F8; --goldbg:#FBF6E6; --ink:#1A1A1A;
+    --grey:#5A5A5A; --line:#D7DCE1; --light:#F4F6F8; --goldbg:#FBF6E6; --ink:#1A1A1A; --red:#9B2C2C;
   }
   *{box-sizing:border-box}
   body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#fff;line-height:1.45}
   header{background:var(--navy);color:#fff;padding:22px 24px}
   header .rule{height:5px;background:var(--gold);margin:14px -24px -22px -24px}
   h1{margin:0;font-size:24px}
-  .sub{color:#CBD5E1;font-size:13px;margin-top:6px}
+  .sub{color:#CBD5E1;font-size:13px;margin-top:6px;max-width:860px}
   main{max-width:980px;margin:0 auto;padding:22px 20px 60px}
   .intro{background:var(--goldbg);border:1.5px solid var(--gold);border-radius:8px;padding:14px 16px;font-size:13.5px;color:var(--grey)}
   .intro b{color:var(--navy)}
-  .domain{border:1px solid var(--line);border-radius:9px;margin-top:16px;overflow:hidden}
-  .domain h2{margin:0;background:var(--navy);color:#fff;font-size:15px;padding:10px 14px}
-  .domain h2 span{color:var(--gold);font-weight:400;font-size:12px;display:block;margin-top:2px}
-  .levels{display:grid;grid-template-columns:1fr;gap:0}
-  .lvl{display:flex;gap:12px;align-items:flex-start;padding:10px 14px;border-top:1px solid var(--line);cursor:pointer}
+  .intro ol{margin:8px 0 8px 18px;padding:0}
+  .intro li{margin:3px 0}
+  .meta{display:grid;grid-template-columns:200px 1fr;gap:12px;margin-top:16px;border:1px solid var(--line);border-radius:9px;padding:12px 14px;background:var(--light)}
+  @media(max-width:620px){.meta{grid-template-columns:1fr}}
+  label.f{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:4px}
+  input[type=text],input[type=date],select,textarea{font-family:inherit;font-size:13px;border:1px solid #B9C2CC;border-radius:6px;padding:7px 8px;width:100%;background:#fff;color:var(--ink)}
+  textarea{min-height:52px;resize:vertical}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .domain{border:1px solid var(--line);border-radius:9px;margin-top:18px;overflow:hidden}
+  .domain fieldset{border:0;margin:0;padding:0;min-width:0}
+  .domain legend{display:block;width:100%;padding:0;float:left}
+  .dh{background:var(--navy);color:#fff;font-size:15px;font-weight:700;padding:10px 14px}
+  .dh span{color:var(--gold);font-weight:400;font-size:12px;display:block;margin-top:2px}
+  .levels{clear:both}
+  .lvl{display:grid;grid-template-columns:auto 132px 1fr;column-gap:12px;align-items:start;padding:9px 14px;border-top:1px solid var(--line);cursor:pointer}
+  @media(max-width:620px){.lvl{grid-template-columns:auto 1fr;row-gap:2px}.lvl .d{grid-column:2}}
   .lvl:hover{background:var(--light)}
   .lvl input{margin-top:3px}
-  .lvl .n{font-weight:700;color:var(--teal);min-width:74px}
+  .lvl .n{font-weight:700;color:var(--teal)}
   .lvl.sel{background:#EAF1F2}
-  .next{padding:10px 14px;background:var(--light);font-size:12.5px;color:var(--grey);border-top:1px solid var(--line)}
+  .plan{display:grid;grid-template-columns:150px 1fr 1fr;gap:12px;padding:12px 14px;background:var(--light);border-top:1px solid var(--line)}
+  .plan .own{grid-column:2 / 4}
+  @media(max-width:720px){.plan{grid-template-columns:1fr}.plan .own{grid-column:auto}}
+  .next{padding:9px 14px;font-size:12.5px;color:var(--grey);border-top:1px solid var(--line)}
   .next b{color:var(--navy)}
-  /* results */
-  #results{margin-top:26px;border:1.5px solid var(--navy);border-radius:10px;overflow:hidden}
+  #results{margin-top:28px;border:1.5px solid var(--navy);border-radius:10px;overflow:hidden}
   #results h2{margin:0;background:var(--banner);color:#fff;font-size:16px;padding:12px 16px}
-  .rwrap{display:grid;grid-template-columns:320px 1fr;gap:0}
+  .rwrap{display:grid;grid-template-columns:300px 1fr;gap:0}
   @media(max-width:760px){.rwrap{grid-template-columns:1fr}}
-  .band{padding:20px 16px;text-align:center;border-right:1px solid var(--line)}
-  .band .big{font-size:40px;font-weight:700;color:var(--navy);line-height:1}
-  .band .lab{font-size:15px;font-weight:700;color:var(--teal);margin-top:6px}
+  .band{padding:18px 16px;text-align:center;border-right:1px solid var(--line)}
+  .band .row{display:flex;justify-content:center;gap:22px}
+  .band .big{font-size:38px;font-weight:700;color:var(--navy);line-height:1}
+  .band .big.t{color:var(--teal)}
+  .band .cap{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--grey);margin-top:4px}
+  .band .lab{font-size:15px;font-weight:700;color:var(--teal);margin-top:10px}
   .band .note{font-size:12px;color:var(--grey);margin-top:8px}
   .radarbox{padding:10px;text-align:center}
-  .steps{padding:14px 16px;border-top:1px solid var(--line);font-size:13px}
-  .steps h3{margin:0 0 8px;font-size:13px;color:var(--teal);text-transform:uppercase;letter-spacing:.5px}
-  .steps li{margin:5px 0}
-  .btns{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
-  button{font-family:inherit;font-size:13px;padding:9px 16px;border-radius:7px;border:1px solid var(--navy);cursor:pointer}
+  .key{font-size:11.5px;color:var(--grey)}
+  .key i{display:inline-block;width:18px;height:0;border-top:2px solid;vertical-align:middle;margin:0 4px 0 10px}
+  .gap{padding:14px 16px;border-top:1px solid var(--line)}
+  .gap h3{margin:0 0 4px;font-size:13px;color:var(--teal);text-transform:uppercase;letter-spacing:.5px}
+  .gap p.h{margin:0 0 10px;font-size:12.5px;color:var(--grey)}
+  .tw{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:12.5px}
+  th{background:var(--navy);color:#fff;text-align:left;padding:7px 8px;font-weight:700}
+  td{border-top:1px solid var(--line);padding:7px 8px;vertical-align:top}
+  td.c{text-align:center;white-space:nowrap}
+  .pill{display:inline-block;font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px}
+  .p1{background:#F6E0E0;color:var(--red)} .p2{background:var(--goldbg);color:#7A5B00} .p3{background:#E3EEF0;color:var(--teal)}
+  .btns{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  button,.filebtn{font-family:inherit;font-size:13px;padding:9px 16px;border-radius:7px;border:1px solid var(--navy);cursor:pointer;background:#fff;color:var(--navy);font-weight:700}
   .primary{background:var(--navy);color:#fff}
-  .ghost{background:#fff;color:var(--navy)}
+  .filebtn input{position:absolute;left:-9999px}
+  #msg{font-size:12.5px;color:var(--teal);min-height:18px;margin-top:8px}
+  #msg.err{color:var(--red)}
   footer{max-width:980px;margin:0 auto;padding:0 20px 40px;color:var(--grey);font-size:11.5px}
-  @media print{header .rule{display:none} .lvl{cursor:default} .btns{display:none} body{font-size:12px}}
+  @media print{header .rule{display:none} .lvl{cursor:default} .btns,#msg{display:none} body{font-size:11.5px} .domain{break-inside:avoid} textarea{border:0;padding:0;min-height:0}}
 </style>
 </head>
 <body>
 <header>
   <h1>Council AI Governance Maturity Ladder</h1>
-  <div class="sub">A quick self-assessment across six domains. Your overall maturity is set by your lowest domain, not the average. Draft for review &middot; OFFICIAL &middot; decision-support only.</div>
+  <div class="sub">A self-assessment across the seven capability domains of the AI Governance Maturity Framework (Playbook §7.6). Your overall maturity is set by your lowest domain, not the average. Draft for review &middot; OFFICIAL &middot; decision-support only.</div>
   <div class="rule"></div>
 </header>
 <main>
   <div class="intro">
-    <b>How to use.</b> For each domain, choose the single level that best describes where your council is today. It takes about 20 to 30 minutes with the right people in the room. The result shows your overall band, a profile across the six domains, and the next practical step for each. <b>Weakest-link rule:</b> a council is only as mature as its least-developed domain, so one blind spot sets the overall level.
+    <b>How to use.</b> Work through it together with the people who run AI governance, ideally once a year (Playbook §7.6.4). It takes about 30 to 45 minutes. For each domain:
+    <ol>
+      <li>choose the level that best describes the council <b>today</b>;</li>
+      <li>choose the level you are aiming for (your <b>target</b>);</li>
+      <li>note the <b>evidence</b> behind your answer, such as a document, a record or an audit finding;</li>
+      <li>agree the <b>action</b> and who owns it, by role.</li>
+    </ol>
+    <b>Weakest-link rule:</b> a council is only as mature as its least-developed domain, so one blind spot sets the overall level. The aim is an honest picture to plan from, not a score (§7.6.4). Use roles, not names.
+  </div>
+
+  <div class="meta">
+    <div><label class="f" for="aDate">Assessment date</label><input type="date" id="aDate"></div>
+    <div><label class="f" for="aWho">Who took part (roles)</label><input type="text" id="aWho" placeholder="For example: AI Governance Lead, DPO, Head of Digital, Internal Audit"></div>
   </div>
 
   <div id="domains"></div>
@@ -67,190 +106,276 @@
     <h2>Result</h2>
     <div class="rwrap">
       <div class="band">
-        <div class="big" id="bandNum">·</div>
-        <div class="lab" id="bandLab">Complete all six domains</div>
+        <div class="row">
+          <div><div class="big" id="bandNum">·</div><div class="cap">Today</div></div>
+          <div><div class="big t" id="tgtNum">·</div><div class="cap">Target</div></div>
+        </div>
+        <div class="lab" id="bandLab">Complete all seven domains</div>
         <div class="note" id="bandNote">Your overall level is the lowest domain score.</div>
       </div>
-      <div class="radarbox"><svg id="radar" viewBox="0 0 320 300" width="320" height="300" aria-label="Maturity profile"></svg></div>
+      <div class="radarbox">
+        <svg id="radar" viewBox="0 0 360 320" width="100%" style="max-width:360px" role="img" aria-label="Maturity profile chart: today, target and any previous assessment, by domain"></svg>
+        <div class="key"><i style="border-color:#006272"></i>Today<i style="border-color:#C9A442;border-top-style:dashed"></i>Target<span id="prevKey" hidden><i style="border-color:#8A94A0;border-top-style:dotted"></i>Last time</span></div>
+      </div>
     </div>
-    <div class="steps">
-      <h3>Your next step in each domain</h3>
-      <ul id="steps"><li>Select a level in each domain to see your roadmap.</li></ul>
+    <div class="gap">
+      <h3>Priorities and next steps</h3>
+      <p class="h">Ordered by priority: the biggest gap between today and target first, then the least-developed domain. Feed the agreed actions into the improvement plan (AIG-AIMS-03) and report progress through the AI Governance Working Group (§7.6.5.1).</p>
+      <div class="tw"><table>
+        <thead><tr><th>Priority</th><th>Domain</th><th id="prevTh" hidden>Last time</th><th>Today</th><th>Target</th><th>Next step</th><th>Action and owner</th></tr></thead>
+        <tbody id="gapBody"><tr><td colspan="6">Choose a level in each domain to see your priorities.</td></tr></tbody>
+      </table></div>
     </div>
   </div>
 
   <div class="btns">
-    <button class="primary" onclick="window.print()">Print / save as PDF</button>
-    <button class="ghost" onclick="resetAll()">Reset</button>
+    <button class="primary" type="button" onclick="window.print()">Print / save as PDF</button>
+    <button type="button" onclick="downloadJSON()">Save assessment file</button>
+    <button type="button" onclick="downloadCSV()">Download as spreadsheet (CSV)</button>
+    <label class="filebtn">Open a saved assessment<input type="file" id="openFile" accept=".json,application/json"></label>
+    <label class="filebtn">Compare with last time<input type="file" id="cmpFile" accept=".json,application/json"></label>
+    <button type="button" onclick="resetAll()">Reset</button>
   </div>
+  <div id="msg" role="status" aria-live="polite"></div>
 </main>
 <footer>
-  Maturity bands: 1 Initial &middot; 2 Developing &middot; 3 Defined &middot; 4 Managed &middot; 5 Optimising. Aligned to ISO/IEC 42001 and the NIST AI RMF (Govern, Map, Measure, Manage). This tool runs entirely in your browser and stores nothing. It structures judgement; it does not replace it.
+  Maturity levels (Playbook §7.6.2): 1 Initial &middot; 2 Developing &middot; 3 Defined &middot; 4 Managed &middot; 5 Optimised. Domains from Playbook §7.6.3; aligned to ISO/IEC 42001 and the NIST AI RMF (Govern, Map, Measure, Manage). It structures judgement; it does not replace it.
 </footer>
 
 <script>
-// ---- Content: 6 domains x 5 levels, plus the artefact that unlocks the next rung ----
+// ---- Content: the seven capability domains of Playbook §7.6.3, five levels each (§7.6.2) ----
+const BANDS = ["", "Initial", "Developing", "Defined", "Managed", "Optimised"];
 const DOMAINS = [
-  { key:"lead", name:"Leadership and policy", hint:"Accountability, policy, board and terms of reference",
-    levels:["No AI policy or ownership; AI use is unmanaged.",
-            "An AI policy is drafted and a lead is identified.",
-            "Policy approved, with an accountable owner and a board or terms of reference.",
-            "Governance roles operate consistently; decisions are recorded and owned.",
-            "Leadership drives continuous improvement; AI governance sits within corporate planning."],
-    unlock:["AI Policy Statement, Terms of Reference, Leadership Commitment",
-            "Terms of Reference (board), Governance Responsibilities matrix",
-            "Embed roles across services; minute decisions in the Decision Record",
-            "Add management review and corporate-planning links",
-            "Already leading; share your model with peers"] },
-  { key:"vis", name:"Visibility", hint:"Do you know what AI you have (the register)",
-    levels:["No central list; AI is discovered by accident.",
-            "A register exists but is partial.",
-            "All known AI is registered with a permanent ID.",
-            "The register is current, owned and reconciled regularly.",
-            "The register feeds live reporting and is used to drive decisions."],
-    unlock:["AI Intake Form and AI Register; seed with known systems",
-            "Complete the Register; assign permanent AIR-IDs",
-            "Assign owners; schedule reconciliation",
-            "Connect the Register to the Dashboard and reporting",
-            "Already leading; use trends to target support"] },
-  { key:"risk", name:"Risk and assurance", hint:"Triage, impact assessment and gates",
-    levels:["No triage or risk assessment of AI.",
-            "Ad hoc risk review for some systems.",
-            "Triage and impact assessment operate for high-risk systems through gates.",
-            "Proportionate assurance across all systems; gate decisions evidenced.",
-            "Assurance is continuously improved and covers agentic and emerging risks."],
-    unlock:["Introduce the triage tool and Risk Worksheet",
-            "Run triage and gates for high-risk systems; log decisions",
-            "Extend proportionate assurance to all systems; use the Gate Log",
-            "Add the Agentic Triage and runtime controls",
-            "Already leading; refine from incident and audit findings"] },
-  { key:"dpe", name:"Data protection, equality and ethics", hint:"DPIA, EIA, rights, fairness, transparency",
-    levels:["No DPIA or EIA for AI; transparency not considered.",
-            "DPIA done inconsistently; equality and ethics handled informally.",
-            "DPIA, EIA and ethics assessment completed for high-risk AI; transparency recorded.",
-            "Assessments embedded with DPO and Equality sign-off and ATRS where relevant.",
-            "Rights and ethics are evidenced and monitored across the portfolio."],
-    unlock:["Adopt the DPIA and Equality Impact Assessment templates",
-            "Add Human Rights and Responsible AI assessments for high-risk AI",
-            "Embed DPO and Equality sign-off; record ATRS where relevant",
-            "Monitor fairness and transparency across the portfolio",
-            "Already leading; publish transparency and share practice"] },
-  { key:"skill", name:"Skills and culture", hint:"Training, awareness, roles, safe disclosure",
-    levels:["Low awareness; staff use AI without guidance.",
-            "Basic guidance issued; some awareness.",
-            "Clear roles and a safe route to disclose AI use; a staff guide is in use.",
-            "Role-based training and competence are tracked; a culture of responsible use.",
-            "Skills are continuously developed and the council shares learning with peers."],
-    unlock:["Issue the staff guide: do I need to register AI?",
-            "Define roles; open a safe, no-blame disclosure route",
-            "Introduce role-based training and track competence",
-            "Measure culture; recognise good practice",
-            "Already leading; mentor other authorities"] },
-  { key:"mon", name:"Monitoring and improvement", hint:"Post-deployment monitoring, incidents, review",
-    levels:["No monitoring after go-live.",
-            "Some systems monitored informally.",
-            "Post-deployment monitoring and incident reporting operate for high-risk AI.",
-            "Monitoring, incidents and corrective actions drive reassessment; an AIMS is operating.",
-            "Continuous improvement is evidenced; management review closes the loop (ISO 42001)."],
-    unlock:["Start a Post-Deployment Monitoring and Review Log",
-            "Add the Incident Report route for high-risk AI",
-            "Link breaches to Corrective Action and reassessment",
-            "Stand up the AIMS and management review",
-            "Already leading; benchmark and share outcomes"] },
+  { key:"gov", name:"Governance and oversight", short:"Governance",
+    covers:"Governance bodies, roles and responsibilities, escalation, strategic oversight",
+    levels:["No one is clearly accountable for AI and no forum oversees it; issues are handled as they arise.",
+            "An AI lead is named and a governance group is forming, but roles, escalation and decision rights are still informal.",
+            "Terms of reference are agreed; roles, escalation routes and decision rights are defined and used, and decisions are recorded.",
+            "Oversight is measured: the board reviews governance indicators and effectiveness, and acts on what it finds.",
+            "AI governance is part of corporate strategy and planning; oversight is proactive and shapes AI investment."],
+    next:["Name an accountable lead and adopt the Leadership Commitment Statement (AIG-GOV-04) and Terms of Reference (AIG-GOV-06)",
+          "Agree the Terms of Reference (AIG-GOV-06) and the responsibilities matrix (Playbook §3.5.1); record decisions in the Governance Decision Record (AIG-DEC-03)",
+          "Report governance measures to the board using the AI Governance Dashboard (AIG-OPS-06) and Reporting Templates (AIG-OPS-05)",
+          "Link AI governance to corporate planning through the AIMS Management Review (AIG-AIMS-09)",
+          "Keep reviewing, and share your model with peer authorities"] },
+  { key:"pol", name:"Policy and standards", short:"Policy",
+    covers:"Policy framework, standards and procedures, Responsible AI requirements, documentation quality",
+    levels:["There is no AI policy or guidance.",
+            "An AI policy is drafted and some guidance exists, but it is not applied consistently.",
+            "The AI Policy Statement and corporate AI policies, including acceptable use, are approved, communicated and followed.",
+            "Policies and standards are reviewed on a cycle, tested for effectiveness and updated when law or practice changes.",
+            "Policy anticipates change through horizon scanning, and the council's approach is recognised as good practice."],
+    next:["Draft the AI Policy Statement (AIG-GOV-05) and the AI Acceptable Use Policy (Playbook §5.4)",
+          "Approve and communicate the AI Policy Statement (AIG-GOV-05) and Acceptable Use Policy, and issue the Staff Guide to Registering and Governing AI (AIG-INV-01)",
+          "Track legal and policy change in the Applicable Requirements and Change Register (AIG-AIMS-05) and review policies on a set cycle",
+          "Use horizon scanning to update policy before changes take effect",
+          "Keep reviewing, and share your policies with peer authorities"] },
+  { key:"risk", name:"Risk management", short:"Risk",
+    covers:"Risk identification, assessment, treatment and reporting",
+    levels:["AI risks are not identified or assessed.",
+            "Some systems get an ad hoc risk review, but there is no common method.",
+            "Every AI use is triaged and risk-assessed with a common method; higher risks go through gates and their treatment is recorded.",
+            "Risk is reported and trended; treatments are checked for effectiveness, and change triggers reassessment.",
+            "Risk management looks ahead, covering emerging and agentic risks before they materialise."],
+    next:["Start intake with the AI Intake Form (AIG-INV-03) and triage with the AGPI Triage Tool (AIG-ASS-01) and AI Risk Assessment Worksheet (AIG-ASS-02)",
+          "Apply triage and the Gate Map (AIG-DEC-01) to every use, and record risk treatment in the AIMS Objectives, Risk Treatment and Improvement Plan (AIG-AIMS-03)",
+          "Report risk trends and check that treatments work",
+          "Extend to agentic risk with Agentic Triage (AIG-AGT-03) and the Agent Record (AIG-AGT-04)",
+          "Keep refining from incidents and audit findings"] },
+  { key:"ass", name:"Assurance and compliance", short:"Assurance",
+    covers:"Monitoring, compliance activities, internal audit, independent assurance",
+    levels:["There is no assurance after go-live, and compliance is assumed.",
+            "Some systems are checked informally; DPIAs and other assessments are done inconsistently.",
+            "Required assessments, such as the DPIA, Equality Impact Assessment and Responsible AI Assessment, are completed before decisions; deployed AI is monitored, and assurance is proportionate to risk.",
+            "Assurance is integrated, and independent where it matters: internal audit covers AI, and findings drive corrective action.",
+            "Assurance is continuous and evidence-led, and the council can show regulators and the public that its AI is under control."],
+    next:["Adopt the Data Protection Impact Assessment (AIG-ASS-05), Equality Impact Assessment (AIG-ASS-06) and Post-Deployment Monitoring and Review Log (AIG-OPS-02)",
+          "Complete the required assessments, including the Responsible AI Assessment (AIG-ASS-04), before every decision, and monitor every deployed use",
+          "Add internal audit (AIG-AIMS-07) and corrective action (AIG-AIMS-08)",
+          "Move to continuous assurance through the AI Governance Dashboard (AIG-OPS-06) and Management Review (AIG-AIMS-09)",
+          "Keep improving, and publish what assurance shows"] },
+  { key:"ppl", name:"People and capability", short:"People",
+    covers:"Skills and competencies, training and awareness, leadership capability, knowledge sharing",
+    levels:["Awareness is low, and staff use AI without guidance.",
+            "Basic guidance and awareness exist, but skills depend on individuals.",
+            "Roles have defined competences, and role-based training is delivered and recorded.",
+            "Competence is tracked and refreshed; leaders understand AI risk, and capability gaps are planned for.",
+            "Capability is continuously developed, and the council shares learning with peers."],
+    next:["Issue the Staff Guide to Registering and Governing AI (AIG-INV-01) and basic awareness",
+          "Define role competences and training in the Roles, Competence, Awareness and Communications Plan (AIG-AIMS-04)",
+          "Track competence, refresh training and brief leaders on AI risk",
+          "Plan AI capability as part of the workforce strategy",
+          "Keep developing, and mentor other authorities"] },
+  { key:"cul", name:"Culture and responsible AI", short:"Culture",
+    covers:"Accountability, transparency, ethical decision-making, responsible innovation",
+    levels:["Responsible AI is not discussed, and AI use is hidden or unchallenged.",
+            "Responsible AI principles are stated, and staff are starting to disclose AI use without fear of blame.",
+            "Principles are applied in every decision; ethical questions are raised and reviewed, and transparency records are published where required.",
+            "Fairness, complaints and challenges are monitored; residents can contest AI-supported decisions, and the council learns from them.",
+            "Openness and accountability are the norm, and the council is trusted and recognised for responsible innovation."],
+    next:["Adopt the Responsible AI principles (Playbook §5.3) and a no-blame route for disclosing AI use (§5.4.2)",
+          "Use the Responsible AI Assessment (AIG-ASS-04) and ethics review (Playbook §5.11), and publish transparency records where required",
+          "Put contestability and redress in place (AIG-OPS-04) and monitor fairness",
+          "Publish what you learn and involve residents",
+          "Keep listening, and share practice with the sector"] },
+  { key:"ops", name:"Technology and operational controls", short:"Operations",
+    covers:"AI register and lifecycle management, system monitoring, supplier governance, incident management",
+    levels:["There is no list of AI in use, and suppliers and incidents are not managed for AI.",
+            "A partial AI register exists; some supplier checks and incident reporting happen informally.",
+            "All AI is registered with a permanent ID and owner; suppliers are assessed before procurement, and incidents follow a set route.",
+            "The register is reconciled and current; supplier performance and model changes are monitored, and incidents drive reassessment.",
+            "Lifecycle controls are automated where possible, and supplier, runtime and agentic risks are managed proactively."],
+    next:["Start the AI Register (AIG-INV-04) and AI Intake Form (AIG-INV-03)",
+          "Register all AI with permanent AIR-IDs, and use the Supplier AI Due-Diligence Questionnaire (AIG-ASS-08) and AI Incident Report Form (AIG-OPS-03)",
+          "Reconcile the register on a schedule, and monitor suppliers and model changes (AIG-OPS-02)",
+          "Add runtime and agentic controls (AIG-AGT-04) and automate monitoring where you can",
+          "Keep improving controls as the technology changes"] },
 ];
-const BANDS = ["", "Initial", "Developing", "Defined", "Managed", "Optimising"];
+const N = DOMAINS.length;
+const state = {};   // key -> {current, target, evidence, action, owner}
+let prev = null;    // key -> current level from a previous assessment
+DOMAINS.forEach(d => state[d.key] = {current:0, target:0, evidence:"", action:"", owner:""});
 
-const scores = {};
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const host = document.getElementById("domains");
 
 DOMAINS.forEach((d, di) => {
-  const box = document.createElement("div"); box.className = "domain";
-  box.innerHTML = `<h2>${di+1}. ${d.name}<span>${d.hint}</span></h2>`;
-  const lv = document.createElement("div"); lv.className = "levels";
-  d.levels.forEach((txt, i) => {
-    const lvl = i + 1;
-    const row = document.createElement("label"); row.className = "lvl";
-    row.innerHTML = `<input type="radio" name="${d.key}" value="${lvl}">
-      <span class="n">Level ${lvl}</span><span>${txt}</span>`;
-    row.querySelector("input").addEventListener("change", () => {
-      scores[d.key] = lvl;
-      [...lv.children].forEach(c => c.classList.remove("sel"));
-      row.classList.add("sel");
-      update();
-    });
-    lv.appendChild(row);
-  });
-  box.appendChild(lv);
+  const box = document.createElement("section"); box.className = "domain"; box.id = "d-" + d.key;
+  const opts = BANDS.map((b, i) => i ? `<option value="${i}">Level ${i} · ${b}</option>` : `<option value="0">Not set</option>`).join("");
+  box.innerHTML = `<fieldset><legend><div class="dh">${di+1}. ${d.name}<span>${d.covers}</span></div></legend>
+    <div class="levels">${d.levels.map((t, i) => `<label class="lvl"><input type="radio" name="${d.key}" value="${i+1}"><span class="n">Level ${i+1} · ${BANDS[i+1]}</span><span class="d">${t}</span></label>`).join("")}</div></fieldset>
+    <div class="plan">
+      <div><label class="f" for="t-${d.key}">Target level</label><select id="t-${d.key}">${opts}</select></div>
+      <div><label class="f" for="e-${d.key}">Evidence for today's level</label><textarea id="e-${d.key}" placeholder="What shows this? For example a document, record, audit finding or measure."></textarea></div>
+      <div><label class="f" for="a-${d.key}">Agreed action</label><textarea id="a-${d.key}" placeholder="What will you do next?"></textarea></div>
+      <div class="own"><label class="f" for="o-${d.key}">Action owner (role) and due date</label><input type="text" id="o-${d.key}" placeholder="For example: AI Governance Lead, by March"></div>
+    </div>
+    <div class="next" id="n-${d.key}">Choose a level to see the next step.</div>`;
   host.appendChild(box);
+  box.querySelectorAll(`input[name=${d.key}]`).forEach(r => r.addEventListener("change", () => { state[d.key].current = +r.value; refreshDomain(d); update(); }));
+  box.querySelector(`#t-${d.key}`).addEventListener("change", e => { state[d.key].target = +e.target.value; update(); });
+  ["e","a","o"].forEach(p => box.querySelector(`#${p}-${d.key}`).addEventListener("input", e => {
+    state[d.key][{e:"evidence",a:"action",o:"owner"}[p]] = e.target.value; update(); }));
 });
 
-function update() {
-  const vals = DOMAINS.map(d => scores[d.key]);
-  const done = vals.filter(Boolean).length;
-  drawRadar(vals);
-  if (done < DOMAINS.length) {
-    document.getElementById("bandNum").textContent = "·";
-    document.getElementById("bandLab").textContent = `Completed ${done} of ${DOMAINS.length} domains`;
-    document.getElementById("bandNote").textContent = "Your overall level is the lowest domain score.";
-  } else {
-    const overall = Math.min(...vals);
-    document.getElementById("bandNum").textContent = "L" + overall;
-    document.getElementById("bandLab").textContent = BANDS[overall];
-    const weakest = DOMAINS.filter(d => scores[d.key] === overall).map(d => d.name);
-    document.getElementById("bandNote").textContent =
-      overall === 5 ? "Leading across every domain." :
-      "Set by your least-developed domain: " + weakest.join(", ") + ".";
-  }
-  // next steps
-  const ul = document.getElementById("steps"); ul.innerHTML = "";
-  DOMAINS.forEach(d => {
-    const s = scores[d.key];
-    const li = document.createElement("li");
-    if (!s) { li.innerHTML = `<b>${d.name}:</b> not yet assessed.`; }
-    else if (s >= 5) { li.innerHTML = `<b>${d.name}:</b> Level 5. ${d.unlock[4]}.`; }
-    else { li.innerHTML = `<b>${d.name}:</b> Level ${s}. To reach Level ${s+1}: ${d.unlock[s-1]}.`; }
-    ul.appendChild(li);
-  });
+function refreshDomain(d) {
+  const s = state[d.key], box = document.getElementById("d-" + d.key);
+  box.querySelectorAll(".lvl").forEach((l, i) => { const on = s.current === i+1; l.classList.toggle("sel", on); l.querySelector("input").checked = on; });
+  box.querySelector(`#t-${d.key}`).value = String(s.target || 0);
+  box.querySelector(`#e-${d.key}`).value = s.evidence; box.querySelector(`#a-${d.key}`).value = s.action; box.querySelector(`#o-${d.key}`).value = s.owner;
+  const n = document.getElementById("n-" + d.key);
+  n.innerHTML = !s.current ? "Choose a level to see the next step."
+    : s.current >= 5 ? `<b>Level 5 · Optimised.</b> ${esc(d.next[4])}.`
+    : `<b>To reach Level ${s.current+1} · ${BANDS[s.current+1]}:</b> ${esc(d.next[s.current-1])}.`;
 }
 
-function drawRadar(vals) {
+function nextStep(d) { const c = state[d.key].current; return !c ? "" : c >= 5 ? d.next[4] : d.next[c-1]; }
+
+function update() {
+  const cur = DOMAINS.map(d => state[d.key].current), tgt = DOMAINS.map(d => state[d.key].target);
+  const done = cur.filter(Boolean).length;
+  drawRadar(cur, tgt);
+  const bn = document.getElementById("bandNum"), tn = document.getElementById("tgtNum"), bl = document.getElementById("bandLab"), note = document.getElementById("bandNote");
+  if (done < N) {
+    bn.textContent = "·"; tn.textContent = "·";
+    bl.textContent = `Completed ${done} of ${N} domains`;
+    note.textContent = "Your overall level is the lowest domain score.";
+  } else {
+    const overall = Math.min(...cur);
+    bn.textContent = "L" + overall;
+    const tAll = tgt.every(Boolean); tn.textContent = tAll ? "L" + Math.min(...tgt) : "·";
+    bl.textContent = BANDS[overall];
+    const weakest = DOMAINS.filter(d => state[d.key].current === overall).map(d => d.name);
+    note.textContent = (overall === 5 ? "Optimised across every domain." : "Set by your least-developed domain: " + weakest.join(", ") + ".")
+      + (tAll ? "" : " Set a target in every domain to see your overall target.");
+  }
+  // priorities table
+  const rows = DOMAINS.map((d, i) => ({d, i, c: state[d.key].current, t: state[d.key].target}))
+    .filter(r => r.c)
+    .map(r => ({...r, g: r.t ? Math.max(0, r.t - r.c) : null}))
+    .sort((a, b) => ((b.g ?? -1) - (a.g ?? -1)) || (a.c - b.c) || (a.i - b.i));
+  const body = document.getElementById("gapBody");
+  const showPrev = !!prev; document.getElementById("prevTh").hidden = !showPrev; document.getElementById("prevKey").hidden = !showPrev;
+  const cols = showPrev ? 7 : 6;
+  if (!rows.length) { body.innerHTML = `<tr><td colspan="${cols}">Choose a level in each domain to see your priorities.</td></tr>`; return; }
+  body.innerHTML = rows.map(r => {
+    const s = state[r.d.key];
+    const pr = r.g === null ? `<span class="pill p3">Set target</span>` : r.g >= 2 ? `<span class="pill p1">High</span>` : r.g === 1 ? `<span class="pill p2">Medium</span>` : `<span class="pill p3">Hold</span>`;
+    const act = [s.action, s.owner].filter(Boolean).map(esc).join("<br><i>") + (s.owner && s.action ? "</i>" : "");
+    return `<tr><td>${pr}</td><td><b>${esc(r.d.name)}</b></td>${showPrev ? `<td class="c">${prev[r.d.key] ? "L" + prev[r.d.key] : "–"}</td>` : ""}<td class="c">L${r.c}</td><td class="c">${r.t ? "L" + r.t : "–"}</td><td>${esc(nextStep(r.d))}</td><td>${act || "<span style='color:#8A94A0'>Not yet agreed</span>"}</td></tr>`;
+  }).join("");
+}
+
+function drawRadar(cur, tgt) {
   const svg = document.getElementById("radar");
-  const cx = 160, cy = 150, R = 110, N = 6;
+  const cx = 180, cy = 158, R = 112;
   const ang = i => (-90 + i * (360 / N)) * Math.PI / 180;
   const pt = (i, r) => [cx + r * Math.cos(ang(i)), cy + r * Math.sin(ang(i))];
+  const poly = vals => vals.map((v, i) => pt(i, R * v / 5).map(n => n.toFixed(1)).join(",")).join(" ");
   let s = "";
-  // rings
-  for (let ring = 1; ring <= 5; ring++) {
-    const r = R * ring / 5;
-    let poly = "";
-    for (let i = 0; i < N; i++) { const [x, y] = pt(i, r); poly += `${x.toFixed(1)},${y.toFixed(1)} `; }
-    s += `<polygon points="${poly}" fill="none" stroke="#E2E7EC" stroke-width="1"/>`;
-  }
-  // axes + labels
-  for (let i = 0; i < N; i++) {
+  for (let ring = 1; ring <= 5; ring++) s += `<polygon points="${DOMAINS.map((_, i) => pt(i, R * ring / 5).map(n => n.toFixed(1)).join(",")).join(" ")}" fill="none" stroke="#E2E7EC"/>`;
+  DOMAINS.forEach((d, i) => {
     const [x, y] = pt(i, R); s += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#E2E7EC"/>`;
-    const [lx, ly] = pt(i, R + 20);
-    s += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" font-size="9" fill="#5A5A5A" text-anchor="middle" dominant-baseline="middle">${DOMAINS[i].name.split(" ")[0]}</text>`;
-  }
-  // data polygon
-  if (vals.every(Boolean)) {
-    let poly = "";
-    for (let i = 0; i < N; i++) { const [x, y] = pt(i, R * vals[i] / 5); poly += `${x.toFixed(1)},${y.toFixed(1)} `; }
-    s += `<polygon points="${poly}" fill="rgba(0,98,114,0.22)" stroke="#006272" stroke-width="2"/>`;
-    for (let i = 0; i < N; i++) { const [x, y] = pt(i, R * vals[i] / 5); s += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#C9A442"/>`; }
+    const [lx, ly] = pt(i, R + 24);
+    s += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" font-size="10" fill="#5A5A5A" text-anchor="middle" dominant-baseline="middle">${d.short}</text>`;
+  });
+  if (prev && DOMAINS.every(d => prev[d.key])) s += `<polygon points="${poly(DOMAINS.map(d => prev[d.key]))}" fill="none" stroke="#8A94A0" stroke-width="2" stroke-dasharray="2 3"/>`;
+  if (tgt.every(Boolean)) s += `<polygon points="${poly(tgt)}" fill="none" stroke="#C9A442" stroke-width="2" stroke-dasharray="6 4"/>`;
+  if (cur.every(Boolean)) {
+    s += `<polygon points="${poly(cur)}" fill="rgba(0,98,114,0.20)" stroke="#006272" stroke-width="2"/>`;
+    cur.forEach((v, i) => { const [x, y] = pt(i, R * v / 5); s += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#006272"/>`; });
   }
   svg.innerHTML = s;
 }
 
+// ---- Save, export and reopen (files go only to the user's own device) ----
+function snapshot() {
+  return { kind:"council-ai-governance-maturity", version:2, framework:"Playbook §7.6 (seven domains)",
+    date: document.getElementById("aDate").value, participants: document.getElementById("aWho").value,
+    overall: DOMAINS.every(d => state[d.key].current) ? Math.min(...DOMAINS.map(d => state[d.key].current)) : null,
+    domains: Object.fromEntries(DOMAINS.map(d => [d.key, {name:d.name, ...state[d.key]}])) };
+}
+function save(blob, name) { const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); }
+function stamp() { return (document.getElementById("aDate").value || new Date().toISOString().slice(0,10)); }
+function downloadJSON() { save(new Blob([JSON.stringify(snapshot(), null, 2)], {type:"application/json"}), `ai-governance-maturity-${stamp()}.json`); say("Assessment file saved to your device. Keep it to compare with next year."); }
+function downloadCSV() {
+  const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const lines = [["Domain","Today (level)","Today","Target (level)","Target","Last time (level)","Next step","Evidence","Agreed action","Owner and due date"].map(q).join(",")];
+  DOMAINS.forEach(d => { const s = state[d.key]; lines.push([d.name, s.current || "", BANDS[s.current] || "", s.target || "", BANDS[s.target] || "", prev && prev[d.key] || "", nextStep(d), s.evidence, s.action, s.owner].map(q).join(",")); });
+  const snap = snapshot();
+  lines.push("", [q("Assessment date"), q(snap.date)].join(","), [q("Who took part (roles)"), q(snap.participants)].join(","), [q("Overall (weakest domain)"), q(snap.overall ? "L" + snap.overall + " " + BANDS[snap.overall] : "Incomplete")].join(","));
+  save(new Blob(["﻿" + lines.join("\r\n")], {type:"text/csv"}), `ai-governance-maturity-${stamp()}.csv`);
+  say("Spreadsheet saved to your device.");
+}
+function say(t, err) { const m = document.getElementById("msg"); m.textContent = t; m.className = err ? "err" : ""; }
+function readFile(input, fn) {
+  const f = input.files[0]; if (!f) return;
+  f.text().then(t => { let j; try { j = JSON.parse(t); } catch (e) { throw new Error("That file is not a saved assessment."); }
+    if (!j || j.kind !== "council-ai-governance-maturity" || !j.domains) throw new Error("That file is not a saved assessment from this tool.");
+    if (j.version !== 2) throw new Error("That file was saved by the earlier six-domain version and cannot be read by this one.");
+    fn(j); }).catch(e => say(e.message, true)).finally(() => { input.value = ""; });
+}
+const lvl = v => (Number.isInteger(v) && v >= 1 && v <= 5) ? v : 0;
+document.getElementById("openFile").addEventListener("change", e => readFile(e.target, j => {
+  document.getElementById("aDate").value = /^\d{4}-\d{2}-\d{2}$/.test(j.date || "") ? j.date : "";
+  document.getElementById("aWho").value = String(j.participants || "").slice(0, 500);
+  DOMAINS.forEach(d => { const s = j.domains[d.key] || {};
+    state[d.key] = {current: lvl(s.current), target: lvl(s.target), evidence: String(s.evidence || "").slice(0, 4000), action: String(s.action || "").slice(0, 4000), owner: String(s.owner || "").slice(0, 500)};
+    refreshDomain(d); });
+  update(); say("Assessment opened.");
+}));
+document.getElementById("cmpFile").addEventListener("change", e => readFile(e.target, j => {
+  prev = Object.fromEntries(DOMAINS.map(d => [d.key, lvl((j.domains[d.key] || {}).current)]));
+  update(); say("Last time's levels" + (j.date ? " (" + j.date + ")" : "") + " are shown in the table and chart for comparison.");
+}));
+
 function resetAll() {
-  for (const k in scores) delete scores[k];
-  document.querySelectorAll("input[type=radio]").forEach(r => r.checked = false);
-  document.querySelectorAll(".lvl").forEach(l => l.classList.remove("sel"));
-  update();
+  DOMAINS.forEach(d => { state[d.key] = {current:0, target:0, evidence:"", action:"", owner:""}; refreshDomain(d); });
+  prev = null; document.getElementById("aDate").value = ""; document.getElementById("aWho").value = ""; say(""); update();
 }
 update();
 </script>
 
-<aside id="data-privacy-note" aria-label="Data and privacy" style="max-width:1100px;margin:28px auto 24px;padding:12px 16px;border-top:2px solid #C8AB36;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.5;color:#5A5A5A;background:transparent"><strong style="color:#122C47">Data and privacy.</strong> This tool runs entirely in your web browser. It uses no cookies, analytics or tracking, and loads nothing from other websites. Nothing you enter is saved or sent anywhere; it is cleared when you close or reload the page. It is hosted on GitHub Pages, which keeps standard server logs of visits, as any website host does. Please do not enter personal data about residents or staff.</aside>
+<aside id="data-privacy-note" aria-label="Data and privacy" style="max-width:1100px;margin:28px auto 24px;padding:12px 16px;border-top:2px solid #C8AB36;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.5;color:#5A5A5A;background:transparent"><strong style="color:#122C47">Data and privacy.</strong> This tool runs entirely in your web browser. It uses no cookies, analytics or tracking, and loads nothing from other websites. Nothing you enter is saved or sent anywhere; it is cleared when you close or reload the page. Saved assessment files and spreadsheets go only to your own device. It is hosted on GitHub Pages, which keeps standard server logs of visits, as any website host does. Please do not enter personal data about residents or staff; record roles, not names.</aside>
 </body>
 </html>
